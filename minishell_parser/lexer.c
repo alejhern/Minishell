@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 11:22:01 by pafranco          #+#    #+#             */
-/*   Updated: 2025/02/28 19:03:06 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/02/28 19:20:10 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ int	find_conditional(char *prompt, int *type)
 		*type = 3;
 	return ((and * (*type == 1)) + (or * (*type == 2)) + (sub * (*type == 3)));
 }
-
+/*
 int	find_cond(char *prompt, int *type)
 {
 	char			*and;
@@ -96,7 +96,7 @@ int	find_cond(char *prompt, int *type)
 			done = 1;
 	}
 }
-
+*/
 int	find_delimiter(char *prompt)
 {
 	int			i;
