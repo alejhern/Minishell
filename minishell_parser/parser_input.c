@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:58:35 by pafranco          #+#    #+#             */
-/*   Updated: 2025/02/28 19:20:46 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/02/28 19:37:16 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,14 @@ void	print_cond(t_conditional *cond)
 
 int	parser_input(void)
 {
-	char				*print;
+//	char				*print;
 	t_conditional		*cond;
 
-	print = get_next_line(0);
-	cond = lexer_start(print);
-//	cond = lexer_start("puta");
+//	print = get_next_line(0);
+//	cond = lexer_start(print);
+	cond = lexer_start("puta > joder");
 	print_cond(cond);
-	free(print);
+//	free(print);
 	free_cond(cond);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 11:22:01 by pafranco          #+#    #+#             */
-/*   Updated: 2025/02/28 19:20:10 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/02/28 19:44:17 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,7 +111,7 @@ int	find_delimiter(char *prompt)
 		i = aux;
 	aux = ft_strchr(prompt, '	') - prompt;
 	if (i < 0 || (aux < i && aux > 0))
-		i = aux;
+	i = aux;
 	aux = ft_strchr(prompt, 0) - prompt;
 	if (i < 0 || (aux < i && aux > 0))
 		i = aux;
@@ -145,7 +145,7 @@ t_redirect	*create_redirect(char *prompt, t_redirect *prev, int *pos, t_conditio
 	}
 	while (prompt[i] == ' ' || prompt[i] == '	')
 		i++;
-	j = find_delimiter(prompt);
+	j = find_delimiter(&prompt[i]);
 	redirect->path = p_substr(prompt, i, j, con);
 	*pos = *pos + j;
 	if (prev == 0)
