@@ -3,56 +3,99 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: alejhern <alejhern@student.42barcelona.co  +#+  +:+       +#+         #
+#    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2025/02/27 21:06:52 by alejhern          #+#    #+#              #
-#    Updated: 2025/02/27 21:06:58 by alejhern         ###   ########.fr        #
+#    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
+#    Updated: 2025/02/28 18:20:48 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
+SRCS	= main.c \
+		  minishell_parser/parser_input.c \
+		  minishell_parser/lexer.c \
+		  minishell_utils/parser_utils.c \
 
-# **************************************************************************** #
-#                                 VARIABLES                                    #
-# **************************************************************************** #
+LSRCS	= libft/ft_atoi.c \
+		  libft/ft_bzero.c \
+		  libft/ft_calloc.c \
+		  libft/ft_isalnum.c \
+		  libft/ft_isalpha.c \
+		  libft/ft_isascii.c \
+		  libft/ft_isdigit.c \
+		  libft/ft_isprint.c \
+		  libft/ft_itoa.c \
+		  libft/ft_memchr.c \
+		  libft/ft_memcmp.c \
+		  libft/ft_memcpy.c \
+		  libft/ft_memmove.c \
+		  libft/ft_memset.c \
+		  libft/ft_putchar_fd.c \
+		  libft/ft_putendl_fd.c \
+		  libft/ft_putnbr_fd.c \
+		  libft/ft_putstr_fd.c \
+		  libft/ft_split.c \
+		  libft/ft_strchr.c \
+		  libft/ft_strdup.c \
+		  libft/ft_striteri.c \
+		  libft/ft_strjoin.c \
+		  libft/ft_strlcat.c \
+		  libft/ft_strlcpy.c \
+		  libft/ft_strlen.c \
+		  libft/ft_strmapi.c \
+		  libft/ft_strncmp.c \
+		  libft/ft_strnstr.c \
+		  libft/ft_strrchr.c \
+		  libft/ft_strtrim.c \
+		  libft/ft_substr.c \
+		  libft/ft_tolower.c \
+		  libft/ft_toupper.c \
+		  libft/get_next_line.c \
+		  libft/get_next_line_utils.c \
 
-NAME = minishell
+HEAD	= minishell.h
 
-CC = cc
+OBJS	= ${SRCS:.c=.o}
 
-CFLAGS = -Wall -Werror -Wextra
+LOBJS	= ${LSRCS:.c=.o}
 
-LIBFT = $(LIB_DIR)libft.a
+DEPS	= ${SRCS:.c=.d}
 
-# **************************************************************************** #
-#                                 RULES                                        #
-# **************************************************************************** #
+LDEPS	= ${LSRCS:.c=.d}
 
-all: $(NAME)
+NAME	= minishell
 
-$(NAME): $(LIBFT) $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) -L$(LIB_DIR) -lft -o $(NAME)
+AR		= ar rs -g
 
-%.o: %.c
-	$(CC) $(CFLAGS) -I $(LIB_DIR) -c $< -o $@
+RM		= rm -f
 
-$(LIBFT):
-	@if [ ! -d "$(LIB_DIR)" ]; then \
-		git clone https://github.com/alejhern/libft.git $(LIB_DIR); \
-	fi
-	@make -C $(LIB_DIR)
+CC		= cc
 
-clean:
-	@make -C $(LIB_DIR) clean
-	rm -f $(OBJ)
+CFLAGS	= -Wall -Wextra -Werror# -fsanitize=address
 
-fclean: clean
-	@make -C $(LIB_DIR) fclean
-	rm -f $(NAME) $(CHECKER)
+all:		libft ${NAME}
 
-re: fclean all
+libft:	
+				make -C libft
 
-.PHONY: all clean fclean re
+fclibft:
+				make -C libft fclean
 
-# **************************************************************************** #
-#                                BONUS                                         #
-# **************************************************************************** #
+clibft:
+				make -C libft clean
+
+%.o: %.c Makefile llibft/libft.a
+	$(CC) ${CFLAGS} -o $@ -c $<
+
+-include ${DEPS}
+$(NAME):	$(OBJS)
+	$(CC) ${CFLAGS} -o ${NAME} $(OBJS) ${LOBJS} -MMD
+
+clean:		clibft
+				${RM} ${OBJS} ${DEPS}
+
+fclean:		clean fclibft
+	${RM} ${NAME} ${BNAME}
+
+re:			fclean all
+
+.PHONY:		clean fclean re all libft final bonus fclibft clibft
