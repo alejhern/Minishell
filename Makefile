@@ -6,13 +6,14 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/02/28 18:20:48 by pafranco         ###   ########.fr        #
+#    Updated: 2025/03/03 18:16:14 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 SRCS	= main.c \
 		  minishell_parser/parser_input.c \
-		  minishell_parser/lexer.c \
+		  minishell_parser/parser_parser.c \
+		  minishell_parser/parser_finders.c \
 		  minishell_utils/parser_utils.c \
 
 LSRCS	= libft/ft_atoi.c \
@@ -70,7 +71,7 @@ RM		= rm -f
 
 CC		= cc
 
-CFLAGS	= -Wall -Wextra -Werror# -fsanitize=address
+CFLAGS	= -Wall -Wextra -Werror -fsanitize=address
 
 all:		libft ${NAME}
 

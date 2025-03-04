@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:58:35 by pafranco          #+#    #+#             */
-/*   Updated: 2025/02/28 19:37:16 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/04 15:41:38 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,11 @@ void	print_comm(t_command *comm)
 	i = 0;
 	while (comm)
 	{
-		printf("	Command:\n		argv:\n");
+		printf("	Command:\n		argv:");
 		argv = comm->argv;
 		while (argv[i])
 		{
-			printf("			%s\n", argv[i]);
+			printf("\n			%s", argv[i]);
 			i++;
 		}
 		i = 0;
@@ -57,14 +57,15 @@ void	print_cond(t_conditional *cond)
 
 int	parser_input(void)
 {
-//	char				*print;
 	t_conditional		*cond;
+	char				*print;
 
-//	print = get_next_line(0);
-//	cond = lexer_start(print);
-	cond = lexer_start("puta > joder");
+	print = get_next_line(0);
+	cond = lexer_start(print);
+//						0         10        20        30        40        50        60        70
+//	cond = lexer_start("puta \">> joder < hostia || patata | a |\" aaaa > a (cat < b) && puta");
 	print_cond(cond);
-//	free(print);
+	free(print);
 	free_cond(cond);
 	return (0);
 }
