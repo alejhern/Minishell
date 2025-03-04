@@ -25,19 +25,6 @@ void	free_redirect(t_redirect *redirect)
 	}
 }
 
-void	free_split(char **argv)
-{
-	int			i;
-
-	i = 0;
-	while (argv[i])
-	{
-		free(argv[i]);
-		i++;
-	}
-	free(argv);
-}
-
 void	free_comm(t_command *command)
 {
 	t_command		*aux;
@@ -45,7 +32,7 @@ void	free_comm(t_command *command)
 	while (command)
 	{
 		aux = command->next;
-		free_split(command->argv);
+		ft_free_array((void ***)&command->argv);
 		free_redirect(command->redirect_out);
 		free_redirect(command->redirect_in);
 		free(command);

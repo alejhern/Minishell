@@ -57,7 +57,6 @@ void			*p_calloc(size_t nmeb, size_t size, t_conditional *c);
 void			free_cond(t_conditional *c);
 void			free_comm(t_command *command);
 void			free_redirect(t_redirect *redirect);
-void			free_split(char **argv);
 char			*p_substr(char *s, int start, int len, t_conditional *cond);
 int				double_strchr(char *prompt, char c);
 
