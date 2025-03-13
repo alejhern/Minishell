@@ -1,22 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser_checker.c                                   :+:      :+:    :+:   */
+/*   conditional_lists.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/04 14:54:58 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/04 15:42:55 by pafranco         ###   ########.fr       */
+/*   Created: 2025/03/13 19:26:19 by pafranco          #+#    #+#             */
+/*   Updated: 2025/03/13 19:29:48 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-//Things to check:
-//
-//	unfinishe quotes
-//	unfinished or empty parenthesis
-//	more than 2 & or | (&&& |||)
-//	& alone
-//	empty conditionals (echo && && cat) (trailing conditional maybe apply here_doc or similar)
-//	more than two redirection signs (<<</>>>) 
+t_conditional	*cond_lstlast(t_conditional *lst)
+{
+	t_conditional		*temp;
+
+	if (lst == 0)
+		return (0);
+	temp = lst;
+	while (temp->next)
+		temp = temp->next;
+	return (temp);
+}
+
+void	cond_lstadd_back(t_conditional **lst, t_conditional *new)
+{
+	t_conditional		*temp;
+
+	if (lst)
+	{
+		if (*lst)
+		{
+			temp = cond_lstlast(*lst);
+			temp->next = new;
+		}
+		else
+			*lst = new;
+	}
+}

@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/04 15:46:50 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/13 22:24:22 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,20 +51,39 @@ typedef struct s_history
 	struct s_history		*prev;
 }				t_history;
 
-int				parser_input(void);
+typedef struct s_token
+{
+	char					*token;
+	int						type;
+	struct s_token			*next;
+}				t_token;
+
+void			free_cond(t_conditional *c);
+void			free_token(t_token *token, int util);
 
 void			*p_calloc(size_t nmeb, size_t size, t_conditional *c);
-void			free_cond(t_conditional *c);
-void			free_comm(t_command *command);
-void			free_redirect(t_redirect *redirect);
-void			free_split(char **argv);
 char			*p_substr(char *s, int start, int len, t_conditional *cond);
-int				double_strchr(char *prompt, char c);
+char			*p_strdup(char *s, t_conditional *cond);
 
-int				find_delimiter(char *prompt);
-int				find_conditional(char *prompt, int *type);
-int				find_pipe(char *prompt);
-int				find_quotes(char *prompt);
+int				parser_input(int util);
 
-t_conditional	*lexer_start(char *prompt);
+t_token			*tokenize(char *prompt, int *error);
+
+t_conditional	*token_parser(t_token *token, int *error);
+
+void			print_cond(t_conditional *cond);
+void			print_token(t_token *token);
+
+t_token			*token_lstlast(t_token *token);
+t_command		*command_lstlast(t_command *command);
+t_redirect		*redirect_lstlast(t_redirect * redirect);
+t_conditional	*cond_lstlast(t_conditional *cond);
+
+int				is_del(char c);
+
+void			token_lstadd_back(t_token **token, t_token *new_token);
+void			command_lstadd_back(t_command **command, t_command *new_command);
+void			redirect_lstadd_back(t_redirect **redirect, t_redirect *new_redirect);
+void			cond_lstadd_back(t_conditional **cond, t_conditional *new_cond);
+
 #endif /* MINISHELL_H */

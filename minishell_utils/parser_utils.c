@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 12:52:18 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/04 15:49:01 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/13 21:51:52 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ char	*p_substr(char *s, int start, int len, t_conditional *cond)
 	char		*ret;
 	char		*error;
 
-	ret = 0;
 	ret = ft_substr(s, start, len);
 	if (ret == 0)
 	{
@@ -107,4 +106,26 @@ int	double_strchr(char *prompt, char c)
 	if (i < 0 || (ft_strchr(&prompt[i + 1], c) != &prompt[i + 1]))
 		i = -1;
 	return (i);
+}
+
+char	*p_strdup(char *s, t_conditional *cond)
+{
+	char		*ret;
+	char		*error;
+
+	ret = ft_strdup(s);
+	if (ret == 0)
+	{
+		error = "SUBSTR FAIL";
+		write(2, error, 11);
+		free_cond(cond);
+		exit(0);
+	}
+	return (ret);
+}
+
+int	is_del(char c)
+{
+	return (c == '<' || c == '>' || c == '"' || c == '\'' || c == '&' ||
+				c == '|' || c == '(' || c == ')');
 }

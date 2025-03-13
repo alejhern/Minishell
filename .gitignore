@@ -6,7 +6,7 @@
 #    By: alejhern <alejhern@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/27 21:13:38 by alejhern          #+#    #+#              #
-#    Updated: 2025/02/28 20:04:50 by pafranco         ###   ########.fr        #
+#    Updated: 2025/03/13 21:46:29 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,3 +15,4 @@ minishell
 *.d
 *.o
 a.out
+.old_parser_backup

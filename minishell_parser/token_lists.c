@@ -1,26 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   token_lists.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/26 18:47:12 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/13 22:19:50 by pafranco         ###   ########.fr       */
+/*   Created: 2025/03/12 19:11:08 by pafranco          #+#    #+#             */
+/*   Updated: 2025/03/13 19:31:21 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
-int	main(int argc, char **argv)
+t_token	*token_lstlast(t_token *lst)
 {
-	int				useless;
+	t_token		*temp;
 
-	if (argv)
-		useless = 1 + 1;
-	else
-		useless = 1 + 1;
-	if (useless == 3)
-		printf("🤯");
-	parser_input(argc == 1);
+	if (lst == 0)
+		return (0);
+	temp = lst;
+	while (temp->next)
+		temp = temp->next;
+	return (temp);
+}
+
+void	token_lstadd_back(t_token **lst, t_token *new)
+{
+	t_token		*temp;
+
+	if (lst)
+	{
+		if (*lst)
+		{
+			temp = token_lstlast(*lst);
+			temp->next = new;
+		}
+		else
+			*lst = new;
+	}
 }
