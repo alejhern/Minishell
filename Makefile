@@ -55,7 +55,7 @@ $(LIBFT):
 
 clean:
 	@make -C $(LIB_DIR) clean
-	rm -f $(OBJ)
+	rm -f $(OBJS)
 
 fclean: clean
 	@make -C $(LIB_DIR) fclean
