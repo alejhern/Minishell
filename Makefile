@@ -6,7 +6,7 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/03/13 22:41:02 by pafranco         ###   ########.fr        #
+#    Updated: 2025/03/19 18:21:36 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,6 @@ SRCS	= main.c \
 		  minishell_parser/printer.c \
 		  minishell_parser/tokenizer.c \
 		  minishell_parser/token_lists.c \
-		  minishell_parser/command_lists.c \
-		  minishell_parser/conditional_lists.c \
 		  minishell_utils/parser_utils.c \
 
 OBJS	= ${SRCS:.c=.o}
@@ -30,7 +28,7 @@ LIB_DIR = libft/
 LIBFT = $(LIB_DIR)libft.a
 
 CC = cc -g
-CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR)
+CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR)# -fsanitize=address
 
 DEPS	= ${SRCS:.c=.d}
 
@@ -56,6 +54,7 @@ $(LIBFT):
 		git clone https://github.com/alejhern/libft.git $(LIB_DIR); \
 	fi
 	@make -C $(LIB_DIR)
+	@make -C $(LIB_DIR) bonus
 
 clean:
 	@make -C $(LIB_DIR) clean
