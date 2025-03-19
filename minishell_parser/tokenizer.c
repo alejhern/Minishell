@@ -6,28 +6,11 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 15:02:05 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/13 22:24:40 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/19 19:55:11 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
-int	token_cond_util(int or, int and, int *error, t_token *next)
-{
-	if (or == 1 && and == 0)
-		return (1);
-	else if (or == 2 && and == 0)
-		return (2);
-	else if (or == 0 && and == 2)
-		return (3);
-	else if (or == 0 && and == 1)
-	{
-		next->token = ft_strdup("&");
-		return(0);
-	}
-	*error = 1;
-	return (0);
-}
 
 void	token_cond(char *prompt, int *i, int *error, t_token **token)
 {
@@ -111,7 +94,7 @@ void	token_word(char *prompt, int *i, t_token **token)
 	if (!token)
 		free_token(*token, 1);
 	while (prompt[*i + j] != ' ' && prompt[*i + j] != '	' && prompt[*i + j]
-			&& !is_del(prompt[*i + j]))
+		&& !is_del(prompt[*i + j]))
 		j++;
 	token_lstadd_back(token, next);
 	next->token = ft_substr(prompt, *i, j);
@@ -134,8 +117,8 @@ t_token	*tokenize(char *prompt, int *error)
 			i++;
 		if (prompt[i] == '&' || prompt[i] == '|')
 			token_cond(prompt, &i, error, &token);
-		else if (prompt[i] == '(' || prompt[i] == ')' || prompt[i] == '>' ||
-				prompt[i] == '<')
+		else if (prompt[i] == '(' || prompt[i] == ')' || prompt[i] == '>'
+			|| prompt[i] == '<')
 			token_sub_red(prompt, &i, error, &token);
 		else if (prompt[i] == '\'' || prompt[i] == '"')
 			token_quote(prompt, &i, error, &token);

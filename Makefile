@@ -6,7 +6,7 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/03/19 18:21:36 by pafranco         ###   ########.fr        #
+#    Updated: 2025/03/19 19:49:16 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,7 @@ SRCS	= main.c \
 		  minishell_parser/printer.c \
 		  minishell_parser/tokenizer.c \
 		  minishell_parser/token_lists.c \
+		  minishell_parser/subshell_parser.c \
 		  minishell_utils/parser_utils.c \
 
 OBJS	= ${SRCS:.c=.o}

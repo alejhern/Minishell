@@ -6,54 +6,47 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 12:52:18 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/13 21:51:52 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/17 17:14:28 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	free_redirect(t_redirect *redirect)
+void	free_redirect(void *red)
 {
-	t_redirect		*aux;
+	t_redirect		*redirect;
 
-	while (redirect)
-	{
-		aux = redirect->next;
-		free(redirect->path);
-		free(redirect);
-		redirect = aux;
-	}
+	redirect = red;
+	free(redirect->path);
+	free(redirect);
 }
 
-void	free_comm(t_command *command)
+void	free_comm(void *comm)
 {
-	t_command		*aux;
+	t_command		*command;
 
-	while (command)
-	{
-		aux = command->next;
-		ft_free_array((void ***)&command->argv);
-		free_redirect(command->redirect_out);
-		free_redirect(command->redirect_in);
-		free(command);
-		command = aux;
-	}
+	command = comm;
+	ft_free_array((void ***)&command->argv);
+	ft_lstclear(&command->redirect_out, free_redirect);
+	ft_lstclear(&command->redirect_in, free_redirect);
+	free(command);
 }
 
-void	free_cond(t_conditional *cond)
+void	free_cond(void *condi)
 {
-	t_conditional	*aux;
+	t_shell			*cond;
 
-	while (cond)
-	{
-		aux = cond->next;
-		free_comm(cond->command);
-		free(cond);
-		cond = aux;
-	}
+	cond = condi;
+	ft_lstclear(&cond->command, free_comm);
+	free(cond);
 }
 
-void	*p_calloc(size_t nmeb, size_t size, t_conditional *cond)
+void	free_shell(t_list *list)
+{
+	ft_lstclear(&list, free_cond);
+}
+
+void	*p_calloc(size_t nmeb, size_t size)
 {
 	void		*ret;
 	char		*error;
@@ -63,13 +56,12 @@ void	*p_calloc(size_t nmeb, size_t size, t_conditional *cond)
 	{
 		error = "CALLOC FAIL";
 		write(2, error, 11);
-		free_cond(cond);
 		exit(0);
 	}
 	return (ret);
 }
 
-char	*p_substr(char *s, int start, int len, t_conditional *cond)
+char	*p_substr(char *s, int start, int len)
 {
 	char		*ret;
 	char		*error;
@@ -79,23 +71,12 @@ char	*p_substr(char *s, int start, int len, t_conditional *cond)
 	{
 		error = "SUBSTR FAIL";
 		write(2, error, 11);
-		free_cond(cond);
 		exit(0);
 	}
 	return (ret);
 }
 
-int	double_strchr(char *prompt, char c)
-{
-	long long				i;
-
-	i = ft_strchr(prompt, c) - prompt;
-	if (i < 0 || (ft_strchr(&prompt[i + 1], c) != &prompt[i + 1]))
-		i = -1;
-	return (i);
-}
-
-char	*p_strdup(char *s, t_conditional *cond)
+char	*p_strdup(char *s)
 {
 	char		*ret;
 	char		*error;
@@ -105,10 +86,19 @@ char	*p_strdup(char *s, t_conditional *cond)
 	{
 		error = "SUBSTR FAIL";
 		write(2, error, 11);
-		free_cond(cond);
 		exit(0);
 	}
 	return (ret);
+}
+
+t_list	*p_lstnew(void *content)
+{
+	t_list		*list;
+
+	list = ft_lstnew(content);
+	if (!content)
+		exit(0);
+	return (list);
 }
 
 int	is_del(char c)

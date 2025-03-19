@@ -6,134 +6,113 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 18:46:25 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/13 22:23:18 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/19 19:59:09 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-int	add_word(t_conditional *cond_og, t_token *token)
+int	add_word(t_list *list_og, t_token *token)
 {
-	int						i;
-	t_conditional			*cond;
+	t_shell					*cond;
 	t_command				*command;
-	char					**new;
 
-	i = 0;
-	cond = cond_lstlast(cond_og);
-	if (!cond->command)
-		cond->command = p_calloc(1, sizeof(t_command), cond_og);
-	command = command_lstlast(cond->command);
-	while(command->argv && command->argv[i])
-		i++;
-	new	= p_calloc(i + 2, sizeof(char), cond);
-	i = 0;
-	while (command->argv && command->argv[i])
+	cond = ft_lstlast(list_og)->content;
+	if (!cond || !cond->command)
 	{
-		new[i] = command->argv[i];
-		i++;
+		cond->command = p_lstnew(p_calloc(1, sizeof(t_command)));
+		command = cond->command->content;
 	}
-	new[i] = p_strdup(token->token, cond);
-	if (command->argv)
-		free(command->argv);
-	command->argv = new;
-	return (0);
-}
-
-int	new_pipe(t_conditional *cond_og)
-{
-	t_conditional			*cond;
-	t_command				*command;
-
-	cond = cond_lstlast(cond_og);
-	if (!cond->command)
-		return (1);
-	command = command_lstlast(cond->command);
-	command->next = p_calloc(1, sizeof(t_command), cond_og);
-	return(0);
-}
-
-int	new_conditional(t_conditional *cond_og, t_token *token)
-{
-	t_conditional			*cond;
-
-	cond = cond_lstlast(cond_og);
-	if (!cond)
-		return (1);
-	cond->next = p_calloc (1, sizeof(t_conditional), cond_og);
-	if (token->type == 2)
-		cond->type = 2;
-	else if (token->type == 3)
-		cond->type = 1;
 	else
-	{//a
-		printf("pau ets tonto");
-		return (1);
-	}
+		command = ft_lstlast(cond->command)->content;
+	ft_append_array((void ***) &command->argv, p_strdup(token->token));
+	if (command->argv == 0)
+		exit(0);
 	return (0);
 }
 
-int	add_redirect(t_conditional *cond_og, t_token **token)
+int	new_conditional(t_list *list_og, t_token *token)
 {
-	t_conditional			*cond;
-	t_command				*command;
-	t_redirect				*red;
+	t_list					*list;
 
-	cond = cond_lstlast(cond_og);
+	list = ft_lstlast(list_og);
+	if (!list)
+		return (1);
+	if (token->type == 2)
+		((t_shell *) list->content)->type = 2;
+	else if (token->type == 3)
+		((t_shell *) list->content)->type = 1;
+	else
+		return (1);
+	ft_lstadd_back(&list_og, p_lstnew(p_calloc(1, sizeof(t_shell))));
+	return (0);
+}
+
+int	new_pipe(t_list *cond_og)
+{
+	t_shell					*con;
+	t_list					*list;
+	t_command				*command;
+
+	con = ft_lstlast(cond_og)->content;
+	command = p_calloc(1, sizeof(t_command));
+	list = ft_lstnew(command);
+	if (!list || !command)
+		exit(0);
+	ft_lstadd_back(&(con->command), list);
+	return (0);
+}
+
+int	add_redirect(t_list *list_og, t_token **token)
+{
+	t_shell					*cond;
+	t_command				*command;
+	t_list					*red;
+	int						type;
+
+	type = (*token)->type;
+	cond = ft_lstlast(list_og)->content;
 	if (!cond->command)
-		cond->command = p_calloc(1, sizeof(t_command), cond_og);
-	command = command_lstlast(cond->command);
-	red = p_calloc(1, sizeof(t_redirect), cond_og);
+		ft_lstadd_back(&list_og, p_lstnew(p_calloc(1, sizeof(t_command))));
+	command = ft_lstlast(cond->command)->content;
+	red = p_lstnew(p_calloc(1, sizeof(t_redirect)));
 	if ((*token)->next->type == 0)
-		red->is_double = 0;
+		((t_redirect *) red->content)->is_double = 0;
 	else if ((*token)->type == (*token)->next->type)
 	{
-		red->is_double = 1;
+		((t_redirect *) red->content)->is_double = 1;
 		*token = (*token)->next;
 	}
-	else
-		return (1);
 	*token = (*token)->next;
-	red->path = p_strdup((*token)->token, cond_og);
-	if ((*token)->type == 6)
-		redirect_lstadd_back(&command->redirect_in, red);
-	else
-		redirect_lstadd_back(&command->redirect_out, red);
+	((t_redirect *) red->content)->path = p_strdup((*token)->token);
+	if (type == 6)
+		ft_lstadd_back(&command->redirect_in, red);
+	else if (type == 7)
+		ft_lstadd_back(&command->redirect_out, red);
 	return (0);
 }
 
-int	new_subshell(t_conditional *cond_og, t_token **token)
-{
-	//TODO
-	//POOTSER SE COM FER-HO PERO CREC QUE ES UN GUARRADA (un void*per guardar el t_conditional i castear-lo sempre)
-	//TODO
-	cond_og = 0;
-	token = 0;
-	if (cond_og == 0 && token == 0)
-		return (0);
-	return (1);
-}
-
-t_conditional	*token_parser(t_token *token, int *error)
+t_list	*token_parser(t_token *token, int *error)
 {
 	t_token				*aux;
-	t_conditional		*cond;
+	t_list				*list;
 
 	aux = token;
-	cond = ft_calloc(1, sizeof(t_conditional));
+	list = p_calloc(1, sizeof(t_list));
+	list->content = p_calloc(1, sizeof(t_shell));
 	while (aux && *error == 0)
 	{
 		if (aux->type == 0)
-			*error = add_word(cond, aux);
+			*error = add_word(list, aux);
 		else if (aux->type == 1)
-			*error = new_pipe(cond);
+			*error = new_pipe(list);
 		else if (aux->type == 2 || aux->type == 3)
-			*error = new_conditional(cond, aux);
+			*error = new_conditional(list, aux);
 		else if (aux->type == 4 || aux->type == 5)
-			*error = new_subshell(cond, &aux);
+			*error = new_subshell(list, &aux);
 		else if (aux->type == 7 || aux->type == 6)
-			*error = add_redirect(cond, &aux);
+			*error = add_redirect(list, &aux);
 		aux = aux->next;
 	}
-	return (cond);
+	return (list);
 }

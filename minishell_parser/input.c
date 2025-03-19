@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 18:38:08 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/13 22:22:12 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/19 19:31:49 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ int	parser_input(int util)
 {
 	int				error;
 	char			*print;
-	t_conditional	*cond;
+	t_list			*cond;
 	t_token			*token;
 
 	error = 0;
@@ -71,12 +71,12 @@ int	parser_input(int util)
 		free(print);
 	}
 //						0         10        20        30        40        50        60        70
-	token = tokenize("puta >> joder < hostia && patata | a | aaaa > a && puta", &error);
-//	token = tokenize("puta", &error);
+	token = tokenize("puta >> joder < hostia && patata | a | aaaa > a && puta | (puta espanya | (joder tot << aqui > alla))", &error);
+//	token = tokenize("puta a", &error);
 //	print_token(token);
 	cond = token_parser(token, &error);
-	print_cond(cond);
+	print_shell(cond);
 //	free_token(token, 0);
-	free_cond(cond);
+	free_shell(cond);
 	return (0);
 }
