@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/17 11:58:35 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/19 19:41:52 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/26 20:29:46 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ void	print_comm(void *com)
 	if (comm->is_subshell == 0)
 	{
 		argv = comm->argv;
-		while (argv[++i])
+		while (argv && argv[++i])
 			printf("\n			%s", argv[i]);
 	}
 	else

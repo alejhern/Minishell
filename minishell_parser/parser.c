@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 18:46:25 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/19 19:59:09 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/26 20:24:08 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ int	new_pipe(t_list *cond_og)
 	list = ft_lstnew(command);
 	if (!list || !command)
 		exit(0);
+	if (((t_command *)ft_lstlast(con->command)->content)->argv == 0)
+		return (1);
 	ft_lstadd_back(&(con->command), list);
 	return (0);
 }
@@ -92,15 +94,18 @@ int	add_redirect(t_list *list_og, t_token **token)
 	return (0);
 }
 
-t_list	*token_parser(t_token *token, int *error)
+t_list	*token_parser(t_token *token, int *error, t_token **token_sub)
 {
 	t_token				*aux;
 	t_list				*list;
 
-	aux = token;
+	if (token == 0 && token_sub != 0)
+		aux = (*token_sub)->next;
+	else
+		aux = token;
 	list = p_calloc(1, sizeof(t_list));
 	list->content = p_calloc(1, sizeof(t_shell));
-	while (aux && *error == 0)
+	while (aux && *error == 0 && aux->type != 5)
 	{
 		if (aux->type == 0)
 			*error = add_word(list, aux);
@@ -114,5 +119,6 @@ t_list	*token_parser(t_token *token, int *error)
 			*error = add_redirect(list, &aux);
 		aux = aux->next;
 	}
+	parser_check(token_sub, aux, list, error);
 	return (list);
 }

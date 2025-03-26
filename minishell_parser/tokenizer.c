@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 15:02:05 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/19 19:55:11 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/26 19:42:44 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,7 +113,7 @@ t_token	*tokenize(char *prompt, int *error)
 	token = 0;
 	while (prompt[i] && *error == 0)
 	{
-		while (prompt[i] == ' ' || prompt[i] == '	')
+		while (prompt[i] == ' ' || prompt[i] == '	' || prompt[i] == '\n')
 			i++;
 		if (prompt[i] == '&' || prompt[i] == '|')
 			token_cond(prompt, &i, error, &token);

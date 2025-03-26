@@ -6,7 +6,7 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/03/19 19:49:16 by pafranco         ###   ########.fr        #
+#    Updated: 2025/03/26 18:53:39 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,8 +19,10 @@ SRCS	= main.c \
 		  minishell_parser/parser.c \
 		  minishell_parser/printer.c \
 		  minishell_parser/tokenizer.c \
+		  minishell_parser/tokenizer_utils.c \
 		  minishell_parser/token_lists.c \
-		  minishell_parser/subshell_parser.c \
+		  minishell_parser/subshells.c \
+		  minishell_parser/token_checker.c \
 		  minishell_utils/parser_utils.c \
 
 OBJS	= ${SRCS:.c=.o}
@@ -28,8 +30,11 @@ OBJS	= ${SRCS:.c=.o}
 LIB_DIR = libft/
 LIBFT = $(LIB_DIR)libft.a
 
+#READLINE = lib/libhistory.a \
+#		   lib/libreadline.a \
+
 CC = cc -g
-CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR)# -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) -lreadline -ltinfo# -fsanitize=address
 
 DEPS	= ${SRCS:.c=.d}
 

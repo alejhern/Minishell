@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 18:38:08 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/19 19:31:49 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/26 20:34:19 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,27 +56,24 @@ int	parser_input(int util)
 	t_token			*token;
 
 	error = 0;
-	while (util == 0)
+	if (util == 0)
 	{
 		error = 0;
 		print = get_next_line(0);
-		if (error == 0)
-		{
-			token = tokenize(print, &error);
-			print_token(token);
-			free_token(token, 0);
-		}
-		else
-			printf("Syntax error!");
+//		print = readline("shell petit: ");
+		token = tokenize(print, &error);
 		free(print);
 	}
-//						0         10        20        30        40        50        60        70
-	token = tokenize("puta >> joder < hostia && patata | a | aaaa > a && puta | (puta espanya | (joder tot << aqui > alla))", &error);
-//	token = tokenize("puta a", &error);
-//	print_token(token);
-	cond = token_parser(token, &error);
+	else
+		token = tokenize(" patata | > pata", &error);
+	check_tokens(token, 0, &error);
+	if (error != 0)
+	{
+		printf ("SYNTAX (p)ERROr🐶");
+		exit(0);
+	}
+	cond = token_parser(token, &error, 0);
 	print_shell(cond);
-//	free_token(token, 0);
 	free_shell(cond);
 	return (0);
 }

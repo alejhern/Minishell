@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/19 19:50:50 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/26 20:30:30 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,18 @@ typedef enum e_comand_type
 	END
 }							t_type;
 
+typedef enum e_token_type
+{
+	WORD,
+	PIPE,
+	ORC,
+	ANDC,
+	OPEN_SUB,
+	CLOSE_SUB,
+	IN_RED,
+	OUT_RED,
+}							t_token_type;
+
 typedef struct s_command
 {
 	int						pid;
@@ -53,7 +65,7 @@ typedef struct s_shell
 typedef struct s_token
 {
 	char					*token;
-	int						type;
+	t_token_type			type;
 	struct s_token			*next;
 }							t_token;
 
@@ -69,7 +81,9 @@ int				parser_input(int util);
 
 t_token			*tokenize(char *prompt, int *error);
 
-t_list			*token_parser(t_token *token, int *error);
+t_list			*token_parser(t_token *token, int *error, t_token **token_sub);
+void			parser_check(t_token **t_sub, t_token *t);
+int				token_cond_util(int or, int and, int *error, t_token *next);
 
 void			print_shell(t_list *list);
 void			print_token(t_token *token);
@@ -87,10 +101,8 @@ void			redirect_lstadd_back(t_redirect **redirect, t_redirect *n_red);
 void			cond_lstadd_back(t_shell **cond, t_shell *new_cond);
 
 int				new_subshell(t_list *list_og, t_token **token);
-int				add_redirect(t_list *list_og, t_token **token);
-int				new_pipe(t_list *cond_og);
-int				new_conditional(t_list *list_og, t_token *token);
-int				add_word(t_list *list_og, t_token *token);
-t_list			*subshell_parser(t_token **token, int *error);
+
+void			check_tokens(t_token *token, t_token **token_sub, int *error);
+int				check_subshell(t_token **token);
 
 #endif /* MINISHELL_H */
