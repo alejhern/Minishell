@@ -6,16 +6,49 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 20:08:46 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/26 19:52:15 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/31 20:00:03 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+/*
+int	remove_quotes(t_token *token)
+{
+	char				*str;
 
+	str = ft_substr(token->token, 1, ft_strlen(token->token) - 2);
+	free(token->token);
+	token->token = str;
+	return (0);
+}
+
+void	expand(t_token *token)
+{
+	char				*var;
+	char				string;
+
+	var = ft_strchr(token->token, '$');
+	while (var != 0)
+	{
+		
+	}
+}
+*/
 int	check_word(t_token *token)
 {
+//	char				*str;
+//	char				*var;
+
 	if (token->next->type == OPEN_SUB)
 		return (1);
+/*	if (token->token[0] == '\'')
+		return (remove_quotes(token));
+	if (token->token[0] == '\"')
+		remove_quotes(token);
+	str = ft_strchr(token->token, '$');
+	if (str == 0)
+		return (0);
+*/
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/26 20:30:30 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/03/31 17:40:40 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,9 @@ typedef struct s_redirect
 
 typedef enum e_comand_type
 {
+	END = 0,
 	AND,
-	OR,
-	END
+	OR
 }							t_type;
 
 typedef enum e_token_type
