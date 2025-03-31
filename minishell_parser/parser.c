@@ -119,6 +119,6 @@ t_list	*token_parser(t_token *token, int *error, t_token **token_sub)
 			*error = add_redirect(list, &aux);
 		aux = aux->next;
 	}
-	parser_check(token_sub, aux, list, error);
+	parser_check(token_sub, aux);
 	return (list);
 }
