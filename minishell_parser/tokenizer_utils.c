@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:53:42 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/26 20:30:13 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/02 18:33:04 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,14 @@ void	parser_check(t_token **t_sub, t_token *t)
 {
 	if (t_sub != 0 && t != 0)
 		*t_sub = t;
+}
+
+int	remove_quotes(t_token *token)
+{
+	char				*str;
+
+	str = ft_substr(token->token, 1, ft_strlen(token->token) - 2);
+	free(token->token);
+	token->token = str;
+	return (0);
 }

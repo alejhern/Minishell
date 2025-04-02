@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/31 17:40:40 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/02 20:46:30 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ t_token			*tokenize(char *prompt, int *error);
 t_list			*token_parser(t_token *token, int *error, t_token **token_sub);
 void			parser_check(t_token **t_sub, t_token *t);
 int				token_cond_util(int or, int and, int *error, t_token *next);
+int				remove_quotes(t_token *token);
+char			*expand(char *prompt);
 
 void			print_shell(t_list *list);
 void			print_token(t_token *token);
@@ -104,5 +106,7 @@ int				new_subshell(t_list *list_og, t_token **token);
 
 void			check_tokens(t_token *token, t_token **token_sub, int *error);
 int				check_subshell(t_token **token);
+
+void	heredoc(t_token *token, t_redirect *red, int type);
 
 #endif /* MINISHELL_H */

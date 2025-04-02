@@ -6,73 +6,54 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 20:08:46 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/31 20:00:03 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/02 18:47:30 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-/*
-int	remove_quotes(t_token *token)
+
+int	check_word(t_token *token)
 {
 	char				*str;
+	char				*var;
 
-	str = ft_substr(token->token, 1, ft_strlen(token->token) - 2);
+	if (token->next && token->next->type == OPEN_SUB)
+		return (1);
+	if (token->token[0] == '\'')
+		return (remove_quotes(token));
+	if (token->token[0] == '\"')
+		remove_quotes(token);
+	var = ft_strchr(token->token, '$');
+	if (var == 0)
+		return (0);
+	str = expand(token->token);
 	free(token->token);
 	token->token = str;
 	return (0);
 }
 
-void	expand(t_token *token)
-{
-	char				*var;
-	char				string;
-
-	var = ft_strchr(token->token, '$');
-	while (var != 0)
-	{
-		
-	}
-}
-*/
-int	check_word(t_token *token)
-{
-//	char				*str;
-//	char				*var;
-
-	if (token->next->type == OPEN_SUB)
-		return (1);
-/*	if (token->token[0] == '\'')
-		return (remove_quotes(token));
-	if (token->token[0] == '\"')
-		remove_quotes(token);
-	str = ft_strchr(token->token, '$');
-	if (str == 0)
-		return (0);
-*/
-	return (0);
-}
-
 int	check_pipe(t_token *token)
 {
-	if (token->next->type == WORD || token->next->type == IN_RED
-		|| token->next->type == OUT_RED || token->next->type == OPEN_SUB)
+	if (token->next && (token->next->type == 0 || token->next->type == IN_RED
+		|| token->next->type == OUT_RED || token->next->type == OPEN_SUB))
 		return (0);
 	return (1);
 }
 
 int	check_conditional(t_token *token)
 {
-	if (token->next->type == CLOSE_SUB || token->next->type == ORC
-		|| token->next->type == ANDC || token->next->type == PIPE)
+	if ((token->next && (token->next->type == 5 || token->next->type == ORC
+		|| token->next->type == ANDC || token->next->type == PIPE))
+		|| !token->next)
 		return (1);
 	return (0);
 }
 
 int	check_redirection(t_token **token)
 {
-	if ((*token)->type == (*token)->next->type)
+	if ((*token)->next && (*token)->type == (*token)->next->type)
 		*token = (*token)->next;
-	if ((*token)->next->type == WORD)
+	if ((*token)->next && (*token)->next->type == WORD)
 		return (0);
 	return (1);
 }
@@ -85,7 +66,7 @@ void	check_tokens(t_token *token, t_token **token_sub, int *error)
 		aux = token;
 	else
 		aux = (*token_sub)->next;
-	while (aux && aux->next && *error == 0 && aux->type != CLOSE_SUB)
+	while (aux && *error == 0 && aux->type != CLOSE_SUB)
 	{
 		if (aux->type == WORD)
 			*error = check_word(aux);

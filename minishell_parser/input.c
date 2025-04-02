@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/12 18:38:08 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/26 20:34:19 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/02 20:45:32 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	parser_input(int util)
 		free(print);
 	}
 	else
-		token = tokenize(" patata | > pata", &error);
+		token = tokenize("$pararapapa $pararapachin", &error);
 	check_tokens(token, 0, &error);
 	if (error != 0)
 	{
