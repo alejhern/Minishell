@@ -12,15 +12,8 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+int	main()
 {
-	int				useless;
-
-	if (argv)
-		useless = 1 + 1;
-	else
-		useless = 1 + 1;
-	if (useless == 3)
-		printf("🤯");
-	parser_input(argc == 1);
+	parser_input();
+	return (0);
 }

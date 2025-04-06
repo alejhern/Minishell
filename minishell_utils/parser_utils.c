@@ -12,38 +12,43 @@
 
 #include "../minishell.h"
 
-void	free_redirect(void *red)
+static void	free_redirect(void *content)
 {
-	t_redirect		*redirect;
+	t_redirect	*red;
 
-	redirect = red;
-	free(redirect->path);
-	free(redirect);
+	red = (t_redirect *)content;
+	if (!red)
+		return ;
+	if (red->path)
+		free(red->path);
+	free(red);
 }
 
-void	free_comm(void *comm)
+void free_comand(void *content)
 {
-	t_command		*command;
-
-	command = comm;
+	t_command *command;
+	
+	command = (t_command *)content;
+	if (!command)
+		return;
 	ft_free_array((void ***)&command->argv);
+	ft_lstclear(&command->subshell, free_comand);
 	ft_lstclear(&command->redirect_out, free_redirect);
 	ft_lstclear(&command->redirect_in, free_redirect);
 	free(command);
+	content = NULL;
 }
 
-void	free_cond(void *condi)
+void	free_shell(void *content)
 {
-	t_shell			*cond;
+	t_shell		*shell;
 
-	cond = condi;
-	ft_lstclear(&cond->command, free_comm);
-	free(cond);
-}
-
-void	free_shell(t_list *list)
-{
-	ft_lstclear(&list, free_cond);
+	shell = (t_shell *)content;
+	if (!shell)
+		return ;
+	ft_lstclear(&shell->command, free_comand);
+	free(shell);
+	content = NULL;
 }
 
 void	*p_calloc(size_t nmeb, size_t size)

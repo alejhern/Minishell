@@ -31,7 +31,7 @@ void	print_comm(void *com)
 	i = -1;
 	comm = com;
 	printf("	Command:\n		argv:");
-	if (comm->is_subshell == 0)
+	if (!comm->subshell)
 	{
 		argv = comm->argv;
 		while (argv && argv[++i])

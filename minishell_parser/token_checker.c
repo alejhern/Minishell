@@ -12,64 +12,116 @@
 
 #include "../minishell.h"
 
-int	check_word(t_token *token)
+int check_word(t_list *token_node)
 {
-	if (token->next->type == OPEN_SUB)
-		return (1);
-	return (0);
+    t_token *next_token;
+
+    if (!token_node || !token_node->next || !token_node->content || !token_node->next->content)
+        return (1);
+    next_token = (t_token *)token_node->next->content;
+    if (next_token->type == TOKEN_LPAREN)
+        return (1);
+    return (0);
 }
 
-int	check_pipe(t_token *token)
+int check_pipe(t_list *token_node)
 {
-	if (token->next->type == WORD || token->next->type == IN_RED
-		|| token->next->type == OUT_RED || token->next->type == OPEN_SUB)
-		return (0);
-	return (1);
+    t_token *next_token;
+
+    if (!token_node || !token_node->next || !token_node->content || !token_node->next->content)
+        return (1);
+    next_token = (t_token *)token_node->next->content;
+    if (next_token->type == TOKEN_WORD ||
+        next_token->type == TOKEN_LESS ||
+        next_token->type == TOKEN_GREAT ||
+        next_token->type == TOKEN_LPAREN)
+        return (0);
+    return (1);
 }
 
-int	check_conditional(t_token *token)
+int check_conditional(t_list *token_node)
 {
-	if (token->next->type == CLOSE_SUB || token->next->type == ORC
-		|| token->next->type == ANDC || token->next->type == PIPE)
-		return (1);
-	return (0);
+    t_token *next_token;
+
+    if (!token_node || !token_node->next || !token_node->content || !token_node->next->content)
+        return (1);
+    next_token = (t_token *)token_node->next->content;
+    if (next_token->type == TOKEN_RPAREN ||
+        next_token->type == TOKEN_OR ||
+        next_token->type == TOKEN_AND ||
+        next_token->type == TOKEN_PIPE)
+        return (1);
+    return (0);
 }
 
-int	check_redirection(t_token **token)
+int check_redirection(t_list **token_node)
 {
-	if ((*token)->type == (*token)->next->type)
-		*token = (*token)->next;
-	if ((*token)->next->type == WORD)
-		return (0);
-	return (1);
+    t_token *token;
+    t_token *next_token;
+
+    if (!token_node || !*token_node || !(*token_node)->next || 
+        !(*token_node)->content || !(*token_node)->next->content)
+        return (1);
+
+    token = (t_token *)(*token_node)->content;
+    next_token = (t_token *)(*token_node)->next->content;
+
+    if (token->type == next_token->type)
+        *token_node = (*token_node)->next;
+
+    if (!(*token_node)->next || !(*token_node)->next->content)
+        return (1);
+
+    next_token = (t_token *)(*token_node)->next->content;
+    if (next_token->type == TOKEN_WORD)
+        return (0);
+    return (1);
 }
 
-void	check_tokens(t_token *token, t_token **token_sub, int *error)
+void check_tokens(t_list *token_list, t_list **token_node, int *error)
 {
-	t_token				*aux;
+    t_list *current;
+    t_token *token;
 
-	if (token != 0)
-		aux = token;
-	else
-		aux = (*token_sub)->next;
-	while (aux && aux->next && *error == 0 && aux->type != CLOSE_SUB)
-	{
-		if (aux->type == WORD)
-			*error = check_word(aux);
-		else if (aux->type == PIPE)
-			*error = check_pipe(aux);
-		else if (aux->type == ORC || aux->type == ANDC)
-			*error = check_conditional(aux);
-		else if (aux->type == OPEN_SUB || aux->type == CLOSE_SUB)
-			*error = check_subshell(&aux);
-		else if (aux->type == OUT_RED || aux->type == IN_RED)
-			*error = check_redirection(&aux);
-		aux = aux->next;
-	}
-	if (token_sub != 0)
-	{
-		*token_sub = aux;
-		if (aux == 0)
-			*error = 1;
-	}
+    if (token_list)
+        current = token_list;
+    else if (token_node && *token_node)
+        current = (*token_node)->next;
+    else
+    {
+        if (error) *error = 1;
+        return;
+    }
+
+    while (current && current->next && error && *error == 0)
+    {
+        token = (t_token *)current->content;
+        if (!token)
+        {
+            *error = 1;
+            break;
+        }
+
+        if (token->type == TOKEN_RPAREN)
+            break;
+
+        if (token->type == TOKEN_WORD)
+            *error = check_word(current);
+        else if (token->type == TOKEN_PIPE)
+            *error = check_pipe(current);
+        else if (token->type == TOKEN_OR || token->type == TOKEN_AND)
+            *error = check_conditional(current);
+        else if (token->type == TOKEN_LPAREN || token->type == TOKEN_RPAREN)
+            *error = check_subshell(&current);
+        else if (token->type == TOKEN_GREAT || token->type == TOKEN_LESS)
+            *error = check_redirection(&current);
+
+        current = current->next;
+    }
+    if (token_node)
+    {
+        *token_node = current;
+        if (!current && error)
+            *error = 1;
+    }
 }

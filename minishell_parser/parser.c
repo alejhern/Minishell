@@ -14,111 +14,223 @@
 
 int	add_word(t_list *list_og, t_token *token)
 {
-	t_shell					*cond;
-	t_command				*command;
+	t_shell		*cond;
+	t_command	*command;
+	t_list		*last_node;
+	char		*dup_str;
 
-	cond = ft_lstlast(list_og)->content;
-	if (!cond || !cond->command)
+	if (!list_og || !token || !token->token)
+		return (1);
+	last_node = ft_lstlast(list_og);
+	if (!last_node || !last_node->content)
+		return (1);
+	cond = (t_shell *)last_node->content;
+	if (!cond->command)
 	{
-		cond->command = p_lstnew(p_calloc(1, sizeof(t_command)));
-		command = cond->command->content;
+		cond->command = ft_lstnew(ft_calloc(1, sizeof(t_command)));
+		if (!cond->command || !cond->command->content)
+			return (1);
 	}
-	else
-		command = ft_lstlast(cond->command)->content;
-	ft_append_array((void ***) &command->argv, p_strdup(token->token));
-	if (command->argv == 0)
-		exit(0);
+	command = (t_command *)ft_lstlast(cond->command)->content;
+	if (!command)
+		return (1);
+	dup_str = ft_strdup(token->token);
+	if (!dup_str)
+		return (1);
+	ft_append_array((void ***)&command->argv, dup_str);
+	if (!command->argv)
+	{
+		free(dup_str);
+		return (1);
+	}
 	return (0);
 }
 
 int	new_conditional(t_list *list_og, t_token *token)
 {
-	t_list					*list;
+	t_list	*last_node;
+	t_shell	*last_shell;
+	t_shell	*new_shell;
+	t_list	*new_node;
 
-	list = ft_lstlast(list_og);
-	if (!list)
+	if (!list_og || !token || (token->type != TOKEN_AND
+			&& token->type != TOKEN_OR))
 		return (1);
-	if (token->type == 2)
-		((t_shell *) list->content)->type = 2;
-	else if (token->type == 3)
-		((t_shell *) list->content)->type = 1;
-	else
+	last_node = ft_lstlast(list_og);
+	if (!last_node || !last_node->content)
 		return (1);
-	ft_lstadd_back(&list_og, p_lstnew(p_calloc(1, sizeof(t_shell))));
+	last_shell = (t_shell *)last_node->content;
+	last_shell->type = (token->type == TOKEN_AND) ? AND : OR;
+	new_shell = ft_calloc(1, sizeof(t_shell));
+	if (!new_shell)
+		return (1);
+	new_node = ft_lstnew(new_shell);
+	if (!new_node)
+	{
+		free(new_shell);
+		return (1);
+	}
+	ft_lstadd_back(&list_og, new_node);
 	return (0);
 }
 
 int	new_pipe(t_list *cond_og)
 {
-	t_shell					*con;
-	t_list					*list;
-	t_command				*command;
+	t_shell		*con;
+	t_command	*command;
+	t_list		*list;
+	t_list		*last_node;
+	t_list		*last_cmd;
 
-	con = ft_lstlast(cond_og)->content;
-	command = p_calloc(1, sizeof(t_command));
-	list = ft_lstnew(command);
-	if (!list || !command)
-		exit(0);
-	if (((t_command *)ft_lstlast(con->command)->content)->argv == 0)
+	if (!cond_og)
 		return (1);
+	last_node = ft_lstlast(cond_og);
+	if (!last_node || !last_node->content)
+		return (1);
+	con = (t_shell *)last_node->content;
+	if (!con->command)
+		return (1);
+	last_cmd = ft_lstlast(con->command);
+	if (!last_cmd || !last_cmd->content)
+		return (1);
+	if (((t_command *)last_cmd->content)->argv == NULL)
+		return (1);
+	command = ft_calloc(1, sizeof(t_command));
+	if (!command)
+		return (1);
+	list = ft_lstnew(command);
+	if (!list)
+	{
+		free(command);
+		return (1);
+	}
 	ft_lstadd_back(&(con->command), list);
 	return (0);
 }
 
-int	add_redirect(t_list *list_og, t_token **token)
+int	add_redirect(t_list *list_og, t_list **token_node)
 {
-	t_shell					*cond;
-	t_command				*command;
-	t_list					*red;
-	int						type;
+	t_shell		*cond;
+	t_command	*command;
+	t_list		*red;
+	t_redirect	*redirect;
+	t_token		*token;
+	t_list		*last_node;
+	t_command	*new_cmd;
+	t_list		*new_cmd_node;
+	t_token		*next_token;
 
-	type = (*token)->type;
-	cond = ft_lstlast(list_og)->content;
+	if (!list_og || !token_node || !*token_node)
+		return (1);
+	token = (*token_node)->content;
+	if (!token)
+		return (1);
+	last_node = ft_lstlast(list_og);
+	if (!last_node || !last_node->content)
+		return (1);
+	cond = (t_shell *)last_node->content;
 	if (!cond->command)
-		ft_lstadd_back(&list_og, p_lstnew(p_calloc(1, sizeof(t_command))));
-	command = ft_lstlast(cond->command)->content;
-	red = p_lstnew(p_calloc(1, sizeof(t_redirect)));
-	if ((*token)->next->type == 0)
-		((t_redirect *) red->content)->is_double = 0;
-	else if ((*token)->type == (*token)->next->type)
 	{
-		((t_redirect *) red->content)->is_double = 1;
-		*token = (*token)->next;
+		new_cmd = ft_calloc(1, sizeof(t_command));
+		if (!new_cmd)
+			return (1);
+		new_cmd_node = ft_lstnew(new_cmd);
+		if (!new_cmd_node)
+		{
+			free(new_cmd);
+			return (1);
+		}
+		ft_lstadd_back(&cond->command, new_cmd_node);
 	}
-	*token = (*token)->next;
-	((t_redirect *) red->content)->path = p_strdup((*token)->token);
-	if (type == 6)
+	command = (t_command *)ft_lstlast(cond->command)->content;
+	if (!command)
+		return (1);
+	if (!(*token_node)->next)
+		return (1);
+	redirect = ft_calloc(1, sizeof(t_redirect));
+	if (!redirect)
+		return (1);
+	red = ft_lstnew(redirect);
+	if (!red)
+	{
+		free(redirect);
+		return (1);
+	}
+	next_token = (*token_node)->next->content;
+	if (!next_token)
+	{
+		free(redirect);
+		free(red);
+		return (1);
+	}
+	if (next_token->type == TOKEN_WORD)
+		redirect->is_double = 0;
+	else if (token->type == next_token->type)
+	{
+		redirect->is_double = 1;
+		*token_node = (*token_node)->next;
+		next_token = (*token_node)->next->content;
+	}
+	*token_node = (*token_node)->next;
+	if (!*token_node || !next_token || !next_token->token)
+	{
+		free(redirect);
+		free(red);
+		return (1);
+	}
+	redirect->path = ft_strdup(next_token->token);
+	if (!redirect->path)
+	{
+		free(redirect);
+		free(red);
+		return (1);
+	}
+	if (token->type == TOKEN_LESS)
 		ft_lstadd_back(&command->redirect_in, red);
-	else if (type == 7)
+	else if (token->type == TOKEN_GREAT)
 		ft_lstadd_back(&command->redirect_out, red);
+	else
+	{
+		free(redirect->path);
+		free(redirect);
+		free(red);
+		return (1);
+	}
 	return (0);
 }
 
-t_list	*token_parser(t_token *token, int *error, t_token **token_sub)
+t_list	*token_parser(t_list *tokens, int *error)
 {
-	t_token				*aux;
-	t_list				*list;
+	t_list *shells;
+	t_list *current_token;
+	t_token *token;
 
-	if (token == 0 && token_sub != 0)
-		aux = (*token_sub)->next;
-	else
-		aux = token;
-	list = p_calloc(1, sizeof(t_list));
-	list->content = p_calloc(1, sizeof(t_shell));
-	while (aux && *error == 0 && aux->type != 5)
+	if (!tokens || !error)
+		return (NULL);
+	shells = ft_lstnew(ft_calloc(1, sizeof(t_shell)));
+	if (!shells || !shells->content)
+		return (free(shells), NULL);
+	current_token = tokens;
+	while (current_token && *error == 0)
 	{
-		if (aux->type == 0)
-			*error = add_word(list, aux);
-		else if (aux->type == 1)
-			*error = new_pipe(list);
-		else if (aux->type == 2 || aux->type == 3)
-			*error = new_conditional(list, aux);
-		else if (aux->type == 4 || aux->type == 5)
-			*error = new_subshell(list, &aux);
-		else if (aux->type == 7 || aux->type == 6)
-			*error = add_redirect(list, &aux);
-		aux = aux->next;
+		token = current_token->content;
+		if (!token)
+		{
+			*error = 1;
+			break ;
+		}
+		if (token->type == TOKEN_WORD)
+			*error = add_word(shells, token);
+		else if (token->type == TOKEN_PIPE)
+			*error = new_pipe(shells);
+		else if (token->type == TOKEN_AND || token->type == TOKEN_OR)
+			*error = new_conditional(shells, token);
+		else if (token->type == TOKEN_LPAREN || token->type == TOKEN_RPAREN)
+			*error = new_subshell(shells, &current_token);
+		else if (token->type == TOKEN_LESS || token->type == TOKEN_GREAT)
+			*error = add_redirect(shells, &current_token);
+		if (*error == 0)
+			current_token = current_token->next;
 	}
-	parser_check(token_sub, aux);
-	return (list);
+	return (shells);
 }

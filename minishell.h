@@ -34,24 +34,24 @@ typedef enum e_comand_type
 	END
 }							t_type;
 
-typedef enum e_token_type
-{
-	WORD,
-	PIPE,
-	ORC,
-	ANDC,
-	OPEN_SUB,
-	CLOSE_SUB,
-	IN_RED,
-	OUT_RED,
-}							t_token_type;
+typedef enum e_token_type {
+    TOKEN_WORD,
+    TOKEN_PIPE,
+    TOKEN_AND,
+    TOKEN_OR,
+    TOKEN_LPAREN,
+    TOKEN_RPAREN,
+    TOKEN_LESS,
+    TOKEN_GREAT,
+    TOKEN_QUOTE_SINGLE,
+    TOKEN_QUOTE_DOUBLE
+} t_token_type;
 
 typedef struct s_command
 {
 	int						pid;
-	int						is_subshell;
 	char					**argv;
-	void					*subshell;
+	t_list					*subshell;
 	t_list					*redirect_out;
 	t_list					*redirect_in;
 }							t_command;
@@ -66,24 +66,23 @@ typedef struct s_token
 {
 	char					*token;
 	t_token_type			type;
-	struct s_token			*next;
 }							t_token;
 
-void			free_token(t_token *token, int util);
-void			free_shell(t_list *list);
+void			free_token(void *content);
+void			free_shell(void *content);
 
 void			*p_calloc(size_t nmeb, size_t size);
 char			*p_substr(char *s, int st, int l);
 char			*p_strdup(char *s);
 t_list			*p_lstnew(void *content);
 
-int				parser_input(int util);
+int				parser_input();
 
-t_token			*tokenize(char *prompt, int *error);
+t_list			*tokenize(char *prompt, int *error);
 
-t_list			*token_parser(t_token *token, int *error, t_token **token_sub);
+t_list			*token_parser(t_list *tokens, int *error);
 void			parser_check(t_token **t_sub, t_token *t);
-int				token_cond_util(int or, int and, int *error, t_token *next);
+int				token_cond_util(int or, int and, int *error);
 
 void			print_shell(t_list *list);
 void			print_token(t_token *token);
@@ -100,9 +99,9 @@ void			command_lstadd_back(t_command **command, t_command *new_comm);
 void			redirect_lstadd_back(t_redirect **redirect, t_redirect *n_red);
 void			cond_lstadd_back(t_shell **cond, t_shell *new_cond);
 
-int				new_subshell(t_list *list_og, t_token **token);
+int				new_subshell(t_list *list_og, t_list **token);
 
-void			check_tokens(t_token *token, t_token **token_sub, int *error);
-int				check_subshell(t_token **token);
+void			check_tokens(t_list *token, t_list **token_sub, int *error);
+int				check_subshell(t_list **token);
 
 #endif /* MINISHELL_H */
