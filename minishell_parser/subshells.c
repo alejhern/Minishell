@@ -11,111 +11,97 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-/*
-t_list	*subshell_parser(t_token **token, int *error)
-{
-	t_token				*aux;
-	t_list				*list;
 
-	aux = (*token)->next;
-	list = p_calloc(1, sizeof(t_list));
-	list->content = p_calloc(1, sizeof(t_shell));
-	while (aux && *error == 0 && aux->type != 5)
-	{
-		if (aux->type == 0)
-			*error = add_word(list, aux);
-		else if (aux->type == 1)
-			*error = new_pipe(list);
-		else if (aux->type == 2 || aux->type == 3)
-			*error = new_conditional(list, aux);
-		else if (aux->type == 4 || aux->type == 5)
-			*error = new_subshell(list, &aux);
-		else if (aux->type == 7 || aux->type == 6)
-			*error = add_redirect(list, &aux);
-		aux = aux->next;
-	}
-	*token = aux;
-	return (list);
+t_list *subshell_parser(t_list **token_node, int *error)
+{
+    t_list  *list;
+    t_token *token;
+    t_list  *current;
+
+    if (!token_node || !*token_node)
+        return (NULL);    
+    current = (*token_node)->next;
+    list = ft_lstnew(ft_calloc(1, sizeof(t_shell)));
+    if (!list || !list->content)
+    {
+        *error = 1;
+        return (NULL);
+    }
+    while (current && *error == 0)
+    {
+        token = current->content;
+        if (!token)
+        {
+            *error = 1;
+            break;
+        }
+        if (token->type == TOKEN_RPAREN)
+            break;
+        if (token->type == TOKEN_WORD)
+            *error = add_word(list, token);
+        else if (token->type == TOKEN_PIPE)
+            *error = new_pipe(list);
+        else if (token->type == TOKEN_AND || token->type == TOKEN_OR)
+            *error = new_conditional(list, token);
+        else if (token->type == TOKEN_LPAREN)
+            *error = new_subshell(list, &current);
+        else if (token->type == TOKEN_LESS || token->type == TOKEN_GREAT)
+            *error = add_redirect(list, &current);
+        if (*error == 0)
+            current = current->next;
+    }
+    *token_node = current;
+    return (list);
 }
-*/
+
 int new_subshell(t_list *list_og, t_list **token_node)
 {
     t_shell     *cond;
     t_command   *command;
     int         error;
-    t_list      *last_node;
 
     if (!list_og || !token_node || !*token_node)
         return (1);
 
-    last_node = ft_lstlast(list_og);
+    t_list *last_node = ft_lstlast(list_og);
     if (!last_node || !last_node->content)
         return (1);
 
     cond = (t_shell *)last_node->content;
     error = 0;
 
-    // Initialize command structure if needed
     if (!cond->command)
     {
         cond->command = ft_lstnew(ft_calloc(1, sizeof(t_command)));
         if (!cond->command || !cond->command->content)
             return (1);
     }
-
     command = (t_command *)ft_lstlast(cond->command)->content;
     if (!command)
         return (1);
-
-    // Parse the subshell tokens
-    command->subshell = token_parser(*token_node, &error);
-    if (error)
-        return (error);
-
-    // Advance past the closing parenthesis
-    while (*token_node && ((t_token *)(*token_node)->content)->type != TOKEN_RPAREN)
-        *token_node = (*token_node)->next;
-
-    if (!*token_node)
-        return (1);
-
-    return (0);
+    command->subshell = subshell_parser(token_node, &error);
+    return (error);
 }
 
 int check_subshell(t_list **token_node)
 {
-    t_token *next;
     int     error;
+    t_token *token;
+    t_token *next_token;
 
     if (!token_node || !*token_node || !(*token_node)->content)
         return (1);
+    token = (*token_node)->content;
     if (!(*token_node)->next || !(*token_node)->next->content)
         return (1);
-    next = (t_token *)(*token_node)->next->content;
+    next_token = (*token_node)->next->content;
     error = 0;
-    // Check valid tokens after opening parenthesis
-    if (next->type == TOKEN_WORD ||        // 0
-        next->type == TOKEN_LPAREN ||      // 4
-        next->type == TOKEN_LESS ||        // 6
-        next->type == TOKEN_GREAT)        // 7
-    {
+    if (token->type == TOKEN_WORD || 
+        next_token->type == TOKEN_LPAREN ||
+        next_token->type == TOKEN_LESS || 
+        next_token->type == TOKEN_GREAT)
         check_tokens(NULL, token_node, &error);
-    }
     else
-    {
         error = 1;
-    }
-
-    // Additional validation
-    if (!error && (*token_node)->next && (*token_node)->next->content)
-    {
-        next = (t_token *)(*token_node)->next->content;
-        if (next->type == TOKEN_LPAREN ||  // OPEN_SUB
-            next->type == TOKEN_WORD)      // WORD
-        {
-            error = 1;
-        }
-    }
-
     return (error);
 }

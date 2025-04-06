@@ -20,7 +20,6 @@ SRCS	= main.c \
 		  minishell_parser/printer.c \
 		  minishell_parser/tokenizer.c \
 		  minishell_parser/tokenizer_utils.c \
-		  minishell_parser/token_lists.c \
 		  minishell_parser/subshells.c \
 		  minishell_parser/token_checker.c \
 		  minishell_utils/parser_utils.c \
@@ -60,7 +59,6 @@ $(LIBFT):
 		git clone https://github.com/alejhern/libft.git $(LIB_DIR); \
 	fi
 	@make -C $(LIB_DIR)
-	@make -C $(LIB_DIR) bonus
 
 clean:
 	@make -C $(LIB_DIR) clean

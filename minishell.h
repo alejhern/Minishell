@@ -93,6 +93,10 @@ t_redirect		*redirect_lstlast(t_redirect *redirect);
 t_shell			*cond_lstlast(t_shell *cond);
 
 int				is_del(char c);
+int				add_redirect(t_list *list_og, t_list **token);
+int				add_word(t_list *list_og, t_token *token);
+int				new_pipe(t_list *list_og);
+int				new_conditional(t_list *list_og, t_token *token);
 
 void			token_lstadd_back(t_token **token, t_token *new_token);
 void			command_lstadd_back(t_command **command, t_command *new_comm);
