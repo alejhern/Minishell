@@ -6,7 +6,7 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/04/02 20:46:50 by pafranco         ###   ########.fr        #
+#    Updated: 2025/03/26 18:53:39 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,11 +20,8 @@ SRCS	= main.c \
 		  minishell_parser/printer.c \
 		  minishell_parser/tokenizer.c \
 		  minishell_parser/tokenizer_utils.c \
-		  minishell_parser/tokenize_expansion.c \
-		  minishell_parser/token_lists.c \
 		  minishell_parser/subshells.c \
 		  minishell_parser/token_checker.c \
-		  minishell_parser/heredoc.c \
 		  minishell_utils/parser_utils.c \
 
 OBJS	= ${SRCS:.c=.o}
@@ -62,7 +59,6 @@ $(LIBFT):
 		git clone https://github.com/alejhern/libft.git $(LIB_DIR); \
 	fi
 	@make -C $(LIB_DIR)
-	@make -C $(LIB_DIR) bonus
 
 clean:
 	@make -C $(LIB_DIR) clean
