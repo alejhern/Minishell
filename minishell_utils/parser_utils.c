@@ -32,7 +32,7 @@ void free_comand(void *content)
 	if (!command)
 		return;
 	ft_free_array((void ***)&command->argv);
-	ft_lstclear(&command->subshell, free_comand);
+	ft_lstclear(&command->subshell, free_shell);
 	ft_lstclear(&command->redirect_out, free_redirect);
 	ft_lstclear(&command->redirect_in, free_redirect);
 	free(command);

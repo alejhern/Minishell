@@ -16,10 +16,10 @@ void	token_cond(char *prompt, int *i, int *error, t_list **token_list)
 {
 	t_token	*new_token;
 	t_list	*new_node;
-	int		or;
 	int		and;
 	int		j;
 
+	int or ;
 	or = 0;
 	and = 0;
 	j = 0;
@@ -78,7 +78,7 @@ void	token_sub_red(char *prompt, int *i, int *error, t_list **token_list)
 		return ;
 	}
 	new_token->type = token_sub_type(prompt[*i]);
-	if (new_token->type == (t_token_type) -1)
+	if (new_token->type == (t_token_type)-1)
 		return (*error = 1, free(new_token), ft_lstclear(token_list,
 				free_token));
 	new_node = ft_lstnew(new_token);
@@ -107,7 +107,7 @@ void	token_quote(char *prompt, int *i, int *error, t_list **token_list)
 		j++;
 	if (prompt[*i + j] == '\0')
 		return (*error = 1, free(new_token), ft_lstclear(token_list,
-			free_token));
+				free_token));
 	j++;
 	new_token->token = ft_substr(prompt, *i, j);
 	if (prompt[*i] == '\'')
@@ -144,8 +144,8 @@ void	token_word(char *prompt, int *i, t_list **token_list)
 		return (free(new_token), ft_lstclear(token_list, free_token));
 	new_node = ft_lstnew(new_token);
 	if (!new_node)
-	return (free(new_token->token), free(new_token),
-			ft_lstclear(token_list, free_token));
+		return (free(new_token->token), free(new_token), ft_lstclear(token_list,
+				free_token));
 	ft_lstadd_back(token_list, new_node);
 	*i += j;
 }
@@ -163,11 +163,11 @@ t_list	*tokenize(char *prompt, int *error)
 			i++;
 		if (!prompt[i])
 			break ;
-		if (prompt[i] == '&' || prompt[i] == '|')
-			token_cond(prompt, &i, error, &token_list);
-		else if (prompt[i] == '(' || prompt[i] == ')' || prompt[i] == '>'
+		if (prompt[i] == '(' || prompt[i] == ')' || prompt[i] == '>'
 			|| prompt[i] == '<')
 			token_sub_red(prompt, &i, error, &token_list);
+		else if (prompt[i] == '&' || prompt[i] == '|')
+			token_cond(prompt, &i, error, &token_list);
 		else if (prompt[i] == '\'' || prompt[i] == '"')
 			token_quote(prompt, &i, error, &token_list);
 		else

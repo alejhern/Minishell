@@ -83,25 +83,41 @@ int new_subshell(t_list *list_og, t_list **token_node)
     return (error);
 }
 
-int check_subshell(t_list **token_node)
+int check_subshell(t_list **token_node) 
 {
-    int     error;
+    t_list  *current;
     t_token *token;
-    t_token *next_token;
+    int     error = 0;
 
     if (!token_node || !*token_node || !(*token_node)->content)
         return (1);
+
     token = (*token_node)->content;
-    if (!(*token_node)->next || !(*token_node)->next->content)
-        return (1);
-    next_token = (*token_node)->next->content;
-    error = 0;
-    if (token->type == TOKEN_WORD || 
-        next_token->type == TOKEN_LPAREN ||
-        next_token->type == TOKEN_LESS || 
-        next_token->type == TOKEN_GREAT)
-        check_tokens(NULL, token_node, &error);
-    else
-        error = 1;
+    if (token->type != TOKEN_LPAREN)
+        return (1);  // No es una subshell si no empieza con '('
+
+    current = (*token_node)->next;
+    while (current && error == 0)
+    {
+        token = (t_token *)current->content;
+        if (!token)
+            return (1);
+        if (token->type == TOKEN_RPAREN)
+            break;
+        if (token->type == TOKEN_WORD)
+            error = check_word(current);
+        else if (token->type == TOKEN_PIPE)
+            error = check_pipe(current);
+        else if (token->type == TOKEN_AND || token->type == TOKEN_OR)
+            error = check_conditional(current);
+        else if (token->type == TOKEN_LPAREN)
+            error = check_subshell(&current);
+        else if (token->type == TOKEN_LESS || token->type == TOKEN_GREAT)
+            error = check_redirection(&current);
+        current = current->next;
+    }
+    if (!current || ((t_token *)current->content)->type != TOKEN_RPAREN)
+        return (1); // No se cerró la subshell
+    *token_node = current; // Avanzamos el puntero al ')'
     return (error);
 }

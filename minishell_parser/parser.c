@@ -90,6 +90,7 @@ int	new_pipe(t_list *cond_og)
 	con = (t_shell *)last_node->content;
 	if (!con->command)
 		return (1);
+	con->type = PIPE;
 	last_cmd = ft_lstlast(con->command);
 	if (!last_cmd || !last_cmd->content)
 		return (1);

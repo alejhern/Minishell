@@ -31,6 +31,7 @@ typedef enum e_comand_type
 {
 	AND,
 	OR,
+	PIPE,
 	END
 }							t_type;
 
@@ -105,7 +106,11 @@ void			cond_lstadd_back(t_shell **cond, t_shell *new_cond);
 
 int				new_subshell(t_list *list_og, t_list **token);
 
+int				check_word(t_list *token_node);
+int				check_pipe(t_list *token_node);
+int				check_conditional(t_list *token_node);
+int				check_subshell(t_list **token_node);
+int				check_redirection(t_list **token_node);
 void			check_tokens(t_list *token, t_list **token_sub, int *error);
-int				check_subshell(t_list **token);
 
 #endif /* MINISHELL_H */
