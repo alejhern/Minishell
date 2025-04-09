@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 18:46:25 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/02 20:47:39 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/09 12:14:35 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,10 +38,10 @@ int	new_conditional(t_list *list_og, t_token *token)
 	list = ft_lstlast(list_og);
 	if (!list)
 		return (1);
-	if (token->type == 2)
-		((t_shell *) list->content)->type = 2;
-	else if (token->type == 3)
-		((t_shell *) list->content)->type = 1;
+	if (token->type == ORC)
+		((t_shell *) list->content)->type = OR;
+	else if (token->type == ANDC)
+		((t_shell *) list->content)->type = AND;
 	else
 		return (1);
 	ft_lstadd_back(&list_og, p_lstnew(p_calloc(1, sizeof(t_shell))));
@@ -53,13 +53,15 @@ int	new_pipe(t_list *cond_og)
 	t_shell					*con;
 	t_list					*list;
 	t_command				*command;
+	t_command				*command2;
 
 	con = ft_lstlast(cond_og)->content;
 	command = p_calloc(1, sizeof(t_command));
 	list = ft_lstnew(command);
 	if (!list || !command)
 		exit(0);
-	if (((t_command *)ft_lstlast(con->command)->content)->argv == 0)
+	command2 = (ft_lstlast(con->command)->content);
+	if (command2->argv == 0 && command2->subshell == 0)
 		return (1);
 	ft_lstadd_back(&(con->command), list);
 	return (0);
@@ -78,7 +80,7 @@ int	add_redirect(t_list *list_og, t_token **token)
 		ft_lstadd_back(&list_og, p_lstnew(p_calloc(1, sizeof(t_command))));
 	command = ft_lstlast(cond->command)->content;
 	red = p_lstnew(p_calloc(1, sizeof(t_redirect)));
-	if ((*token)->next->type == 0)
+	if ((*token)->next->type == WORD)
 		((t_redirect *) red->content)->is_double = 0;
 	else if ((*token)->type == (*token)->next->type)
 	{
@@ -87,9 +89,9 @@ int	add_redirect(t_list *list_og, t_token **token)
 	}
 	*token = (*token)->next;
 	heredoc(*token, ((t_redirect *) red->content), type);
-	if (type == 6)
+	if (type == IN_RED)
 		ft_lstadd_back(&command->redirect_in, red);
-	else if (type == 7)
+	else if (type == OUT_RED)
 		ft_lstadd_back(&command->redirect_out, red);
 	return (0);
 }
@@ -105,17 +107,17 @@ t_list	*token_parser(t_token *token, int *error, t_token **token_sub)
 		aux = token;
 	list = p_calloc(1, sizeof(t_list));
 	list->content = p_calloc(1, sizeof(t_shell));
-	while (aux && *error == 0 && aux->type != 5)
+	while (aux && *error == 0 && aux->type != CLOSE_SUB)
 	{
-		if (aux->type == 0)
+		if (aux->type == WORD)
 			*error = add_word(list, aux);
-		else if (aux->type == 1)
+		else if (aux->type == PIPE)
 			*error = new_pipe(list);
-		else if (aux->type == 2 || aux->type == 3)
+		else if (aux->type == ORC || aux->type == ANDC)
 			*error = new_conditional(list, aux);
-		else if (aux->type == 4 || aux->type == 5)
+		else if (aux->type == OPEN_SUB || aux->type == CLOSE_SUB)
 			*error = new_subshell(list, &aux);
-		else if (aux->type == 7 || aux->type == 6)
+		else if (aux->type == IN_RED || aux->type == OUT_RED)
 			*error = add_redirect(list, &aux);
 		aux = aux->next;
 	}

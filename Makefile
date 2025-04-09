@@ -6,7 +6,7 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/04/02 20:46:50 by pafranco         ###   ########.fr        #
+#    Updated: 2025/04/09 15:04:34 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,28 +15,25 @@
 # **************************************************************************** #
 
 SRCS	= main.c \
-		  minishell_parser/input.c \
-		  minishell_parser/parser.c \
-		  minishell_parser/printer.c \
-		  minishell_parser/tokenizer.c \
-		  minishell_parser/tokenizer_utils.c \
-		  minishell_parser/tokenize_expansion.c \
-		  minishell_parser/token_lists.c \
-		  minishell_parser/subshells.c \
-		  minishell_parser/token_checker.c \
-		  minishell_parser/heredoc.c \
-		  minishell_utils/parser_utils.c \
+		  parser/input.c \
+		  parser/parser.c \
+		  parser/printer.c \
+		  parser/tokenizer.c \
+		  parser/tokenizer_utils.c \
+		  parser/tokenize_expansion.c \
+		  parser/token_lists.c \
+		  parser/subshells.c \
+		  parser/token_checker.c \
+		  parser/heredoc.c \
+		  parser/parser_utils.c \
 
 OBJS	= ${SRCS:.c=.o}
 
 LIB_DIR = libft/
 LIBFT = $(LIB_DIR)libft.a
 
-#READLINE = lib/libhistory.a \
-#		   lib/libreadline.a \
-
 CC = cc -g
-CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) -lreadline -ltinfo# -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) # -fsanitize=address
 
 DEPS	= ${SRCS:.c=.d}
 
@@ -52,7 +49,7 @@ all:		$(LIBFT) ${NAME}
 
 -include ${DEPS}
 $(NAME):	$(OBJS) $(LIBFT)
-	$(CC) ${CFLAGS} $(OBJS) -L$(LIB_DIR) -lft -o ${NAME} -MMD
+	$(CC) ${CFLAGS} $(OBJS) -L$(LIB_DIR) -lreadline -lft -o ${NAME} -MMD
 
 %.o: %.c Makefile
 	$(CC) ${CFLAGS} -I $(LIB_DIR) -o $@ -c $<

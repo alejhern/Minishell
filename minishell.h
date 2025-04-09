@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/02 20:46:30 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/09 18:59:13 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <readline/history.h>
 # include <unistd.h>
 # include <limits.h>
+# include "libft/pipex.h"
 
 # include "libft/libft.h"
 
@@ -108,5 +109,10 @@ void			check_tokens(t_token *token, t_token **token_sub, int *error);
 int				check_subshell(t_token **token);
 
 void	heredoc(t_token *token, t_redirect *red, int type);
+
+//HISTORY
+int				add_to_history(char **history, char *line, int size);
+void			commit_history(char **history, int size);
+char			**get_history(int *size);
 
 #endif /* MINISHELL_H */

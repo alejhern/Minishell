@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 12:52:18 by pafranco          #+#    #+#             */
-/*   Updated: 2025/03/17 17:14:28 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/07 18:28:54 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,6 @@ t_list	*p_lstnew(void *content)
 
 int	is_del(char c)
 {
-	return (c == '<' || c == '>' || c == '"' || c == '\'' || c == '&' ||
+	return (c == '<' || c == '>' || c == '&' ||
 				c == '|' || c == '(' || c == ')');
 }
