@@ -49,9 +49,9 @@ void	free_comm(void *content)
 
 void	free_shell(void *content)
 {
-	t_shell	*cond;
+	t_shell	*shell;
 
-	cond = content;
-	ft_lstclear(&cond->command, free_comm);
-	free(cond);
+	shell = content;
+	ft_lstclear(&shell->commands, free_comm);
+	free(shell);
 }

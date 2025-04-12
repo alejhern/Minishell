@@ -14,19 +14,19 @@
 
 int	new_subshell(t_list *list_og, t_token **token)
 {
-	t_shell					*cond;
+	t_shell					*shell;
 	t_command				*command;
 	int						error;
 
-	cond = ft_lstlast(list_og)->content;
+	shell = ft_lstlast(list_og)->content;
 	error = 0;
-	if (!cond || !cond->command)
+	if (!shell || !shell->commands)
 	{
-		cond->command = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
-		command = cond->command->content;
+		shell->commands = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
+		command = shell->commands->content;
 	}
 	else
-		command = ft_lstlast(cond->command)->content;
+		command = ft_lstlast(shell->commands)->content;
 	command->is_subshell = 1;
 	command->subshell = token_parser(0, &error, token);
 	return (error);

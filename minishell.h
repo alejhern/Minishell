@@ -74,7 +74,7 @@ typedef struct s_token
 // ╚██████╔╝   ██║   ██║███████╗███████║
 //  ╚═════╝    ╚═╝   ╚═╝╚══════╝╚══════╝
 
-void				print_shell(void *cond);
+void				print_shell(void *shell);
 void				print_token(t_token *token);
 
 void				free_token(t_token *token);
