@@ -22,22 +22,22 @@ char	*get_expanse(char *var)
 
 void	token_word2(char *prompt, int *i, t_token **token, int quotes)
 {
-	t_token				*next;
-	int					j;
+	t_token	*next;
+	int		j;
 
 	j = 0;
 	next = ft_calloc(1, sizeof(t_token));
 	if (!token)
-		free_token(*token, 1);
+		free_token(*token);
 	if (quotes != 0)
 		*i += 1;
 	while ((prompt[*i + j] != '$' && quotes != 1) && prompt[*i + j] != '\''
-			&& prompt[*i + j] != '\"'  && prompt[*i + j])
+		&& prompt[*i + j] != '\"' && prompt[*i + j])
 		j++;
 	token_lstadd_back(token, next);
 	next->token = ft_substr(prompt, *i, j);
 	if (!next->token)
-		free_token(*token, 1);
+		free_token(*token);
 	if (quotes != 0 && (prompt[*i + j] == '\'' || prompt[*i + j] == '\"'))
 		j++;
 	*i += j;
@@ -45,17 +45,17 @@ void	token_word2(char *prompt, int *i, t_token **token, int quotes)
 
 void	token_expanse(char *prompt, int *i, t_token **token)
 {
-	t_token				*next;
-	char				*var;
-	int					j;
+	t_token	*next;
+	char	*var;
+	int		j;
 
 	j = 1;
 	next = ft_calloc(1, sizeof(t_token));
 	if (!token)
 		exit(0);
 	while (prompt[*i + j] != ' ' && prompt[*i + j] != '	' && prompt[*i + j]
-			&& prompt[*i + j] != '$' && prompt[*i + j] != '\''
-			&& prompt[*i + j] != '\"')
+		&& prompt[*i + j] != '$' && prompt[*i + j] != '\'' && prompt[*i
+			+ j] != '\"')
 		j++;
 	if (prompt[*i + j] == '$')
 		j = 2;
@@ -72,9 +72,9 @@ void	token_expanse(char *prompt, int *i, t_token **token)
 
 char	*join_tokens(t_token *token)
 {
-	t_token				*aux;
-	char				*new;
-	char				*temp;
+	t_token	*aux;
+	char	*new;
+	char	*temp;
 
 	new = 0;
 	while (token)
@@ -95,9 +95,9 @@ char	*join_tokens(t_token *token)
 
 char	*expand(char *prompt)
 {
-	int				i;
-	char			*new;
-	t_token			*token;
+	int		i;
+	char	*new;
+	t_token	*token;
 
 	i = 0;
 	token = 0;

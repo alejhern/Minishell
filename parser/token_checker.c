@@ -14,9 +14,8 @@
 
 int	check_word(t_token *token)
 {
-	char				*str;
-	char				*var;
-
+	char	*str;
+	char	*var;
 
 	if (token->next && token->next->type == OPEN_SUB)
 		return (1);
@@ -57,7 +56,7 @@ int	check_redirection(t_token **token)
 
 void	check_tokens(t_token *token, t_token **token_sub, int *error)
 {
-	t_token				*aux;
+	t_token	*aux;
 
 	if (token != 0)
 		aux = token;

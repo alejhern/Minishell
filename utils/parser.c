@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   tokenizer_utils.c                                  :+:      :+:    :+:   */
+/*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/19 19:53:42 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/07 18:29:11 by pafranco         ###   ########.fr       */
+/*   Created: 2025/02/18 12:52:18 by pafranco          #+#    #+#             */
+/*   Updated: 2025/04/12 14:07:59 by amhernandez      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,10 +37,25 @@ void	parser_check(t_token **t_sub, t_token *t)
 
 int	remove_quotes(t_token *token)
 {
-	char				*str;
+	char	*str;
 
 	str = ft_substr(token->token, 1, ft_strlen(token->token) - 2);
 	free(token->token);
 	token->token = str;
 	return (0);
+}
+
+void	heredoc(t_token *token, t_redirect *red, int type)
+{
+	if (red->is_double == 0 || type == 7)
+	{
+		red->path = ft_strdup(token->token);
+		return ;
+	}
+}
+
+int	is_del(char c)
+{
+	return (c == '<' || c == '>' || c == '&' || c == '|' || c == '('
+		|| c == ')');
 }

@@ -22,7 +22,7 @@ int	new_subshell(t_list *list_og, t_token **token)
 	error = 0;
 	if (!cond || !cond->command)
 	{
-		cond->command = p_lstnew(p_calloc(1, sizeof(t_command)));
+		cond->command = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
 		command = cond->command->content;
 	}
 	else

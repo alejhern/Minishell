@@ -12,15 +12,34 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv)
+void	line_shell()
 {
-	int				useless;
+	int				error;
+	char			*line;
+	t_list			*shells;
+	t_token			*token;
 
-	if (argv)
-		useless = 1 + 1;
-	else
-		useless = 1 + 1;
-	if (useless == 3)
-		printf("🤯");
-	parser_input(argc == 0);
+	error = 0;
+	while (1)
+	{
+		line = readline("shell petit: ");
+		if (line == 0)
+			ft_perror_exit("EOF");
+		token = tokenize(line, &error);
+		check_tokens(token, 0, &error);
+		if (error != 0)
+			ft_error_exit("SYNTAX ERROR");
+		shells = token_parser(token, &error, 0);
+		if (!shells)
+			ft_error_exit("PARSER ERROR");
+		ft_lstiter(shells, print_shell);
+		ft_lstclear(&shells, free_shell);
+		free_token(token);
+	}
+}
+
+int	main(void)
+{
+	line_shell();
+	return (0);
 }

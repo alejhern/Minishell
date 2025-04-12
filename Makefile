@@ -14,18 +14,11 @@
 #                                 VARIABLES                                    #
 # **************************************************************************** #
 
-SRCS	= main.c \
-		  parser/input.c \
-		  parser/parser.c \
-		  parser/printer.c \
-		  parser/tokenizer.c \
-		  parser/tokenizer_utils.c \
-		  parser/tokenize_expansion.c \
-		  parser/token_lists.c \
-		  parser/subshells.c \
-		  parser/token_checker.c \
-		  parser/heredoc.c \
-		  parser/parser_utils.c \
+UTIL_DIR = ./utils/
+PARSE_DIR = ./parser/
+
+SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) -type f -name "*.c") \
+		main.c \
 
 OBJS	= ${SRCS:.c=.o}
 
@@ -59,7 +52,6 @@ $(LIBFT):
 		git clone https://github.com/alejhern/libft.git $(LIB_DIR); \
 	fi
 	@make -C $(LIB_DIR)
-	@make -C $(LIB_DIR) bonus
 
 clean:
 	@make -C $(LIB_DIR) clean
