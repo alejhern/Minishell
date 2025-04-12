@@ -36,10 +36,10 @@ void	print_red(void *content)
 	t_redirect	*red;
 
 	red = content;
-    ft_printf("\t\t\t%s", red->path);
+	ft_printf("\t\t\t%s", red->path);
 	if (red->is_double)
-        ft_putstr_fd(" append", STDOUT_FILENO);
-    ft_putendl_fd("", STDOUT_FILENO);
+		ft_putstr_fd(" append", STDOUT_FILENO);
+	ft_putendl_fd("", STDOUT_FILENO);
 }
 
 void	print_comand(void *content)
