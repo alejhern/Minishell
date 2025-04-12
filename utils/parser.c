@@ -47,9 +47,10 @@ int	remove_quotes(t_token *token)
 
 void	heredoc(t_token *token, t_redirect *red, int type)
 {
-	if (red->is_double == 0 || type == 7)
+	if (red->is_double == 0 || type == OUT_RED)
 	{
 		red->path = ft_strdup(token->token);
+		token->type = PASS;
 		return ;
 	}
 }

@@ -12,30 +12,30 @@
 
 #include "../minishell.h"
 
-int	add_word(t_list *list_og, t_token *token)
+int	add_word(t_list *shells, t_token *token)
 {
-	t_shell		*cond;
+	t_shell		*shell;
 	t_command	*command;
 
-	cond = ft_lstlast(list_og)->content;
-	if (!cond || !cond->command)
+	shell = ft_lstlast(shells)->content;
+	if (!shell || !shell->command)
 	{
-		cond->command = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
-		command = cond->command->content;
+		shell->command = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
+		command = shell->command->content;
 	}
 	else
-		command = ft_lstlast(cond->command)->content;
+		command = ft_lstlast(shell->command)->content;
 	ft_append_array((void ***)&command->argv, ft_save_strdup(token->token));
 	if (command->argv == 0)
 		exit(0);
 	return (0);
 }
 
-int	new_conditional(t_list *list_og, t_token *token)
+int	new_conditional(t_list *shells, t_token *token)
 {
 	t_list	*list;
 
-	list = ft_lstlast(list_og);
+	list = ft_lstlast(shells);
 	if (!list)
 		return (1);
 	if (token->type == ORC)
@@ -44,7 +44,7 @@ int	new_conditional(t_list *list_og, t_token *token)
 		((t_shell *)list->content)->type = AND;
 	else
 		return (1);
-	ft_lstadd_back(&list_og, ft_save_lstnew(ft_save_calloc(1,
+	ft_lstadd_back(&shells, ft_save_lstnew(ft_save_calloc(1,
 				sizeof(t_shell))));
 	return (0);
 }
@@ -68,19 +68,18 @@ int	new_pipe(t_list *cond_og)
 	return (0);
 }
 
-int	add_redirect(t_list *list_og, t_token **token)
+int	add_redirect(t_list *shells, t_token **token)
 {
-	t_shell		*cond;
+	t_shell		*shell;
 	t_command	*command;
 	t_list		*red;
 	int			type;
 
 	type = (*token)->type;
-	cond = ft_lstlast(list_og)->content;
-	if (!cond->command)
-		ft_lstadd_back(&list_og, ft_save_lstnew(ft_save_calloc(1,
-					sizeof(t_command))));
-	command = ft_lstlast(cond->command)->content;
+	shell = ft_lstlast(shells)->content;
+	if (!shell->command)
+		shell->command = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
+	command = ft_lstlast(shell->command)->content;
 	red = ft_save_lstnew(ft_save_calloc(1, sizeof(t_redirect)));
 	if ((*token)->next->type == WORD)
 		((t_redirect *)red->content)->is_double = 0;
@@ -110,14 +109,14 @@ t_list	*token_parser(t_token *token, int *error, t_token **token_sub)
 	list->content = ft_save_calloc(1, sizeof(t_shell));
 	while (aux && *error == 0 && aux->type != CLOSE_SUB)
 	{
-		if (aux->type == WORD)
+		if (aux->type == OPEN_SUB || aux->type == CLOSE_SUB)
+			*error = new_subshell(list, &aux);
+		else if (aux->type == WORD)
 			*error = add_word(list, aux);
 		else if (aux->type == PIPE)
 			*error = new_pipe(list);
 		else if (aux->type == ORC || aux->type == ANDC)
 			*error = new_conditional(list, aux);
-		else if (aux->type == OPEN_SUB || aux->type == CLOSE_SUB)
-			*error = new_subshell(list, &aux);
 		else if (aux->type == IN_RED || aux->type == OUT_RED)
 			*error = add_redirect(list, &aux);
 		aux = aux->next;

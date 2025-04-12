@@ -26,7 +26,7 @@ typedef struct s_redirect
 
 typedef enum e_comand_type
 {
-	END = 0,
+	END,
 	AND,
 	OR
 }					t_type;
@@ -41,6 +41,7 @@ typedef enum e_token_type
 	CLOSE_SUB,
 	IN_RED,
 	OUT_RED,
+	PASS
 }					t_token_type;
 
 typedef struct s_command
