@@ -57,7 +57,7 @@ typedef struct s_command
 typedef struct s_shell
 {
 	t_type			type;
-	t_list			*command;
+	t_list			*commands;
 }					t_shell;
 
 typedef struct s_token
@@ -104,6 +104,15 @@ int					new_subshell(t_list *list_og, t_token **token);
 void				check_tokens(t_token *token, t_token **token_sub,
 						int *error);
 int					check_subshell(t_token **token);
+
+// ███████╗██╗  ██╗███████╗ ██████╗
+// ██╔════╝╚██╗██╔╝██╔════╝██╔════╝
+// █████╗   ╚███╔╝ █████╗  ██║     
+// ██╔══╝   ██╔██╗ ██╔══╝  ██║     
+// ███████╗██╔╝ ██╗███████╗╚██████╗
+// ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
+
+int					launch_commands(t_list *shells, char **env);
 
 // ██╗  ██╗██╗███████╗████████╗ ██████╗ ██████╗ ██╗   ██╗
 // ██║  ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝

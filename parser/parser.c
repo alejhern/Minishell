@@ -18,13 +18,13 @@ int	add_word(t_list *shells, t_token *token)
 	t_command	*command;
 
 	shell = ft_lstlast(shells)->content;
-	if (!shell || !shell->command)
+	if (!shell || !shell->commands)
 	{
-		shell->command = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
-		command = shell->command->content;
+		shell->commands = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
+		command = shell->commands->content;
 	}
 	else
-		command = ft_lstlast(shell->command)->content;
+		command = ft_lstlast(shell->commands)->content;
 	ft_append_array((void ***)&command->comand, ft_save_strdup(token->token));
 	if (command->comand == 0)
 		exit(0);
@@ -51,20 +51,20 @@ int	new_conditional(t_list *shells, t_token *token)
 
 int	new_pipe(t_list *cond_og)
 {
-	t_shell		*con;
+	t_shell		*shell;
 	t_list		*list;
 	t_command	*command;
 	t_command	*command2;
 
-	con = ft_lstlast(cond_og)->content;
+	shell = ft_lstlast(cond_og)->content;
 	command = ft_save_calloc(1, sizeof(t_command));
 	list = ft_lstnew(command);
 	if (!list || !command)
 		exit(0);
-	command2 = (ft_lstlast(con->command)->content);
+	command2 = (ft_lstlast(shell->commands)->content);
 	if (command2->comand == 0 && command2->subshell == 0)
 		return (1);
-	ft_lstadd_back(&(con->command), list);
+	ft_lstadd_back(&(shell->commands), list);
 	return (0);
 }
 
@@ -77,9 +77,9 @@ int	add_redirect(t_list *shells, t_token **token)
 
 	type = (*token)->type;
 	shell = ft_lstlast(shells)->content;
-	if (!shell->command)
-		shell->command = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
-	command = ft_lstlast(shell->command)->content;
+	if (!shell->commands)
+		shell->commands = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
+	command = ft_lstlast(shell->commands)->content;
 	red = ft_save_lstnew(ft_save_calloc(1, sizeof(t_redirect)));
 	if ((*token)->next->type == WORD)
 		((t_redirect *)red->content)->is_double = 0;

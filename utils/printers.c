@@ -75,5 +75,5 @@ void	print_shell(void *content)
 
 	shell = content;
 	ft_printf("Conditional: \n	type %d\n", shell->type);
-	ft_lstiter(shell->command, print_comand);
+	ft_lstiter(shell->commands, print_comand);
 }
