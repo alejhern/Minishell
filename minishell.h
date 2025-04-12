@@ -48,7 +48,7 @@ typedef struct s_command
 {
 	int				pid;
 	int				is_subshell;
-	char			**argv;
+	char			**comand;
 	t_list			*subshell;
 	t_list			*redirect_out;
 	t_list			*redirect_in;

@@ -36,25 +36,28 @@ void	print_red(void *content)
 	t_redirect	*red;
 
 	red = content;
-	ft_printf("			%s   %i\n", red->path, red->is_double);
+    ft_printf("\t\t\t%s", red->path);
+	if (red->is_double)
+        ft_putstr_fd(" append", STDOUT_FILENO);
+    ft_putendl_fd("", STDOUT_FILENO);
 }
 
 void	print_comand(void *content)
 {
-	char		**argv;
+	char		**str_comand;
 	int			i;
 	t_command	*comand;
 
 	i = -1;
 	comand = content;
-	ft_printf("	Command:\n		argv:");
-	if (comand->is_subshell == 0)
+	ft_printf("	Command:\n		comand:");
+	if (comand->comand)
 	{
-		argv = comand->argv;
-		while (argv && argv[++i])
-			ft_printf("\n			%s", argv[i]);
+		str_comand = comand->comand;
+		while (comand && str_comand[++i])
+			ft_printf(" %s", str_comand[i]);
 	}
-	else
+	else if (comand->subshell)
 	{
 		ft_printf("\n**************SUBSHELL_IN****************\n");
 		ft_lstiter(comand->subshell, print_shell);

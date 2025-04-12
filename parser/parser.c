@@ -25,8 +25,8 @@ int	add_word(t_list *shells, t_token *token)
 	}
 	else
 		command = ft_lstlast(shell->command)->content;
-	ft_append_array((void ***)&command->argv, ft_save_strdup(token->token));
-	if (command->argv == 0)
+	ft_append_array((void ***)&command->comand, ft_save_strdup(token->token));
+	if (command->comand == 0)
 		exit(0);
 	return (0);
 }
@@ -62,7 +62,7 @@ int	new_pipe(t_list *cond_og)
 	if (!list || !command)
 		exit(0);
 	command2 = (ft_lstlast(con->command)->content);
-	if (command2->argv == 0 && command2->subshell == 0)
+	if (command2->comand == 0 && command2->subshell == 0)
 		return (1);
 	ft_lstadd_back(&(con->command), list);
 	return (0);

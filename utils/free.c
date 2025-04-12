@@ -40,7 +40,7 @@ void	free_comm(void *content)
 	t_command	*command;
 
 	command = content;
-	ft_free_array((void ***)&command->argv);
+	ft_free_array((void ***)&command->comand);
 	ft_lstclear(&command->subshell, free_shell);
 	ft_lstclear(&command->redirect_out, free_redirect);
 	ft_lstclear(&command->redirect_in, free_redirect);
