@@ -12,36 +12,46 @@
 
 #include "minishell.h"
 
-static char	*get_line_prompt(void)
+char	*get_line_prompt(void)
 {
-	char		*prompt;
-	char		*line;
+	char	*cwd;
+	char	*user;
+	char	*line;
+	char	*home;
 
-	prompt = capture_output("pwd");
-	if (!prompt)
-		prompt = ft_strdup("minishell");
-	ft_clean_line(&prompt);
-	prompt = ft_strappend(prompt, " > ");
-	if (!prompt)
-		prompt = ft_strdup("minishell > ");
-	line = readline(prompt);
-	free(prompt);
+	cwd = ft_exec_catch("pwd");
+	if (!cwd)
+		cwd = strdup("minishell");
+	user = ft_strdup(getenv("USER"));
+	if (!user)
+		user = ft_strdup("minishell");
+	home = getenv("HOME");
+	if (!home)
+		home = ft_strdup("minishell");
+	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
+		ft_printf(GREEN "%s" YELLOW "@" BLUE "~%s" RESET, user, cwd
+			+ ft_strlen(home));
+	else
+		ft_printf(GREEN "%s" YELLOW "@" BLUE "%s" RESET, user, cwd);
+	free(cwd);
+	free(user);
+	line = readline(GREEN " > " RESET);
+	if (!line)
+		ft_perror_exit("Error: readline");
 	return (line);
 }
 
 void	line_shell(char **env)
 {
-	int				error;
-	char			*line;
-	t_list			*shells;
-	t_token			*token;
+	int		error;
+	char	*line;
+	t_list	*shells;
+	t_token	*token;
 
 	error = 0;
 	while (1)
 	{
 		line = get_line_prompt();
-		if (!line)
-			ft_error_exit("EOF");
 		token = tokenize(line, &error);
 		free(line);
 		check_tokens(token, 0, &error);

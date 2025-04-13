@@ -13,6 +13,11 @@
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
+# define GREEN "\033[1;32m"
+# define YELLOW "\033[1;33m"
+# define BLUE "\033[1;34m"
+# define RESET "\033[0m"
+
 # include "libft/libft.h"
 # include "libft/pipex.h"
 # include <readline/history.h>
@@ -113,7 +118,6 @@ int					check_subshell(t_token **token);
 // ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
 
 int					launch_commands(t_list *shells, char **env);
-char				*capture_output(const char *cmd);
 
 // ██╗  ██╗██╗███████╗████████╗ ██████╗ ██████╗ ██╗   ██╗
 // ██║  ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝
