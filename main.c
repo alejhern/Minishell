@@ -12,6 +12,23 @@
 
 #include "minishell.h"
 
+static char	*get_line_prompt(void)
+{
+	char		*prompt;
+	char		*line;
+
+	prompt = capture_output("pwd");
+	if (!prompt)
+		prompt = ft_strdup("minishell");
+	ft_clean_line(&prompt);
+	prompt = ft_strappend(prompt, " > ");
+	if (!prompt)
+		prompt = ft_strdup("minishell > ");
+	line = readline(prompt);
+	free(prompt);
+	return (line);
+}
+
 void	line_shell(char **env)
 {
 	int				error;
@@ -22,10 +39,11 @@ void	line_shell(char **env)
 	error = 0;
 	while (1)
 	{
-		line = readline("shell petit: ");
-		if (line == 0)
-			ft_perror_exit("EOF");
+		line = get_line_prompt();
+		if (!line)
+			ft_error_exit("EOF");
 		token = tokenize(line, &error);
+		free(line);
 		check_tokens(token, 0, &error);
 		if (error != 0)
 			ft_error_exit("SYNTAX ERROR");

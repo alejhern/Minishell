@@ -113,6 +113,7 @@ int					check_subshell(t_token **token);
 // ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
 
 int					launch_commands(t_list *shells, char **env);
+char				*capture_output(const char *cmd);
 
 // ██╗  ██╗██╗███████╗████████╗ ██████╗ ██████╗ ██╗   ██╗
 // ██║  ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝
