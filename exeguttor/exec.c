@@ -20,17 +20,18 @@ int launch_commands(t_list *shells, char **env)
     t_command   *command;
 
     list = shells;
-    while (list)
+    while (list != NULL)
     {
         shell = list->content;
         commands = shell->commands;
         while (commands)
         {
             command = commands->content;
-            ft_execute(command->comand[0], env);
+            ft_execute(command->comand, env, 1);
             commands = commands->next;
         }
         list = list->next;
     }
     return (0);    
 }
+
