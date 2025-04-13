@@ -12,26 +12,25 @@
 
 #include "../minishell.h"
 
-int launch_commands(t_list *shells, char **env)
+int	launch_commands(t_list *shells, char **env)
 {
-    t_list      *list;
-    t_shell     *shell;
-    t_list      *commands;
-    t_command   *command;
+	t_list		*list;
+	t_shell		*shell;
+	t_list		*commands;
+	t_command	*command;
 
-    list = shells;
-    while (list != NULL)
-    {
-        shell = list->content;
-        commands = shell->commands;
-        while (commands)
-        {
-            command = commands->content;
-            ft_execute(command->comand, env, 1);
-            commands = commands->next;
-        }
-        list = list->next;
-    }
-    return (0);    
+	list = shells;
+	while (list != NULL)
+	{
+		shell = list->content;
+		commands = shell->commands;
+		while (commands)
+		{
+			command = commands->content;
+			ft_execute(command->comand, env, 1);
+			commands = commands->next;
+		}
+		list = list->next;
+	}
+	return (0);
 }
-

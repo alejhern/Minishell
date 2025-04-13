@@ -17,7 +17,7 @@ static void	child_process(int pipe_fd[2], const char *cmd)
 	close(pipe_fd[0]);
 	dup2(pipe_fd[1], STDOUT_FILENO);
 	close(pipe_fd[1]);
-	execlp(cmd, cmd, (char *)NULL);
+	execlp(cmd, cmd, (char *) NULL);
 	perror("execlp");
 	exit(1);
 }
