@@ -16,8 +16,9 @@
 
 UTIL_DIR = ./utils/
 PARSE_DIR = ./parser/
+EXEC_DIR = ./exeguttor/
 
-SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) -type f -name "*.c") \
+SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) -type f -name "*.c") \
 		main.c \
 
 OBJS	= ${SRCS:.c=.o}

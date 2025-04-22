@@ -12,20 +12,48 @@
 
 #include "minishell.h"
 
-void	line_shell(void)
+char	*get_line_prompt(void)
 {
-	int				error;
-	char			*line;
-	t_list			*shells;
-	t_token			*token;
+	char	*cwd;
+	char	*user;
+	char	*line;
+	char	*home;
+
+	cwd = ft_exec_catch("pwd");
+	if (!cwd)
+		cwd = strdup("minishell");
+	user = ft_strdup(getenv("USER"));
+	if (!user)
+		user = ft_strdup("minishell");
+	home = getenv("HOME");
+	if (!home)
+		home = ft_strdup("minishell");
+	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
+		ft_printf(GREEN "%s" YELLOW "@" BLUE "~%s" RESET, user, cwd
+			+ ft_strlen(home));
+	else
+		ft_printf(GREEN "%s" YELLOW "@" BLUE "%s" RESET, user, cwd);
+	free(cwd);
+	free(user);
+	line = readline(GREEN " > " RESET);
+	if (!line)
+		ft_perror_exit("Error: readline");
+	return (line);
+}
+
+void	line_shell(char **env)
+{
+	int		error;
+	char	*line;
+	t_list	*shells;
+	t_token	*token;
 
 	error = 0;
 	while (1)
 	{
-		line = readline("shell petit: ");
-		if (line == 0)
-			ft_perror_exit("EOF");
+		line = get_line_prompt();
 		token = tokenize(line, &error);
+		free(line);
 		check_tokens(token, 0, &error);
 		if (error != 0)
 			ft_error_exit("SYNTAX ERROR");
@@ -33,18 +61,19 @@ void	line_shell(void)
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
 		ft_lstiter(shells, print_shell);
+		launch_commands(shells, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);
 	}
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **env)
 {
 	if (argc != 1 && argv[0])
 	{
 		ft_putstr_fd("Error: no arguments expected\n", 2);
 		return (1);
 	}
-	line_shell();
+	line_shell(env);
 	return (0);
 }
