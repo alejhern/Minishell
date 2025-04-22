@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/09 18:59:13 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/22 19:26:04 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ typedef enum e_token_type
 typedef struct s_command
 {
 	int				pid;
-	int				is_subshell;
 	char			**comand;
 	t_list			*subshell;
 	t_list			*redirect_out;

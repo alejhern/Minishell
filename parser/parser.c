@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 18:46:25 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/09 12:14:35 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/04/22 20:34:34 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,12 +20,12 @@ int	add_word(t_list *shells, t_token *token)
 	shell = ft_lstlast(shells)->content;
 	if (!shell || !shell->commands)
 	{
-		shell->commands = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
+		shell->commands = ft_safe_lstnew(ft_safe_calloc(1, sizeof(t_command)));
 		command = shell->commands->content;
 	}
 	else
 		command = ft_lstlast(shell->commands)->content;
-	ft_append_array((void ***)&command->comand, ft_save_strdup(token->token));
+	ft_append_array((void ***)&command->comand, ft_safe_strdup(token->token));
 	if (command->comand == 0)
 		exit(0);
 	return (0);
@@ -33,19 +33,22 @@ int	add_word(t_list *shells, t_token *token)
 
 int	new_conditional(t_list *shells, t_token *token)
 {
-	t_list	*list;
+	t_list		*list;
+	t_shell		*new_shell;
 
 	list = ft_lstlast(shells);
+	new_shell = ft_safe_calloc(1, sizeof(t_shell));
 	if (!list)
 		return (1);
-	if (token->type == ORC)
-		((t_shell *)list->content)->type = OR;
-	else if (token->type == ANDC)
+	if (list->content == shells->content)
 		((t_shell *)list->content)->type = AND;
+	if (token->type == ORC)
+		new_shell->type = OR;
+	else if (token->type == ANDC)
+		new_shell->type = AND;
 	else
 		return (1);
-	ft_lstadd_back(&shells, ft_save_lstnew(ft_save_calloc(1,
-				sizeof(t_shell))));
+	ft_lstadd_back(&shells, ft_safe_lstnew((void *) new_shell));
 	return (0);
 }
 
@@ -57,7 +60,7 @@ int	new_pipe(t_list *cond_og)
 	t_command	*command2;
 
 	shell = ft_lstlast(cond_og)->content;
-	command = ft_save_calloc(1, sizeof(t_command));
+	command = ft_safe_calloc(1, sizeof(t_command));
 	list = ft_lstnew(command);
 	if (!list || !command)
 		exit(0);
@@ -78,9 +81,9 @@ int	add_redirect(t_list *shells, t_token **token)
 	type = (*token)->type;
 	shell = ft_lstlast(shells)->content;
 	if (!shell->commands)
-		shell->commands = ft_save_lstnew(ft_save_calloc(1, sizeof(t_command)));
+		shell->commands = ft_safe_lstnew(ft_safe_calloc(1, sizeof(t_command)));
 	command = ft_lstlast(shell->commands)->content;
-	red = ft_save_lstnew(ft_save_calloc(1, sizeof(t_redirect)));
+	red = ft_safe_lstnew(ft_safe_calloc(1, sizeof(t_redirect)));
 	if ((*token)->next->type == WORD)
 		((t_redirect *)red->content)->is_double = 0;
 	else if ((*token)->type == (*token)->next->type)
@@ -98,15 +101,15 @@ int	add_redirect(t_list *shells, t_token **token)
 
 t_list	*token_parser(t_token *token, int *error, t_token **token_sub)
 {
-	t_token	*aux;
-	t_list	*list;
+	t_token		*aux;
+	t_list		*list;
 
 	if (token == 0 && token_sub != 0)
 		aux = (*token_sub)->next;
 	else
 		aux = token;
-	list = ft_save_calloc(1, sizeof(t_list));
-	list->content = ft_save_calloc(1, sizeof(t_shell));
+	list = ft_safe_calloc(1, sizeof(t_list));
+	list->content = ft_safe_calloc(1, sizeof(t_shell));
 	while (aux && *error == 0 && aux->type != CLOSE_SUB)
 	{
 		if (aux->type == OPEN_SUB || aux->type == CLOSE_SUB)
