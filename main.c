@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char	*get_line_prompt(void)
+static char	*get_line_prompt(void)
 {
 	char	*cwd;
 	char	*user;
