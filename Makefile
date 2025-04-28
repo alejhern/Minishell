@@ -14,7 +14,11 @@
 #                                 VARIABLES                                    #
 # **************************************************************************** #
 
-SRCS = main.c
+UTIL_DIR = ./utils/
+PARSE_DIR = ./parser/
+
+SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) -type f -name "*.c") \
+		main.c \
 
 OBJS	= ${SRCS:.c=.o}
 

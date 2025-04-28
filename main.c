@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-char	*get_line_prompt(void)
+static char	*get_line_prompt(void)
 {
 	char	*cwd;
 	char	*user;
@@ -41,14 +41,28 @@ char	*get_line_prompt(void)
 	return (line);
 }
 
-void	line_shell(void)
+static void	line_shell(void)
 {
+	int		error;
 	char	*line;
+	t_list	*shells;
+	t_token	*token;
 
+	error = 0;
 	while (1)
 	{
 		line = get_line_prompt();
+		token = tokenize(line, &error);
 		free(line);
+		check_tokens(token, 0, &error);
+		if (error != 0)
+			ft_error_exit("SYNTAX ERROR");
+		shells = token_parser(token, &error, 0);
+		if (!shells)
+			ft_error_exit("PARSER ERROR");
+		ft_lstiter(shells, print_shell);
+		ft_lstclear(&shells, free_shell);
+		free_token(token);
 	}
 }
 
