@@ -117,6 +117,7 @@ int					check_subshell(t_token **token);
 
 int					launch_commands(t_list *shells, char **env);
 
+<<<<<<< HEAD
 // ██╗  ██╗██╗███████╗████████╗ ██████╗ ██████╗ ██╗   ██╗
 // ██║  ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝
 // ███████║██║███████╗   ██║   ██║   ██║██████╔╝ ╚████╔╝ 
@@ -130,4 +131,6 @@ char				**get_history(int *size);
 
 void				mini_exit(void);
 
+=======
+>>>>>>> ac1ab41 (migracion exeggutor)
 #endif

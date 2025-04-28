@@ -41,7 +41,11 @@ static char	*get_line_prompt(void)
 	return (line);
 }
 
+<<<<<<< HEAD
 void	line_shell(char **env)
+=======
+static void	line_shell(char **env)
+>>>>>>> ac1ab41 (migracion exeggutor)
 {
 	int		error;
 	char	*line;
