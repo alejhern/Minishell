@@ -41,7 +41,7 @@ static char	*get_line_prompt(void)
 	return (line);
 }
 
-static void	line_shell(void)
+static void	line_shell(char **env)
 {
 	int		error;
 	char	*line;
@@ -61,18 +61,19 @@ static void	line_shell(void)
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
 		ft_lstiter(shells, print_shell);
+		launch_commands(shells, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);
 	}
 }
 
-int	main(int argc, char **argv)
+int	main(int argc, char **argv, char **env)
 {
 	if (argc != 1 && argv[0])
 	{
 		ft_putstr_fd("Error: no arguments expected\n", 2);
 		return (1);
 	}
-	line_shell();
+	line_shell(env);
 	return (0);
 }
