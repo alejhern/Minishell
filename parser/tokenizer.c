@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 15:02:05 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/09 20:06:46 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/12 18:54:39 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	token_sub_red(char *prompt, int *i, int *error, t_token **token)
 	*i += 1;
 }
 
-void	token_word(char *prompt, int *i, t_token **token)
+void	token_word(char *p, int *i, t_token **token, int *error)
 {
 	t_token	*next;
 	int		j;
@@ -69,21 +69,22 @@ void	token_word(char *prompt, int *i, t_token **token)
 
 	j = 0;
 	k = 0;
-	next = ft_calloc(1, sizeof(t_token));
-	if (!token)
-		free_token(*token);
-	while (prompt[*i + j] != ' ' && prompt[*i + j] != '	' && prompt[*i + j]
-		&& !is_del(prompt[*i + j]))
+	next = ft_safe_calloc(1, sizeof(t_token));
+	while (p[*i + j] != ' ' && p[*i + j] != '	' && p[*i + j]
+		&& !is_del(p[*i + j]) && p[j + *i] != 0 && *error == 0)
 	{
-		j++;
-		while ((prompt[j + *i] == '\'' || prompt[j + *i] == '\"') && prompt[k
-				+ j + *i] != prompt[j + *i] && prompt[k + j + *i] != 0)
+		while ((p[j + *i] == '\'' || p[j + *i] == '\"')
+			&& (p[k + j + *i] != p[j + *i] || k == 0) && *error == 0)
+		{
+			*error = (p[k + j + *i] == 0);
 			k++;
+		}
+		j++;
 		j += k;
 		k = 0;
 	}
 	token_lstadd_back(token, next);
-	next->token = ft_substr(prompt, *i, j);
+	next->token = ft_substr(p, *i, j);
 	if (!next->token)
 		free_token(*token);
 	*i += j;
@@ -106,7 +107,7 @@ t_token	*tokenize(char *prompt, int *error)
 			|| prompt[i] == '<')
 			token_sub_red(prompt, &i, error, &token);
 		else if (prompt[i])
-			token_word(prompt, &i, &token);
+			token_word(prompt, &i, &token, error);
 	}
 	return (token);
 }
