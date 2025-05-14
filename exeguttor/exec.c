@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/04/12 16:57:51 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/05/14 18:38:22 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	launch_commands(t_list *shells, char **env)
 		while (commands)
 		{
 			command = commands->content;
-			ft_execute(command->comand, env, 1);
+			ft_execute(command->command, env, 1);
 			commands = commands->next;
 		}
 		list = list->next;

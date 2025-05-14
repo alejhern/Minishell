@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/22 19:26:04 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:33:22 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ typedef enum e_token_type
 typedef struct s_command
 {
 	int				pid;
-	char			**comand;
+	char			**command;
 	t_list			*subshell;
 	t_list			*redirect_out;
 	t_list			*redirect_in;
@@ -128,5 +128,7 @@ int					launch_commands(t_list *shells, char **env);
 int					add_to_history(char **history, char *line, int size);
 void				commit_history(char **history, int size);
 char				**get_history(int *size);
+
+void				mini_exit(void);
 
 #endif

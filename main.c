@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/09 18:50:58 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:32:42 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	*get_line_prompt(void)
 
 	cwd = ft_exec_catch("pwd");
 	if (!cwd)
-		cwd = strdup("minishell");
+		cwd = ft_strdup("minishell");
 	user = ft_strdup(getenv("USER"));
 	if (!user)
 		user = ft_strdup("minishell");

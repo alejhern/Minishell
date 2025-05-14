@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 18:46:25 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/22 20:34:34 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/14 18:34:28 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,8 @@ int	add_word(t_list *shells, t_token *token)
 	}
 	else
 		command = ft_lstlast(shell->commands)->content;
-	ft_append_array((void ***)&command->comand, ft_safe_strdup(token->token));
-	if (command->comand == 0)
+	ft_append_array((void ***)&command->command, ft_safe_strdup(token->token));
+	if (command->command == 0)
 		exit(0);
 	return (0);
 }
@@ -65,7 +65,7 @@ int	new_pipe(t_list *cond_og)
 	if (!list || !command)
 		exit(0);
 	command2 = (ft_lstlast(shell->commands)->content);
-	if (command2->comand == 0 && command2->subshell == 0)
+	if (command2->command == 0 && command2->subshell == 0)
 		return (1);
 	ft_lstadd_back(&(shell->commands), list);
 	return (0);

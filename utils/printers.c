@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 13:46:39 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/04/12 13:46:42 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/05/14 18:35:48 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,29 +44,29 @@ void	print_red(void *content)
 
 void	print_comand(void *content)
 {
-	char		**str_comand;
+	char		**str_command;
 	int			i;
-	t_command	*comand;
+	t_command	*command;
 
 	i = -1;
-	comand = content;
-	ft_printf("	Command:\n		comand:");
-	if (comand->comand)
+	command = content;
+	ft_printf("	Command:\n		command:");
+	if (command->command)
 	{
-		str_comand = comand->comand;
-		while (comand && str_comand[++i])
-			ft_printf(" %s", str_comand[i]);
+		str_command = command->command;
+		while (command && str_command[++i])
+			ft_printf(" %s", str_command[i]);
 	}
-	else if (comand->subshell)
+	else if (command->subshell)
 	{
 		ft_printf("\n**************SUBSHELL_IN****************\n");
-		ft_lstiter(comand->subshell, print_shell);
+		ft_lstiter(command->subshell, print_shell);
 		ft_printf("**************SUBSHELL_OUT***************");
 	}
 	ft_printf("\n		redirect_in:\n");
-	ft_lstiter(comand->redirect_in, print_red);
+	ft_lstiter(command->redirect_in, print_red);
 	ft_printf("		redirect_out:\n");
-	ft_lstiter(comand->redirect_out, print_red);
+	ft_lstiter(command->redirect_out, print_red);
 }
 
 void	print_shell(void *content)
