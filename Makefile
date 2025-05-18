@@ -16,11 +16,7 @@
 
 UTIL_DIR = ./utils/
 PARSE_DIR = ./parser/
-<<<<<<< HEAD
 EXEC_DIR = ./exeguttor/
-=======
-EXEC_DIR = ./exeggutor/
->>>>>>> ac1ab41 (migracion exeggutor)
 
 SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) -type f -name "*.c") \
 		main.c \
