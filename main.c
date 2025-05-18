@@ -19,7 +19,7 @@ static char	*get_line_prompt(void)
 	char	*line;
 	char	*home;
 
-	cwd = ft_exec_catch("pwd");
+	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		cwd = ft_strdup("minishell");
 	user = ft_strdup(getenv("USER"));
