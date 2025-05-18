@@ -19,7 +19,6 @@
 # define RESET "\033[0m"
 
 # include "libft/libft.h"
-# include "libft/pipex.h"
 # include <readline/history.h>
 # include <readline/readline.h>
 
