@@ -26,7 +26,7 @@ static int	launch_shell_commands(t_shell *shell, char **env)
         if (command->subshell)
             result = launch_commands(command->subshell, env);
 		else
-            result = ft_execute(command->comand, env, 1);
+            result = ft_execute(command->command, env, 1);
 		commands = commands->next;
 	}
 	return (result);
