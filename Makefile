@@ -6,7 +6,7 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/04/09 15:04:34 by pafranco         ###   ########.fr        #
+#    Updated: 2025/05/19 18:46:22 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,9 @@
 UTIL_DIR = ./utils/
 PARSE_DIR = ./parser/
 EXEC_DIR = ./exeggutor/
+BUILT-IN_DIR = ./built-in/
 
-SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) -type f -name "*.c") \
+SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) $(BUILT-IN_DIR) -type f -name "*.c") \
 		main.c \
 
 OBJS	= ${SRCS:.c=.o}
