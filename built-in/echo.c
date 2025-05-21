@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 18:23:42 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/21 18:25:38 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/21 18:44:26 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,5 @@ int	mini_echo(char **command, char **env)
 		i++;
 	}
 	printf("%c", jump);
-	return (0);
 	exit(0);
 }
