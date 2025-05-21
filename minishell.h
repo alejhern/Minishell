@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/19 19:05:11 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/21 21:32:59 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # include "libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
+
+extern int			g_signal;
 
 typedef struct s_redirect
 {
@@ -128,6 +131,8 @@ int					add_to_history(char **history, char *line, int size);
 void				commit_history(char **history, int size);
 char				**get_history(int *size);
 
+//		BUILTINS
+
 int					mini_exit(int exit);
 
 int					mini_cd(char **command, char **env);
@@ -136,5 +141,9 @@ int					mini_export(char **command, char **env);
 int					mini_unset(char **command, char **env);
 int					mini_env(char **command, char **env);
 int					mini_echo(char **command, char **env);
+
+//		SIGNALS
+
+void				signal_handler_main(int sig);
 
 #endif
