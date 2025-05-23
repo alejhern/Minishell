@@ -17,7 +17,7 @@
 UTIL_DIR = ./utils/
 PARSE_DIR = ./parser/
 EXEC_DIR = ./exeggutor/
-BUILT-IN_DIR = ./built-in/
+BUILT-IN_DIR = ./built-ins/
 
 SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) $(BUILT-IN_DIR) -type f -name "*.c") \
 		main.c \
