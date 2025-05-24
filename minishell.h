@@ -115,7 +115,7 @@ int					check_subshell(t_token **token);
 // ███████╗██╔╝ ██╗███████╗╚██████╗
 // ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
 
-int					launch_commands(t_list *shells, char **env);
+int					launch_commands(t_list *shells, char ***env);
 
 // ██╗  ██╗██╗███████╗████████╗ ██████╗ ██████╗ ██╗   ██╗
 // ██║  ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static int	launch_shell_commands(t_shell *shell, char **env)
+static int	launch_shell_commands(t_shell *shell, char ***env)
 {
 	t_list		*commands;
 	t_command	*command;
@@ -26,13 +26,13 @@ static int	launch_shell_commands(t_shell *shell, char **env)
         if (command->subshell)
             result = launch_commands(command->subshell, env);
 		else
-            result = ft_execute(command->command, env, 1);
+            result = ft_execute(command->command, *env, 1);
 		commands = commands->next;
 	}
 	return (result);
 }
 
-int	launch_commands(t_list *shells, char **env)
+int	launch_commands(t_list *shells, char ***env)
 {
 	t_list	*list;
 	t_shell	*shell;
