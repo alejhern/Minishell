@@ -12,11 +12,16 @@
 
 #include "../minishell.h"
 
-int	mini_pwd(char **command, char **env)
+int	mini_pwd(char **command, char ***env)
 {
 	char **useless;
 
 	useless = command;
-	command = env;
+	command = *env;
+	if (useless[1] == NULL)
+	{
+		ft_putstr_fd("unset: not enough arguments\n", 2);
+		return (1);
+	}
 	exit(0);
 }

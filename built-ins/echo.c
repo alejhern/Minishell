@@ -26,14 +26,19 @@ static int is_flag(char *flag)
 	return (0);
 }
 
-int	mini_echo(char **command, char **env)
+int	mini_echo(char **command, char ***env)
 {
 	char		**useless;
 	int			i;
 	char		jump;
 	char		space;
 
-	useless = env;
+	useless = *env;
+	if (useless[1] == NULL)
+	{
+		ft_putstr_fd("unset: not enough arguments\n", 2);
+		return (1);
+	}
 	i = 1;
 	jump = '\n';
 	space = 0;

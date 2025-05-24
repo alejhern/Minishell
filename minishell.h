@@ -130,11 +130,11 @@ char				**get_history(int *size);
 
 int					mini_exit(int exit);
 
-int					mini_cd(char **command, char **env);
-int					mini_pwd(char **command, char **env);
-int					mini_export(char **command, char **env);
-int					mini_unset(char **command, char **env);
-int					mini_env(char **command, char **env);
-int					mini_echo(char **command, char **env);
+int					mini_cd(char **command, char ***env);
+int					mini_pwd(char **command, char ***env);
+int					mini_export(char **command, char ***env);
+int					mini_unset(char **command, char ***env);
+int					mini_env(char **command, char ***env);
+int					mini_echo(char **command, char ***env);
 
 #endif

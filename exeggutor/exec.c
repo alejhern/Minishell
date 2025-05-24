@@ -12,25 +12,16 @@
 
 #include "../minishell.h"
 
-int	exec_builtin(char **command, char **env, int (*f)(char **cmd, char **env))
+int	exec_builtin(char **command, char **env, int (*f)(char **cmd, char ***env))
 {
-	pid_t	pid;
-	int		status;
+	char **envp;
 
-	pid = 0;
-	pid = fork();
-	if (pid == -1)
-		return (perror("fork failed"), 0);
-	else if (pid == 0)
+	envp = ft_env((const char **)env);
+	if (f(command, &envp) == -1)
 	{
-		if (f(command, env) == -1)
-		{
-			perror("Cannot execute command");
-			return (0);
-		}
+		perror("Cannot execute command");
+		return (0);
 	}
-	else
-		waitpid(pid, &status, 0);
 	return (1);
 }
 

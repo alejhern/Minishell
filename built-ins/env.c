@@ -12,17 +12,22 @@
 
 #include "../minishell.h"
 
-int	mini_env(char **command, char **env)
+int	mini_env(char **command, char ***env)
 {
 	char		**useless;
 	int			i;
 
 	useless = command;
-	command = env;
-	i = 0;
-	while (env[i])
+	if (useless[1] == NULL)
 	{
-		printf("%s\n", env[i]);
+		ft_putstr_fd("unset: not enough arguments\n", 2);
+		return (1);
+	}
+	command = *env;
+	i = 0;
+	while (*env[i])
+	{
+		printf("%s\n", *env[i]);
 		i++;
 	}
 	exit(0);
