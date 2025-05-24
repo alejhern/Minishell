@@ -14,21 +14,20 @@
 
 int	mini_env(char **command, char ***env)
 {
-	char		**useless;
 	int			i;
 
-	useless = command;
-	if (useless[1] == NULL)
-	{
-		ft_putstr_fd("unset: not enough arguments\n", 2);
-		return (1);
-	}
 	command = *env;
-	i = 0;
-	while (*env[i])
+	while (*command)
 	{
-		printf("%s\n", *env[i]);
-		i++;
+		i = 0;
+		while ((*command)[i] && (*command)[i] != '=')
+			i++;
+		if (i > 0)
+			ft_printf("%s", *command);
+		if ((*command)[i] == '=')
+			ft_printf("=%s", &(*command)[i + 1]);
+		ft_printf("\n");
+		command++;
 	}
-	exit(0);
+	return (0);	
 }
