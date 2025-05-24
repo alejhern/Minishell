@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char	*get_line_prompt(void)
+static char	*get_line_prompt(char **env)
 {
 	char	*cwd;
 	char	*user;
@@ -25,7 +25,7 @@ static char	*get_line_prompt(void)
 	user = ft_strdup(getenv("USER"));
 	if (!user)
 		user = ft_strdup("minishell");
-	home = getenv("HOME");
+	home = ft_getenv("HOME", env);
 	if (!home)
 		home = ft_strdup("minishell");
 	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
@@ -41,7 +41,7 @@ static char	*get_line_prompt(void)
 	return (line);
 }
 
-void	line_shell(char **env)
+void	line_shell(char ***env)
 {
 	int		error;
 	char	*line;
@@ -51,7 +51,7 @@ void	line_shell(char **env)
 	error = 0;
 	while (1)
 	{
-		line = get_line_prompt();
+		line = get_line_prompt(*env);
 		token = tokenize(line, &error);
 		free(line);
 		check_tokens(token, 0, &error);
@@ -69,11 +69,16 @@ void	line_shell(char **env)
 
 int	main(int argc, char **argv, char **env)
 {
+	char	**envp;
 	if (argc != 1 && argv[0])
 	{
 		ft_putstr_fd("Error: no arguments expected\n", 2);
 		return (1);
 	}
-	line_shell(env);
+	envp = ft_env((const char **)env);
+	if (!envp)
+		ft_perror_exit("Error: malloc");
+	line_shell(&envp);
+	ft_free_array((void ***)&envp);
 	return (0);
 }

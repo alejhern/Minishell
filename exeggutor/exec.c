@@ -12,12 +12,9 @@
 
 #include "../minishell.h"
 
-int	exec_builtin(char **command, char **env, int (*f)(char **cmd, char ***env))
+int	exec_builtin(char **command, char ***env, int (*f)(char **cmd, char ***env))
 {
-	char **envp;
-
-	envp = ft_env((const char **)env);
-	if (f(command, &envp) == -1)
+	if (f(command, env) == -1)
 	{
 		perror("Cannot execute command");
 		return (0);
@@ -25,7 +22,7 @@ int	exec_builtin(char **command, char **env, int (*f)(char **cmd, char ***env))
 	return (1);
 }
 
-int	find_builtins(char **command, char **env, int *result)
+int	find_builtins(char **command, char ***env, int *result)
 {
 	if (ft_strncmp(command[0], "echo", 4) == 0)
 		exec_builtin(command, env, mini_echo);
@@ -47,7 +44,7 @@ int	find_builtins(char **command, char **env, int *result)
 	return (1);
 }
 
-static int	launch_shell_commands(t_shell *shell, char **env)
+static int	launch_shell_commands(t_shell *shell, char ***env)
 {
 	t_list		*commands;
 	t_command	*command;
@@ -58,16 +55,16 @@ static int	launch_shell_commands(t_shell *shell, char **env)
 	while (commands)
 	{
 		command = commands->content;
-        if (command->subshell)
-            result = launch_commands(command->subshell, env);
+		if (command->subshell)
+			result = launch_commands(command->subshell, env);
 		else if (find_builtins(command->command, env, &result) == 0)
-            result = ft_execute(command->command, env, 1);
+			result = ft_execute(command->command, *env, 1);
 		commands = commands->next;
 	}
 	return (result);
 }
 
-int	launch_commands(t_list *shells, char **env)
+int	launch_commands(t_list *shells, char ***env)
 {
 	t_list	*list;
 	t_shell	*shell;
