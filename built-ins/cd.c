@@ -55,7 +55,10 @@ static char	*get_new_path(char **command, char **env)
 	if (!command[1] || !command[1][0] || (ft_strncmp(command[1], "--", 3) == 0))
 		return (get_env_path("HOME", env));
 	else if (ft_strncmp(command[1], "-", 2) == 0)
+	{
+		ft_putendl_fd(ft_getenv("OLDPWD", env), 1);
 		return (get_env_path("OLDPWD", env));
+	}
 	else if (ft_strncmp(command[1], ".", 2) == 0 || ft_strncmp(command[1], "..",
 			3) == 0)
 		return (ft_strdup(command[1]));
