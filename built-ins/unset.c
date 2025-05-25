@@ -14,14 +14,17 @@
 
 int	mini_unset(char **command, char ***env)
 {
-	char **useless;
-
-	useless = command;
-	command = *env;
-	if (useless[1] == NULL)
+	if (!command[1])
 	{
 		ft_putstr_fd("unset: not enough arguments\n", 2);
 		return (1);
 	}
-	exit(0);
+	if (ft_strncmp(command[1], "SHELL", 5) == 0)
+	{
+		ft_putstr_fd("unset: cannot unset environment variable\n", 2);
+		return (1);
+	}
+	if (!ft_unsetenv(command[1], env))
+		return (1);
+	return (0);
 }
