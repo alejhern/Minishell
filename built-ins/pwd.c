@@ -14,14 +14,19 @@
 
 int	mini_pwd(char **command, char ***env)
 {
-	char **useless;
+	char	*cwd;
 
-	useless = command;
-	command = *env;
-	if (useless[1] == NULL)
+	if (command[1])
 	{
-		ft_putstr_fd("unset: not enough arguments\n", 2);
+		perror("pwd: too many arguments\n");
 		return (1);
 	}
-	exit(0);
+	cwd = ft_getenv("PWD", *env);
+	if (!cwd)
+	{
+		perror("pwd: getcwd error");
+		return (1);
+	}
+	ft_putendl_fd(cwd, 1);
+	return (0);
 }
