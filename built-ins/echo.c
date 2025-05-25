@@ -12,9 +12,9 @@
 
 #include "../minishell.h"
 
-static int is_flag(char *flag)
+static int	is_flag(char *flag)
 {
-	int			i;
+	int	i;
 
 	i = 1;
 	if (flag[0] != '-')
@@ -28,10 +28,10 @@ static int is_flag(char *flag)
 
 int	mini_echo(char **command, char ***env)
 {
-	char		**useless;
-	int			i;
-	char		jump;
-	char		space;
+	char	**useless;
+	int		i;
+	char	jump;
+	char	space;
 
 	useless = *env;
 	if (useless[1] == NULL)
@@ -44,7 +44,7 @@ int	mini_echo(char **command, char ***env)
 	space = 0;
 	while (is_flag(command[i]) == 1)
 	{
-		jump  = 0;
+		jump = 0;
 		i++;
 	}
 	while (command[i] != 0)
