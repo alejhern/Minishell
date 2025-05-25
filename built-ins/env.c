@@ -14,20 +14,8 @@
 
 int	mini_env(char **command, char ***env)
 {
-	int			i;
-
 	command = *env;
 	while (*command)
-	{
-		i = 0;
-		while ((*command)[i] && (*command)[i] != '=')
-			i++;
-		if (i > 0)
-			ft_printf("%s", *command);
-		if ((*command)[i] == '=')
-			ft_printf("=%s", &(*command)[i + 1]);
-		ft_printf("\n");
-		command++;
-	}
-	return (0);	
+		ft_printf("%s\n", *command++);
+	return (0);
 }
