@@ -14,33 +14,37 @@
 
 int	exec_builtin(char **command, char ***env, int (*f)(char **cmd, char ***env))
 {
-	if (f(command, env) == -1)
+	int result;
+
+	result = f(command, env);
+	if (result == -1)
 	{
 		perror("Cannot execute command");
-		return (0);
+		return (1);
 	}
-	return (1);
+	return (result);
 }
 
-int	find_builtins(char **command, char ***env, int *result)
+int	find_builtins(char **command, char ***env)
 {
+	int result_builtin;
+
 	if (ft_strncmp(command[0], "echo", 4) == 0)
-		exec_builtin(command, env, mini_echo);
+		result_builtin = exec_builtin(command, env, mini_echo);
 	else if (ft_strncmp(command[0], "cd", 2) == 0)
-		exec_builtin(command, env, mini_cd);
+		result_builtin = exec_builtin(command, env, mini_cd);
 	else if (ft_strncmp(command[0], "pwd", 3) == 0)
-		exec_builtin(command, env, mini_pwd);
+		result_builtin = exec_builtin(command, env, mini_pwd);
 	else if (ft_strncmp(command[0], "export", 6) == 0)
-		exec_builtin(command, env, mini_export);
+		result_builtin = exec_builtin(command, env, mini_export);
 	else if (ft_strncmp(command[0], "unset", 5) == 0)
-		exec_builtin(command, env, mini_unset);
+		result_builtin = exec_builtin(command, env, mini_unset);
 	else if (ft_strncmp(command[0], "env", 3) == 0)
-		exec_builtin(command, env, mini_env);
+		result_builtin = exec_builtin(command, env, mini_env);
 	else if (ft_strncmp(command[0], "exit", 4) == 0)
 		exit(0);
 	else
-		return (0);
-	*result = 1;
+		result_builtin = -1;
 	return (1);
 }
 
@@ -57,8 +61,12 @@ static int	launch_shell_commands(t_shell *shell, char ***env)
 		command = commands->content;
 		if (command->subshell)
 			result = launch_commands(command->subshell, env);
-		else if (find_builtins(command->command, env, &result) == 0)
-			result = ft_execute(command->command, *env, 1);
+		else
+		{
+			result = find_builtins(command->command, env);
+			if (result == -1)
+				result = ft_execute(command->command, *env, 1);
+		}
 		commands = commands->next;
 	}
 	return (result);

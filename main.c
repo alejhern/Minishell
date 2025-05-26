@@ -57,7 +57,7 @@ void	line_shell(char ***env)
 		check_tokens(token, 0, &error);
 		if (error != 0)
 			ft_error_exit("SYNTAX ERROR");
-		shells = token_parser(token, &error, 0);
+		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
 		//ft_lstiter(shells, print_shell);//commented for the moment do not remmove
