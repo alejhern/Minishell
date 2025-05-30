@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/30 17:47:42 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/30 19:17:49 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ static char	*get_line_prompt(char **env)
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		cwd = ft_strdup("minishell");
-	user = ft_strdup(getenv("USER"));
+	user = ft_strdup(ft_getenv("USER", env));
 	if (!user)
 		user = ft_strdup("minishell");
 	home = ft_getenv("HOME", env);
@@ -49,9 +49,15 @@ void	line_shell(char ***env)
 	t_token	*token;
 
 	error = 0;
+	signal(SIGINT, signal_handler_main);
 	while (1)
 	{
 		line = get_line_prompt(*env);
+		if (g_signal != 0)
+		{
+			g_signal = 0;
+			continue ;
+		}
 		if (ft_strncmp("", line, 1) == 0)
 			continue ;
 		token = tokenize(line, &error);

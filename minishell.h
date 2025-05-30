@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/30 17:47:20 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/30 18:50:43 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # include "libft/libft.h"
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
+
+extern int			g_signal;
 
 typedef struct s_redirect
 {
@@ -129,13 +132,26 @@ int					add_to_history(char **history, char *line, int size);
 void				commit_history(char **history, int size);
 char				**get_history(int *size);
 
-int					mini_exit(int exit);
+//██████  ██    ██ ██ ██      ████████ ██ ███    ██ ███████ 
+//██   ██ ██    ██ ██ ██         ██    ██ ████   ██ ██      
+//██████  ██    ██ ██ ██         ██    ██ ██ ██  ██ ███████ 
+//██   ██ ██    ██ ██ ██         ██    ██ ██  ██ ██      ██ 
+//██████   ██████  ██ ███████    ██    ██ ██   ████ ███████ 
 
+int					mini_exit(int exit);
 int					mini_cd(char **command, char ***env);
 int					mini_pwd(char **command, char ***env);
 int					mini_export(char **command, char ***env);
 int					mini_unset(char **command, char ***env);
 int					mini_env(char **command, char ***env);
 int					mini_echo(char **command, char ***env);
+
+//███████ ██  ██████  ███    ██  █████  ██      ███████ 
+//██      ██ ██       ████   ██ ██   ██ ██      ██      
+//███████ ██ ██   ███ ██ ██  ██ ███████ ██      ███████ 
+//     ██ ██ ██    ██ ██  ██ ██ ██   ██ ██           ██ 
+//███████ ██  ██████  ██   ████ ██   ██ ███████ ███████ 
+
+void	signal_handler_main(int sig);
 
 #endif
