@@ -45,7 +45,7 @@ int	find_builtins(char **command, char ***env)
 		exit(0);
 	else
 		result_builtin = -1;
-	return (1);
+	return (result_builtin);
 }
 
 static int	launch_shell_commands(t_shell *shell, char ***env)
