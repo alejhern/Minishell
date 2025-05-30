@@ -29,23 +29,23 @@ int	find_builtins(char **command, char ***env)
 {
 	int			result_builtin;
 
-	if (ft_strncmp(command[0], "echo", 4) == 0)
+	if (ft_strncmp(command[0], "echo ", 5) == 0)
 		result_builtin = exec_builtin(command, env, mini_echo);
-	else if (ft_strncmp(command[0], "cd", 2) == 0)
+	else if (ft_strncmp(command[0], "cd ", 3) == 0)
 		result_builtin = exec_builtin(command, env, mini_cd);
-	else if (ft_strncmp(command[0], "pwd", 3) == 0)
+	else if (ft_strncmp(command[0], "pwd ", 4) == 0)
 		result_builtin = exec_builtin(command, env, mini_pwd);
-	else if (ft_strncmp(command[0], "export", 6) == 0)
+	else if (ft_strncmp(command[0], "export ", 7) == 0)
 		result_builtin = exec_builtin(command, env, mini_export);
-	else if (ft_strncmp(command[0], "unset", 5) == 0)
+	else if (ft_strncmp(command[0], "unset ", 6) == 0)
 		result_builtin = exec_builtin(command, env, mini_unset);
-	else if (ft_strncmp(command[0], "env", 3) == 0)
+	else if (ft_strncmp(command[0], "env ", 4) == 0)
 		result_builtin = exec_builtin(command, env, mini_env);
-	else if (ft_strncmp(command[0], "exit", 4) == 0)
+	else if (ft_strncmp(command[0], "exit ", 5) == 0)
 		exit(0);
 	else
 		result_builtin = -1;
-	return (1);
+	return (result_builtin);
 }
 
 static int	launch_shell_commands(t_shell *shell, char ***env)
