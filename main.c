@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/21 17:30:54 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:47:42 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,9 +52,11 @@ void	line_shell(char ***env)
 	while (1)
 	{
 		line = get_line_prompt(*env);
+		if (ft_strncmp("", line, 1) == 0)
+			continue ;
 		token = tokenize(line, &error);
 		free(line);
-		check_tokens(token, 0, &error);
+		check_tokens(token, 0, &error, *env);
 		if (error != 0)
 			ft_error_exit("SYNTAX ERROR");
 		shells = token_parser(token, &error, NULL);
@@ -70,6 +72,7 @@ void	line_shell(char ***env)
 int	main(int argc, char **argv, char **env)
 {
 	char	**envp;
+
 	if (argc != 1 && argv[0])
 	{
 		ft_putstr_fd("Error: no arguments expected\n", 2);

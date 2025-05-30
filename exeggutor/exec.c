@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/05/21 18:23:38 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:51:04 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	exec_builtin(char **command, char ***env, int (*f)(char **cmd, char ***env))
 {
-	int result;
+	int			result;
 
 	result = f(command, env);
 	if (result == -1)
@@ -27,7 +27,7 @@ int	exec_builtin(char **command, char ***env, int (*f)(char **cmd, char ***env))
 
 int	find_builtins(char **command, char ***env)
 {
-	int result_builtin;
+	int			result_builtin;
 
 	if (ft_strncmp(command[0], "echo", 4) == 0)
 		result_builtin = exec_builtin(command, env, mini_echo);

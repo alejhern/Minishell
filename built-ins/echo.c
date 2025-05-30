@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/19 18:23:42 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/21 18:44:26 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:52:00 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char	*get_printable(char *str, char **env)
 		return (NULL);
 	if (printable[0] == '$')
 	{
-		var_env = ft_getenv((const char*)printable + 1, env);
+		var_env = ft_getenv((const char *)printable + 1, env);
 		free(printable);
 		if (var_env)
 			return (ft_strdup(var_env));
@@ -50,7 +50,7 @@ int	mini_echo(char **command, char ***env)
 {
 	int		i;
 	char	jump;
-	char	*printable; 
+	char	*printable;
 
 	i = 0;
 	jump = 1;

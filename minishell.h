@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/19 19:05:11 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/30 17:47:20 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,7 @@ void				heredoc(t_token *token, t_redirect *red, int type);
 int					token_cond_util(int or, int and, int *error, t_token *next);
 
 t_token				*token_lstlast(t_token *token);
+t_token				*token_lstnew(char *token, int type);
 void				token_lstadd_back(t_token **token, t_token *new_token);
 
 // ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
@@ -102,11 +103,11 @@ t_token				*tokenize(char *prompt, int *error);
 t_list				*token_parser(t_token *token, int *error,
 						t_token **token_sub);
 void				parser_check(t_token **t_sub, t_token *t);
-char				*expand(char *prompt);
+char				*expand(char *prompt, char **env);
 int					new_subshell(t_list *list_og, t_token **token);
 void				check_tokens(t_token *token, t_token **token_sub,
-						int *error);
-int					check_subshell(t_token **token);
+						int *error, char **env);
+int					check_subshell(t_token **token, char **env);
 
 // ███████╗██╗  ██╗███████╗ ██████╗
 // ██╔════╝╚██╗██╔╝██╔════╝██╔════╝
@@ -123,7 +124,7 @@ int					launch_commands(t_list *shells, char ***env);
 // ██╔══██║██║╚════██║   ██║   ██║   ██║██╔══██╗  ╚██╔╝  
 // ██║  ██║██║███████║   ██║   ╚██████╔╝██║  ██║   ██║   
 // ╚═╝  ╚═╝╚═╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
-                                                      
+
 int					add_to_history(char **history, char *line, int size);
 void				commit_history(char **history, int size);
 char				**get_history(int *size);
