@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:43:23 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/22 20:23:15 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/05/26 17:57:00 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,14 +31,14 @@ int	new_subshell(t_list *list_og, t_token **token)
 	return (error);
 }
 
-int	check_subshell(t_token **token)
+int	check_subshell(t_token **token, char **env)
 {
 	int					error;
 
 	error = 0;
 	if ((*token)->next->type == 0 || (*token)->next->type == 4
 		|| (*token)->next->type == 6 || (*token)->next->type == 7)
-		check_tokens(0, token, &error);
+		check_tokens(0, token, &error, env);
 	else
 		error = 1;
 	if ((*token)->next != 0 && ((*token)->next->type == OPEN_SUB
