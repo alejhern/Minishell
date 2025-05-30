@@ -16,7 +16,7 @@ static char	*get_line_prompt(char **env)
 {
 	char	*cwd;
 	char	*user;
-	char	*line;
+	char	*prompt;
 	char	*home;
 
 	cwd = getcwd(NULL, 0);
@@ -35,41 +35,52 @@ static char	*get_line_prompt(char **env)
 		ft_printf(GREEN "%s" YELLOW "@" BLUE "%s" RESET, user, cwd);
 	free(cwd);
 	free(user);
-	line = readline(GREEN " > " RESET);
-	if (!line)
-		ft_perror_exit("Error: readline");
-	return (line);
+	prompt = readline(GREEN " > " RESET);
+	if (!prompt)
+		ft_error_exit("");
+	return (prompt);
 }
 
-void	line_shell(char ***env)
+static int	manage_prompt(char *prompt)
+{
+	if (g_signal != 0)
+	{
+		g_signal = 0;
+		return (0);
+	}
+	if (!prompt)
+		ft_perror_exit("Error: readline");
+	if (ft_strlen(prompt) == 0)
+	{
+		free(prompt);
+		return (0);
+	}
+	add_history(prompt);
+	return (1);
+}
+
+static void	line_shell(char ***env, char *proyect_path)
 {
 	int		error;
-	char	*line;
+	char	*prompt;
 	t_list	*shells;
 	t_token	*token;
 
 	error = 0;
-	signal(SIGINT, signal_handler_main);
 	while (1)
 	{
-		line = get_line_prompt(*env);
-		if (g_signal != 0)
-		{
-			g_signal = 0;
+		prompt = get_line_prompt(*env);
+		if (!manage_prompt(prompt))
 			continue ;
-		}
-		if (ft_strncmp("", line, 1) == 0)
-			continue ;
-		token = tokenize(line, &error);
-		free(line);
+		token = tokenize(prompt, &error);
+		free(prompt);
 		check_tokens(token, 0, &error, *env);
 		if (error != 0)
 			ft_error_exit("SYNTAX ERROR");
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
-		//ft_lstiter(shells, print_shell);//commented for the moment do not remmove
-		launch_commands(shells, env);
+		launch_commands(shells, proyect_path, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);
 	}
@@ -78,16 +89,22 @@ void	line_shell(char ***env)
 int	main(int argc, char **argv, char **env)
 {
 	char	**envp;
+	char	*proyect_path;
 
 	if (argc != 1 && argv[0])
 	{
 		ft_putstr_fd("Error: no arguments expected\n", 2);
 		return (1);
 	}
+	signal(SIGINT, signal_handler_main);
 	envp = ft_env((const char **)env);
 	if (!envp)
 		ft_perror_exit("Error: malloc");
-	line_shell(&envp);
+	proyect_path = getcwd(NULL, 0);
+	if (!proyect_path)
+		ft_perror_exit("Error: getcwd");
+	line_shell(&envp, proyect_path);
+	free(proyect_path);
 	ft_free_array((void ***)&envp);
 	return (0);
 }

@@ -14,7 +14,7 @@
 
 int	exec_builtin(char **command, char ***env, int (*f)(char **cmd, char ***env))
 {
-	int			result;
+	int	result;
 
 	result = f(command, env);
 	if (result == -1)
@@ -27,7 +27,7 @@ int	exec_builtin(char **command, char ***env, int (*f)(char **cmd, char ***env))
 
 int	find_builtins(char **command, char ***env)
 {
-	int			result_builtin;
+	int	result_builtin;
 
 	if (ft_strncmp(command[0], "echo", 5) == 0)
 		result_builtin = exec_builtin(command, env, mini_echo);
@@ -48,7 +48,8 @@ int	find_builtins(char **command, char ***env)
 	return (result_builtin);
 }
 
-static int	launch_shell_commands(t_shell *shell, char ***env)
+static int	launch_shell_commands(t_shell *shell, char *proyect_path,
+		char ***env)
 {
 	t_list		*commands;
 	t_command	*command;
@@ -60,7 +61,7 @@ static int	launch_shell_commands(t_shell *shell, char ***env)
 	{
 		command = commands->content;
 		if (command->subshell)
-			result = launch_commands(command->subshell, env);
+			result = launch_commands(command->subshell, proyect_path, env);
 		else
 		{
 			result = find_builtins(command->command, env);
@@ -72,12 +73,13 @@ static int	launch_shell_commands(t_shell *shell, char ***env)
 	return (result);
 }
 
-int	launch_commands(t_list *shells, char ***env)
+int	launch_commands(t_list *shells, char *proyect_path, char ***env)
 {
 	t_list	*list;
 	t_shell	*shell;
 	int		result;
 
+	(void)proyect_path;
 	list = shells;
 	result = 0;
 	while (list != NULL)
@@ -85,7 +87,7 @@ int	launch_commands(t_list *shells, char ***env)
 		shell = list->content;
 		if (result == 1 && shell->type == OR)
 			break ;
-		result = launch_shell_commands(shell, env);
+		result = launch_shell_commands(shell, proyect_path, env);
 		if (result == -1)
 		{
 			ft_putstr_fd("Error: command not found\n", 2);
