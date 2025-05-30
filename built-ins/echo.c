@@ -31,10 +31,10 @@ int	mini_echo(char **command, char ***env)
 	int		i;
 	char	jump;
 
-	env = env;
+	(void) env;
 	i = 0;
 	jump = 1;
-	if (is_flag(command[i]))
+	if (is_flag(command[i + 1]))
 	{
 		jump = 0;
 		i++;
