@@ -15,29 +15,28 @@
 static char	*get_line_prompt(char **env)
 {
 	char	*cwd;
-	char	*user;
 	char	*prompt;
-	char	*home;
+	char	**hostname;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
-		cwd = ft_strdup("minishell");
-	user = ft_strdup(ft_getenv("USER", env));
-	if (!user)
-		user = ft_strdup("minishell");
-	home = ft_getenv("HOME", env);
-	if (!home)
-		home = ft_strdup("minishell");
-	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
-		ft_printf(GREEN "%s" YELLOW "@" BLUE "~%s" RESET, user, cwd
-			+ ft_strlen(home));
-	else
-		ft_printf(GREEN "%s" YELLOW "@" BLUE "%s" RESET, user, cwd);
+		cwd = ft_strdup("");
+	ft_putstr_fd((const char *) GREEN, STDOUT_FILENO);
+	ft_putstr_fd((const char*) ft_getenv("USER", env), STDOUT_FILENO);
+	ft_putchar_fd((const char)'@', STDOUT_FILENO);
+	hostname = NULL;
+	ft_append_array((void ***)&hostname, ft_strdup("hostname"));
+	prompt = ft_exec_catch(hostname, env);
+	ft_free_array((void ***)&hostname);
+	ft_putstr_fd(prompt, STDOUT_FILENO);
+	free(prompt);
+	ft_putchar_fd((const char)':', STDOUT_FILENO);
+	ft_putstr_fd((const char *) BLUE, STDOUT_FILENO);
+	if (ft_strcmp(cwd, ft_getenv("HOME", env)) == 0)
+		ft_putchar_fd('~', STDOUT_FILENO);
+	ft_printf("%s" RESET, cwd);
 	free(cwd);
-	free(user);
 	prompt = readline(GREEN " > " RESET);
-	if (!prompt)
-		ft_error_exit("");
 	return (prompt);
 }
 
@@ -80,7 +79,7 @@ static void	line_shell(char ***env, char *proyect_path)
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
-		launch_commands(shells, proyect_path, env);
+		launch_shells(shells, proyect_path, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);
 	}
