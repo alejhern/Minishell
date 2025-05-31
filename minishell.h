@@ -119,7 +119,10 @@ int					check_subshell(t_token **token, char **env);
 // ███████╗██╔╝ ██╗███████╗╚██████╗
 // ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
 
-int					launch_commands(t_list *shells, char *proyect_path, char ***env);
+int					get_input_file(t_list *redirect);
+int					*get_output_files(t_list *redirects);
+void					transfer_output(int *fds, char *output);
+int					launch_shells(t_list *shells, char *proyect_path, char ***env);
 
 // ██╗  ██╗██╗███████╗████████╗ ██████╗ ██████╗ ██╗   ██╗
 // ██║  ██║██║██╔════╝╚══██╔══╝██╔═══██╗██╔══██╗╚██╗ ██╔╝

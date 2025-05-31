@@ -48,6 +48,34 @@ int	find_builtins(char **command, char ***env)
 	return (result_builtin);
 }
 
+static int	make_comand(t_command *command, char ***env)
+{
+	int		result;
+	int		fd_in;
+	int		*fds_out;
+	char	*output;
+
+	fd_in = -1;
+	result = find_builtins(command->command, env);
+	if (result != -1)
+		return (result);
+	fd_in = get_input_file(command->redirect_in);
+	fds_out = get_output_files(command->redirect_out);
+	output = ft_exec_catch(command->command, *env);
+	if (fd_in != -1)
+	{
+		if (dup2(fd_in, STDIN_FILENO) == -1)
+			ft_perror_exit("Error redirecting input");
+		close(fd_in);
+	}
+	transfer_output(fds_out, output);
+	ft_free_array((void ***)&fds_out);
+	if (!output)
+		return (1);
+	free(output);
+	return (0);
+}
+
 static int	launch_shell_commands(t_shell *shell, char *proyect_path,
 		char ***env)
 {
@@ -61,19 +89,15 @@ static int	launch_shell_commands(t_shell *shell, char *proyect_path,
 	{
 		command = commands->content;
 		if (command->subshell)
-			result = launch_commands(command->subshell, proyect_path, env);
+			result = launch_shells(command->subshell, proyect_path, env);
 		else
-		{
-			result = find_builtins(command->command, env);
-			if (result == -1)
-				result = ft_execute(command->command, *env, 1);
-		}
+			result = make_comand(command, env);
 		commands = commands->next;
 	}
 	return (result);
 }
 
-int	launch_commands(t_list *shells, char *proyect_path, char ***env)
+int	launch_shells(t_list *shells, char *proyect_path, char ***env)
 {
 	t_list	*list;
 	t_shell	*shell;
