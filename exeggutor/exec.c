@@ -100,18 +100,13 @@ int	launch_shells(t_list *shells, char *proyect_path, char ***env)
 	(void)proyect_path;
 	list = shells;
 	result = 0;
-	while (list != NULL)
+	while (list)
 	{
 		shell = list->content;
-		if (result == 1 && shell->type == OR)
+		if (result == 0 && shell->type == OR)
 			break ;
 		result = launch_shell_commands(shell, proyect_path, env);
-		if (result == -1)
-		{
-			ft_putstr_fd("Error: command not found\n", 2);
-			return (-1);
-		}
 		list = list->next;
 	}
-	return (0);
+	return (result);
 }
