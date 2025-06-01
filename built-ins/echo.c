@@ -19,33 +19,36 @@ static int	is_flag(char *flag)
 	i = 1;
 	if (flag[0] != '-')
 		return (0);
-	while (flag[i] == 'n')
-		i++;
-	if (flag[i] == 0)
-		return (1);
+	while (flag[i])
+		if (flag[i++] == 'n')
+			return (1);
 	return (0);
 }
 
-int	mini_echo(char **command, char ***env)
+int	builtin_echo(char **command, int *fds)
 {
-	int		i;
 	char	jump;
+	char	*printeable;
+	char	*print_no_quote;
 
-	(void) env;
-	i = 0;
-	jump = 1;
-	if (is_flag(command[i + 1]))
+	command++;
+	jump = is_flag(*command + 1);
+	if (jump)
+		command++;
+	printeable = NULL;
+	while(*command)
 	{
-		jump = 0;
-		i++;
-	}
-	while (command[++i])
-	{
-		ft_printf("%s", command[i]);
-		if (command[i + 1])
-			ft_printf(" ");
+		printeable = ft_strappend(printeable, *command++);
+		if (command + 1)
+			printeable = ft_strappend(printeable, " ");
 	}
 	if (jump)
-		ft_printf("\n");
+		printeable = ft_strappend(printeable, "\n");
+	print_no_quote = ft_strtrim(printeable, "\"\'");
+	if (!print_no_quote)
+		ft_error_exit("echo: memory allocation error");
+	transfer_output(fds, print_no_quote);
+	free(printeable);
+	free(print_no_quote);
 	return (0);
 }

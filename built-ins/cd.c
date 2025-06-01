@@ -50,13 +50,15 @@ static char	*handle_tilde_path(char *path, char **env)
 	return (new_path);
 }
 
-static char	*get_new_path(char **command, char **env)
+static char	*get_new_path(char **command, char **env, int *fds)
 {
-	if (!command[1] || !command[1][0] || (ft_strncmp(command[1], "--", 3) == 0))
+	if (!command[1] || (ft_strncmp(command[1], "--", 3) == 0)
+		|| (ft_strncmp(command[1], "-P", 3) == 0) || (ft_strncmp(command[1],
+				"-L", 3) == 0))
 		return (get_env_path("HOME", env));
 	else if (ft_strncmp(command[1], "-", 2) == 0)
 	{
-		ft_putendl_fd(ft_getenv("OLDPWD", env), 1);
+		transfer_output(fds, get_env_path("OLDPWD", env));
 		return (get_env_path("OLDPWD", env));
 	}
 	else if (ft_strncmp(command[1], ".", 2) == 0 || ft_strncmp(command[1], "..",
@@ -94,12 +96,14 @@ static int	change_directory(char *new_path, char ***env)
 	return (0);
 }
 
-int	mini_cd(char **command, char ***env)
+int	builtin_cd(char **command, char ***env, int *fds)
 {
 	char	*new_path;
 	int		ret;
 
-	new_path = get_new_path(command, *env);
+	if (command && !command[1])
+		return (0);
+	new_path = get_new_path(command, *env, fds);
 	if (!new_path)
 		return (1);
 	ret = change_directory(new_path, env);

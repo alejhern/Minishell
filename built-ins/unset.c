@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int	mini_unset(char **command, char ***env)
+int	builtin_unset(char **command, char ***env)
 {
 	if (!command[1])
 	{

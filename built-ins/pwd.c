@@ -12,13 +12,13 @@
 
 #include "../minishell.h"
 
-int	mini_pwd(char **command, char ***env)
+int	builtin_pwd(char **command, char ***env, int *fds)
 {
 	char	*cwd;
 
 	if (command[1])
 	{
-		perror("pwd: too many arguments\n");
+		ft_printf_fd(STDERR_FILENO, "pwd: too many arguments\n");
 		return (1);
 	}
 	cwd = ft_getenv("PWD", *env);
@@ -27,6 +27,6 @@ int	mini_pwd(char **command, char ***env)
 		perror("pwd: getcwd error");
 		return (1);
 	}
-	ft_putendl_fd(cwd, 1);
+	transfer_output(fds, cwd);
 	return (0);
 }

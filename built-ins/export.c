@@ -41,7 +41,7 @@ static int	prevalidate_export(char *var)
 	return (0);
 }
 
-int	mini_export(char **command, char ***env)
+int	builtin_export(char **command, char ***env)
 {
 	char	*var;
 	char	*command_nq;

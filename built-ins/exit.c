@@ -12,7 +12,17 @@
 
 #include "../minishell.h"
 
-int	mini_exit(int code)
+int	builtin_exit(char **comand)
 {
-	exit(code);
+	if (ft_memlen(comand) > 2)
+	{
+		ft_printf_fd(STDERR_FILENO, "exit: too many arguments\n");
+		return (1);
+	}
+	ft_printf_fd(STDOUT_FILENO, "exit\n");
+	if (comand[1])
+		exit(ft_atoi(comand[1]));
+	else
+		exit(0);
+	return (0);
 }
