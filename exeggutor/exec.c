@@ -69,7 +69,7 @@ static int	make_comand(t_command *command, char ***env)
 		close(fd_in);
 	}
 	transfer_output(fds_out, output);
-	ft_free_array((void ***)&fds_out);
+	free(fds_out);
 	if (!output)
 		return (1);
 	free(output);

@@ -20,7 +20,7 @@ void transfer_output(int *fds, char *output)
             ft_perror_exit("Error writing to standard output");
         return ;
     }
-    while (*fds)
+    while (*fds != -1)
     {
         if (!ft_putendl_fd(output, *fds))
             ft_perror_exit("Error writing to output file");
@@ -36,7 +36,7 @@ int *get_output_files(t_list *redirects)
 
     if (!redirects)
         return (NULL);
-    fds = malloc(sizeof(int) * ft_lstsize(redirects));
+    fds = malloc(sizeof(int) * (ft_lstsize(redirects) + 1));
     index = 0;
     while (redirects)
     {
@@ -48,7 +48,8 @@ int *get_output_files(t_list *redirects)
         if (fds[index++] == -1)
             ft_perror_exit("Error opening output file");
         redirects = redirects->next;
-    } 
+    }
+    fds[index] = -1;
     return (fds);
 }
 
