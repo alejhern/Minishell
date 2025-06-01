@@ -12,68 +12,62 @@
 
 #include "../minishell.h"
 
-int	exec_builtin(char **command, char ***env, int (*f)(char **cmd, char ***env))
-{
-	int	result;
-
-	result = f(command, env);
-	if (result == -1)
-	{
-		perror("Cannot execute command");
-		return (1);
-	}
-	return (result);
-}
-
-int	find_builtins(char **command, char ***env)
+int	find_builtins(char **command, char ***env, int *fds)
 {
 	int	result_builtin;
 
 	if (ft_strncmp(command[0], "echo", 5) == 0)
-		result_builtin = exec_builtin(command, env, mini_echo);
+		result_builtin = builtin_echo(command, fds);
 	else if (ft_strncmp(command[0], "cd", 3) == 0)
-		result_builtin = exec_builtin(command, env, mini_cd);
+		result_builtin = builtin_cd(command, env, fds);
 	else if (ft_strncmp(command[0], "pwd", 4) == 0)
-		result_builtin = exec_builtin(command, env, mini_pwd);
+		result_builtin = builtin_pwd(command, env, fds);
 	else if (ft_strncmp(command[0], "export", 7) == 0)
-		result_builtin = exec_builtin(command, env, mini_export);
+		result_builtin = builtin_export(command, env);
 	else if (ft_strncmp(command[0], "unset", 6) == 0)
-		result_builtin = exec_builtin(command, env, mini_unset);
+		result_builtin = builtin_unset(command, env);
 	else if (ft_strncmp(command[0], "env", 4) == 0)
-		result_builtin = exec_builtin(command, env, mini_env);
+		result_builtin = builtin_env(env, fds);
 	else if (ft_strncmp(command[0], "exit", 5) == 0)
-		exit(0);
+		result_builtin = builtin_exit(command);
 	else
 		result_builtin = -1;
 	return (result_builtin);
 }
 
-static int	make_comand(t_command *command, char ***env)
+static int	make_comand(t_command *command, char ***env, int *fds_out)
 {
 	int		result;
-	int		fd_in;
-	int		*fds_out;
 	char	*output;
 
-	fd_in = -1;
-	result = find_builtins(command->command, env);
+	result = find_builtins(command->command, env, fds_out);
 	if (result != -1)
 		return (result);
+	output = ft_exec_catch(command->command, *env);
+	transfer_output(fds_out, output);
+	if (!output)
+		return (1);
+	free(output);
+	return (0);
+}
+
+static int	prepare_and_launch(t_command *command, char ***env)
+{
+	int	result;
+	int	*fds_out;
+	int	fd_in;
+
 	fd_in = get_input_file(command->redirect_in);
 	fds_out = get_output_files(command->redirect_out);
-	output = ft_exec_catch(command->command, *env);
+	result = make_comand(command, env, fds_out);
 	if (fd_in != -1)
 	{
 		if (dup2(fd_in, STDIN_FILENO) == -1)
 			ft_perror_exit("Error redirecting input");
 		close(fd_in);
 	}
-	transfer_output(fds_out, output);
 	free(fds_out);
-	if (!output)
-		return (1);
-	free(output);
-	return (0);
+	return (result);
 }
 
 static int	launch_shell_commands(t_shell *shell, char *proyect_path,
@@ -91,7 +85,7 @@ static int	launch_shell_commands(t_shell *shell, char *proyect_path,
 		if (command->subshell)
 			result = launch_shells(command->subshell, proyect_path, env);
 		else
-			result = make_comand(command, env);
+			result = prepare_and_launch(command, env);
 		commands = commands->next;
 	}
 	return (result);
