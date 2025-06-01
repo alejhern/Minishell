@@ -51,44 +51,23 @@ static int	make_comand(t_command *command, char ***env, int *fds_out)
 	return (0);
 }
 
-static int	prepare_and_launch(t_command *command, char ***env)
+static void	launch_shell_commands(t_shell *shell, char *proyect_path,
+		char ***env, int *result)
 {
-	int	result;
-	int	*fds_out;
-	int	fd_in;
+	t_command				*command;
+	t_redirects_response	redirects_response;
 
-	fd_in = get_input_file(command->redirect_in);
-	fds_out = get_output_files(command->redirect_out);
-	result = make_comand(command, env, fds_out);
-	if (fd_in != -1)
+	while (shell->commands)
 	{
-		if (dup2(fd_in, STDIN_FILENO) == -1)
-			ft_perror_exit("Error redirecting input");
-		close(fd_in);
-	}
-	free(fds_out);
-	return (result);
-}
-
-static int	launch_shell_commands(t_shell *shell, char *proyect_path,
-		char ***env)
-{
-	t_list		*commands;
-	t_command	*command;
-	int			result;
-
-	commands = shell->commands;
-	result = -1;
-	while (commands)
-	{
-		command = commands->content;
+		command = shell->commands->content;
+		redirects_response = prepare_redirects(command);
+		shell->commands = shell->commands->next;
 		if (command->subshell)
-			result = launch_shells(command->subshell, proyect_path, env);
+			*result = launch_shells(command->subshell, proyect_path, env);
 		else
-			result = prepare_and_launch(command, env);
-		commands = commands->next;
+			*result = make_comand(command, env, redirects_response.fds_out);
+		recover_fds(redirects_response);
 	}
-	return (result);
 }
 
 int	launch_shells(t_list *shells, char *proyect_path, char ***env)
@@ -99,13 +78,13 @@ int	launch_shells(t_list *shells, char *proyect_path, char ***env)
 
 	(void)proyect_path;
 	list = shells;
-	result = 0;
+	result = 1;
 	while (list)
 	{
 		shell = list->content;
 		if (result == 0 && shell->type == OR)
 			break ;
-		result = launch_shell_commands(shell, proyect_path, env);
+		launch_shell_commands(shell, proyect_path, env, &result);
 		list = list->next;
 	}
 	return (result);
