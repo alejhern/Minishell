@@ -43,6 +43,14 @@ static int	make_comand(t_command *command, char ***env, int *fds_out)
 	result = find_builtins(command->command, env, fds_out);
 	if (result != -1)
 		return (result);
+	if (!fds_out)
+	{
+		result = ft_execute(command->command, *env, 1);
+		if (result == 0 || result == 127)
+			return (1);
+		else
+			return (0);
+	}
 	output = ft_exec_catch(command->command, *env);
 	transfer_output(fds_out, output);
 	if (!output)
