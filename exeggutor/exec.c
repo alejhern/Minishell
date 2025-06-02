@@ -12,22 +12,22 @@
 
 #include "../minishell.h"
 
-int	find_builtins(char **command, char ***env, int *fds)
+int	find_builtins(char **command, char ***env)
 {
 	int	result_builtin;
 
 	if (ft_strncmp(command[0], "echo", 5) == 0)
-		result_builtin = builtin_echo(command, fds);
+		result_builtin = builtin_echo(command);
 	else if (ft_strncmp(command[0], "cd", 3) == 0)
-		result_builtin = builtin_cd(command, env, fds);
+		result_builtin = builtin_cd(command, env);
 	else if (ft_strncmp(command[0], "pwd", 4) == 0)
-		result_builtin = builtin_pwd(command, env, fds);
+		result_builtin = builtin_pwd(command, env);
 	else if (ft_strncmp(command[0], "export", 7) == 0)
 		result_builtin = builtin_export(command, env);
 	else if (ft_strncmp(command[0], "unset", 6) == 0)
 		result_builtin = builtin_unset(command, env);
 	else if (ft_strncmp(command[0], "env", 4) == 0)
-		result_builtin = builtin_env(env, fds);
+		result_builtin = builtin_env(env);
 	else if (ft_strncmp(command[0], "exit", 5) == 0)
 		result_builtin = builtin_exit(command);
 	else
@@ -35,28 +35,18 @@ int	find_builtins(char **command, char ***env, int *fds)
 	return (result_builtin);
 }
 
-static int	make_comand(t_command *command, char ***env, int *fds_out)
+static int	make_comand(t_command *command, char ***env)
 {
 	int		result;
-	char	*output;
 
-	result = find_builtins(command->command, env, fds_out);
+	result = find_builtins(command->command, env);
 	if (result != -1)
 		return (result);
-	if (!fds_out)
-	{
-		result = ft_execute(command->command, *env, 1);
-		if (result == 0 || result == 127)
-			return (1);
-		else
-			return (0);
-	}
-	output = ft_exec_catch(command->command, *env);
-	transfer_output(fds_out, output);
-	if (!output)
+	result = ft_execute(command->command, *env, 1);
+	if (result == 0 || result == 127)
 		return (1);
-	free(output);
-	return (0);
+	else
+		return (0);
 }
 
 static void	launch_shell_commands(t_shell *shell, char *proyect_path,
@@ -73,7 +63,7 @@ static void	launch_shell_commands(t_shell *shell, char *proyect_path,
 		if (command->subshell)
 			*result = launch_shells(command->subshell, proyect_path, env);
 		else
-			*result = make_comand(command, env, redirects_response.fds_out);
+			*result = make_comand(command, env);
 		recover_fds(redirects_response);
 	}
 }

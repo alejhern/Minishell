@@ -12,21 +12,6 @@
 
 #include "../minishell.h"
 
-void	transfer_output(int *fds, char *output)
-{
-	if (!ft_putendl_fd(output, STDOUT_FILENO))
-		ft_perror_exit("Error writing to standard output");
-	if (!fds || !output)
-		return ;
-	fds++;
-	while (*fds != -1)
-	{
-		if (!ft_putendl_fd(output, *fds))
-			ft_perror_exit("Error writing to output file");
-		close(*(fds++));
-	}
-}
-
 static int	*get_output_files(t_list *redirects)
 {
 	int				*fds;
@@ -51,9 +36,9 @@ static int	*get_output_files(t_list *redirects)
 		redirects = redirects->next;
 	}
 	fds[index] = -1;
-	if (dup2(fds[0], STDOUT_FILENO) == -1)
+	if (dup2(fds[--index], STDOUT_FILENO) == -1)
 		ft_perror_exit("Error redirecting output");
-	return (close(fds[0]), fds);
+	return (close(fds[index]), fds);
 }
 
 static int	get_input_file(t_list *redirects)
@@ -75,15 +60,19 @@ static int	get_input_file(t_list *redirects)
 
 void	recover_fds(t_redirects_response response)
 {
+	int	index;
+
 	if (response.fd_in != -1)
 		if (dup2(response.fd_in, STDIN_FILENO) == -1)
 			ft_perror_exit("Error redirecting input");
 	if (response.fds_out)
 	{
-		if (response.fds_out[0] == -1)
-			ft_perror_exit("Error opening output file");
+		index = 0;
+		while (response.fds_out[index] != -1)
+			close(response.fds_out[index++]);
 		if (dup2(response.save_out, STDOUT_FILENO) == -1)
 			ft_perror_exit("Error redirecting output");
+		close(response.save_out);
 		free(response.fds_out);
 	}
 }
