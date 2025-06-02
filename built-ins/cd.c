@@ -101,7 +101,7 @@ int	builtin_cd(char **command, char ***env, int *fds)
 	char	*new_path;
 	int		ret;
 
-	if (command && !command[1])
+	if (!command)
 		return (0);
 	new_path = get_new_path(command, *env, fds);
 	if (!new_path)
