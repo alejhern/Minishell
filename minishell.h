@@ -130,7 +130,6 @@ int						check_subshell(t_token **token, char **env);
 
 t_redirects_response	prepare_redirects(t_command *command);
 void					recover_fds(t_redirects_response response);
-void					transfer_output(int *fds, char *output);
 int						launch_shells(t_list *shells, char *proyect_path,
 							char ***env);
 
@@ -152,12 +151,12 @@ char					**get_history(int *size);
 //██████   ██████  ██ ███████    ██    ██ ██   ████ ███████
 
 int						builtin_exit(char **command);
-int						builtin_cd(char **command, char ***env, int *fds);
-int						builtin_pwd(char **command, char ***env, int *fds);
+int						builtin_cd(char **command, char ***env);
+int						builtin_pwd(char **command, char ***env);
 int						builtin_export(char **command, char ***env);
 int						builtin_unset(char **command, char ***env);
-int						builtin_env(char ***env, int *fds);
-int						builtin_echo(char **command, int *fds);
+int						builtin_env(char ***env);
+int						builtin_echo(char **command);
 
 //███████ ██  ██████  ███    ██  █████  ██      ███████
 //██      ██ ██       ████   ██ ██   ██ ██      ██
