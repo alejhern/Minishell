@@ -15,10 +15,10 @@
 void	transfer_output(int *fds, char *output)
 {
 	if (!ft_putendl_fd(output, STDOUT_FILENO))
-			ft_perror_exit("Error writing to standard output");
+		ft_perror_exit("Error writing to standard output");
 	if (!fds || !output)
-        return ;
-    fds++;
+		return ;
+	fds++;
 	while (*fds != -1)
 	{
 		if (!ft_putendl_fd(output, *fds))
@@ -53,7 +53,7 @@ static int	*get_output_files(t_list *redirects)
 	fds[index] = -1;
 	if (dup2(fds[0], STDOUT_FILENO) == -1)
 		ft_perror_exit("Error redirecting output");
-    return (close(fds[0]), fds);
+	return (close(fds[0]), fds);
 }
 
 static int	get_input_file(t_list *redirects)
@@ -73,25 +73,25 @@ static int	get_input_file(t_list *redirects)
 	return (fd);
 }
 
-void    recover_fds(t_redirects_response response)
+void	recover_fds(t_redirects_response response)
 {
-    if (response.fd_in != -1)
-        if (dup2(response.fd_in, STDIN_FILENO) == -1)
-            ft_perror_exit("Error redirecting input");
-    if (response.fds_out)
-    {
-        if (response.fds_out[0] == -1)
-            ft_perror_exit("Error opening output file");
-        if (dup2(response.save_out, STDOUT_FILENO) == -1)
-            ft_perror_exit("Error redirecting output");
-        free(response.fds_out);
-    }
+	if (response.fd_in != -1)
+		if (dup2(response.fd_in, STDIN_FILENO) == -1)
+			ft_perror_exit("Error redirecting input");
+	if (response.fds_out)
+	{
+		if (response.fds_out[0] == -1)
+			ft_perror_exit("Error opening output file");
+		if (dup2(response.save_out, STDOUT_FILENO) == -1)
+			ft_perror_exit("Error redirecting output");
+		free(response.fds_out);
+	}
 }
 
-t_redirects_response prepare_redirects(t_command *command)
+t_redirects_response	prepare_redirects(t_command *command)
 {
 	t_redirects_response	response;
-    
+
 	response.fd_in = get_input_file(command->redirect_in);
 	response.save_out = dup(STDOUT_FILENO);
 	response.fds_out = get_output_files(command->redirect_out);
