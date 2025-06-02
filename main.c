@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	parsing_home(char **env, char *cwd)
+static void	parsing_pwd(char **env, char *cwd)
 {
 	char	*home;
 	int		len_home;
@@ -53,7 +53,7 @@ static char	*get_line_prompt(char **env, int error)
 	free(prompt);
 	ft_putchar_fd((const char) ':', STDOUT_FILENO);
 	ft_putstr_fd((const char *)BLUE, STDOUT_FILENO);
-	parsing_home(env, cwd);
+	parsing_pwd(env, cwd);
 	free(cwd);
 	ft_putstr_fd((const char *)GREEN, STDOUT_FILENO);
 	if (error)
@@ -70,7 +70,7 @@ static int	manage_prompt(char *prompt)
 		return (0);
 	}
 	if (!prompt)
-		ft_perror_exit("Error: readline");
+		builtin_exit(ft_split("exit 1", ' '));
 	if (ft_strlen(prompt) == 0)
 	{
 		free(prompt);

@@ -17,6 +17,19 @@ int			g_signal = 0;
 void	signal_handler_main(int sig)
 {
 	g_signal = sig;
-	ft_printf("\n");
-	rl_done = 1;
+	if (sig == SIGINT)
+	{
+		rl_replace_line("", 1);              // Borra línea actual
+		rl_done = 1;
+		ft_putchar_fd('\n', STDOUT_FILENO);  // Baja línea para claridad
+		rl_on_new_line();
+		// rl_redisplay();
+	}
+	else if (sig == SIGQUIT)
+	{
+		ft_printf("Quit: 3\n");
+		rl_on_new_line();
+		rl_redisplay();
+	}
 }
+
