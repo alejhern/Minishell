@@ -36,7 +36,7 @@ int	builtin_echo(char **command, int *fds)
 	if (jump)
 		command++;
 	printeable = NULL;
-	while(*command)
+	while (*command)
 	{
 		printeable = ft_strappend(printeable, *command++);
 		if (command + 1)
