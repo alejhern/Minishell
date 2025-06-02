@@ -43,7 +43,7 @@ RM		= rm -f
 #                                 RULES                                        #
 # **************************************************************************** #
 
-all:		$(LIBFT) ${NAME} $(PIPEX)
+all:		$(LIBFT) ${NAME}
 
 -include ${DEPS}
 $(NAME):	$(OBJS) $(LIBFT)
