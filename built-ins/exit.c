@@ -14,15 +14,20 @@
 
 int	builtin_exit(char **comand)
 {
+	if (!comand)
+	{
+		ft_putendl_fd("exit", STDOUT_FILENO);
+		exit(EXIT_FAILURE);
+	}
 	if (ft_memlen(comand) > 2)
 	{
-		ft_printf_fd(STDERR_FILENO, "exit: too many arguments\n");
-		return (1);
+		ft_putstr_fd("exit: too many arguments\n", STDERR_FILENO);
+		return (EXIT_FAILURE);
 	}
-	ft_printf_fd(STDOUT_FILENO, "exit\n");
+	ft_putendl_fd("exit", STDOUT_FILENO);
 	if (comand[1])
 		exit(ft_atoi(comand[1]));
 	else
-		exit(0);
-	return (0);
+		exit(EXIT_SUCCESS);
+	return (EXIT_SUCCESS);
 }

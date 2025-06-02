@@ -12,9 +12,8 @@
 
 #include "../minishell.h"
 
-int	builtin_env(char ***env, int *fds)
+int	builtin_env(char ***env)
 {
-	char	*printeable;
 	char	**original_env;
 
 	if (!*env || !(*env)[0])
@@ -23,16 +22,7 @@ int	builtin_env(char ***env, int *fds)
 		return (1);
 	}
 	original_env = *env;
-	printeable = NULL;
 	while (*original_env)
-	{
-		printeable = ft_strappend(printeable, *original_env++);
-		if (*original_env)
-			printeable = ft_strappend(printeable, "\n");
-		if (!printeable)
-			ft_error_exit("env: memory allocation error");
-	}
-	transfer_output(fds, printeable);
-	free(printeable);
+		ft_putendl_fd(*original_env++, STDOUT_FILENO);
 	return (0);
 }

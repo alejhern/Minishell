@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int	builtin_pwd(char **command, char ***env, int *fds)
+int	builtin_pwd(char **command, char ***env)
 {
 	char	*cwd;
 
@@ -27,6 +27,6 @@ int	builtin_pwd(char **command, char ***env, int *fds)
 		perror("pwd: getcwd error");
 		return (1);
 	}
-	transfer_output(fds, cwd);
+	ft_putendl_fd(cwd, STDOUT_FILENO);
 	return (0);
 }

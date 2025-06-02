@@ -12,43 +12,21 @@
 
 #include "../minishell.h"
 
-static int	is_flag(char *flag)
+int	builtin_echo(char **command)
 {
-	int	i;
-
-	i = 1;
-	if (flag[0] != '-')
-		return (0);
-	while (flag[i])
-		if (flag[i++] == 'n')
-			return (1);
-	return (0);
-}
-
-int	builtin_echo(char **command, int *fds)
-{
-	char	jump;
-	char	*printeable;
-	char	*print_no_quote;
+	int	jump;
 
 	command++;
-	jump = is_flag(*command + 1);
-	if (jump)
+	jump = ft_strncmp("-n", *command, 2);
+	if (!jump)
 		command++;
-	printeable = NULL;
 	while (*command)
 	{
-		printeable = ft_strappend(printeable, *command++);
-		if (command + 1)
-			printeable = ft_strappend(printeable, " ");
+		ft_putstr_fd(*command++, STDOUT_FILENO);
+		if (*command)
+			ft_putchar_fd(' ', STDOUT_FILENO);
 	}
 	if (jump)
-		printeable = ft_strappend(printeable, "\n");
-	print_no_quote = ft_strtrim(printeable, "\"\'");
-	if (!print_no_quote)
-		ft_error_exit("echo: memory allocation error");
-	transfer_output(fds, print_no_quote);
-	free(printeable);
-	free(print_no_quote);
+		ft_putchar_fd('\n', STDOUT_FILENO);
 	return (0);
 }

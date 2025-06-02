@@ -50,7 +50,7 @@ static char	*handle_tilde_path(char *path, char **env)
 	return (new_path);
 }
 
-static char	*get_new_path(char **command, char **env, int *fds)
+static char	*get_new_path(char **command, char **env)
 {
 	if (!command[1] || (ft_strncmp(command[1], "--", 3) == 0)
 		|| (ft_strncmp(command[1], "-P", 3) == 0) || (ft_strncmp(command[1],
@@ -58,7 +58,7 @@ static char	*get_new_path(char **command, char **env, int *fds)
 		return (get_env_path("HOME", env));
 	else if (ft_strncmp(command[1], "-", 2) == 0)
 	{
-		transfer_output(fds, get_env_path("OLDPWD", env));
+		ft_putendl_fd(ft_getenv("OLDPWD", env), STDOUT_FILENO);
 		return (get_env_path("OLDPWD", env));
 	}
 	else if (ft_strncmp(command[1], ".", 2) == 0 || ft_strncmp(command[1], "..",
@@ -87,7 +87,7 @@ static int	change_directory(char *new_path, char ***env)
 		return (1);
 	}
 	if (!ft_setenv("OLDPWD", old_path, env))
-		ft_putstr_fd("cd: failed to set OLDPWD\n", 2);
+		ft_putendl_fd("cd: failed to set OLDPWD", 2);
 	free(old_path);
 	old_path = getcwd(NULL, 0);
 	if (!old_path || !ft_setenv("PWD", old_path, env))
@@ -96,14 +96,14 @@ static int	change_directory(char *new_path, char ***env)
 	return (0);
 }
 
-int	builtin_cd(char **command, char ***env, int *fds)
+int	builtin_cd(char **command, char ***env)
 {
 	char	*new_path;
 	int		ret;
 
 	if (!command)
 		return (0);
-	new_path = get_new_path(command, *env, fds);
+	new_path = get_new_path(command, *env);
 	if (!new_path)
 		return (1);
 	ret = change_directory(new_path, env);
