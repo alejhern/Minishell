@@ -6,66 +6,59 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/03 20:00:52 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/03 18:51:09 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*parsing_pwd(char **env, char *cwd, char *aux1, char * aux2)
+static void	parsing_pwd(char **env, char *cwd)
 {
 	char	*home;
-	char	*aux;
+	int		len_home;
 
 	home = ft_getenv("HOME", env);
-	aux = ft_strjoin(":", BLUE);
-	if (!aux)
-		exit(0);
-	aux2 = ft_strjoin_free(aux1, aux);
 	if (home)
 	{
-		if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
-			aux = ft_strjoin("~", cwd + ft_strlen(home));
+		len_home = ft_strlen(home);
+		if (ft_strncmp(cwd, home, len_home) == 0)
+		{
+			ft_putchar_fd('~', STDOUT_FILENO);
+			ft_putstr_fd(cwd + len_home, STDOUT_FILENO);
+		}
 		else
-			aux = ft_strdup(cwd);
+			ft_putstr_fd(cwd, STDOUT_FILENO);
 	}
 	else
-		aux = ft_strdup(cwd);
-	if (!aux)
-		exit(0);
-	aux1 = ft_strjoin_free(aux2, aux);
-	return (aux1);
+		ft_putstr_fd(cwd, STDOUT_FILENO);
 }
 
 static char	*get_line_prompt(char **env, int error)
 {
 	char	*cwd;
-	char	*aux1;
-	char	*aux2;
+	char	*aux;
 	char	*prompt;
 	char	**hostname;
 
 	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		cwd = ft_strdup("");
-	aux1 = ft_strjoin((char *)GREEN, (char *) ft_getenv("USER", env));
+	ft_putstr_fd((const char *)GREEN, STDOUT_FILENO);
+	ft_putstr_fd((const char *) ft_getenv("USER", env), STDOUT_FILENO);
+	ft_putchar_fd((const char) '@', STDOUT_FILENO);
 	hostname = NULL;
 	ft_append_array((void ***)&hostname, ft_strdup("hostname"));
-	aux2 = ft_strjoin("@", ft_exec_catch(hostname, env));
+	prompt = ft_exec_catch(hostname, env);
 	ft_free_array((void ***)&hostname);
-	aux2 = parsing_pwd(env, cwd, ft_strjoin_free(aux1, aux2), aux2);
+	
+	ft_putchar_fd((const char) ':', STDOUT_FILENO);
+	ft_putstr_fd((const char *)BLUE, STDOUT_FILENO);
+	parsing_pwd(env, cwd);
 	free(cwd);
+	ft_putstr_fd((const char *)GREEN, STDOUT_FILENO);
 	if (error)
-		aux1 = ft_strjoin(aux2, RED);
-	else
-		aux1 = ft_strjoin(aux2, GREEN);
-	free(aux2);
-	if (!aux1)
-		exit(0);
-	aux2 = ft_strjoin(aux1, ft_strjoin(">", RESET));
-	prompt = readline(aux2);
-	free(aux2);
-	ft_putstr_fd(RESET, STDOUT_FILENO);
+		ft_putstr_fd((const char *)RED, STDOUT_FILENO);
+	prompt = readline("> " RESET);
 	return (prompt);
 }
 

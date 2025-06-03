@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/30 18:50:43 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/03 19:48:12 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,8 @@ int						token_cond_util(int or, int and, int *error,
 t_token					*token_lstlast(t_token *token);
 t_token					*token_lstnew(char *token, int type);
 void					token_lstadd_back(t_token **token, t_token *new_token);
+
+char					*ft_strjoin_free(char *s1, char *s2);
 
 // ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
 // ██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗

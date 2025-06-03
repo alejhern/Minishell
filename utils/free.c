@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 13:25:32 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/04/12 13:25:36 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/06/03 20:01:17 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,20 @@ void	free_shell(void *content)
 	shell = content;
 	ft_lstclear(&shell->commands, free_comm);
 	free(shell);
+}
+
+char	*ft_strjoin_free(char *s1, char *s2)
+{
+	char	*ret;
+
+	if (!s1 || !s2)
+		exit(0);
+	ret = ft_strjoin(s1, s2);
+	if (s1)
+		free(s1);
+	if (s2)
+		free(s2);
+	if (!ret)
+		exit(0);
+	return (ret);
 }
