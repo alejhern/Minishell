@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 20:08:46 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/28 20:56:49 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:19:52 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,14 @@ static int	check_word(t_token *token, char **env)
 	if (token->next && token->next->type == OPEN_SUB)
 		return (1);
 	var = ft_strchr(token->token, '$');
-	if (var == 0)
-		return (0);
-	str = expand(token->token, env);
-	free(token->token);
-	token->token = str;
+	if (var != 0)
+	{
+		str = expand(token->token, env);
+		free(token->token);
+		token->token = str;
+	}
+	else
+		token->token = quote_remover(token->token, 0);
 	return (0);
 }
 

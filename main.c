@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/03 20:00:52 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:42:52 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static char	*get_line_prompt(char **env, int error)
 	free(aux2);
 	if (!aux1)
 		exit(0);
-	aux2 = ft_strjoin(aux1, ft_strjoin(">", RESET));
+	aux2 = ft_strjoin_free(aux1, ft_strjoin(">", RESET));
 	prompt = readline(aux2);
 	free(aux2);
 	ft_putstr_fd(RESET, STDOUT_FILENO);
@@ -110,6 +110,7 @@ static void	line_shell(char ***env, char *proyect_path)
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
+		ft_lstiter(shells, print_shell);
 		result = launch_shells(shells, proyect_path, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);

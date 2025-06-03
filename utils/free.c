@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 13:25:32 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/03 20:01:17 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/03 21:58:53 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ void	free_comm(void *content)
 	ft_lstclear(&command->subshell, free_shell);
 	ft_lstclear(&command->redirect_out, free_redirect);
 	ft_lstclear(&command->redirect_in, free_redirect);
-	free(command);
+	free(content);
 }
 
 void	free_shell(void *content)
