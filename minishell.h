@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/03 22:25:22 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/04 15:02:49 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ t_token					*token_lstlast(t_token *token);
 t_token					*token_lstnew(char *token, int type);
 void					token_lstadd_back(t_token **token, t_token *new_token);
 
-char					*ft_strjoin_free(char *s1, char *s2);
+char					*ft_strjoin_free(char *s1, char *s2, int util);
 
 char					*quote_remover(char *str, char *ret);
 

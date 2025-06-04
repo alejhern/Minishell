@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/03 21:42:52 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/04 15:25:33 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*parsing_pwd(char **env, char *cwd, char *aux1, char * aux2)
 	aux = ft_strjoin(":", BLUE);
 	if (!aux)
 		exit(0);
-	aux2 = ft_strjoin_free(aux1, aux);
+	aux2 = ft_strjoin_free(aux1, aux, 3);
 	if (home)
 	{
 		if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
@@ -33,7 +33,8 @@ static char	*parsing_pwd(char **env, char *cwd, char *aux1, char * aux2)
 		aux = ft_strdup(cwd);
 	if (!aux)
 		exit(0);
-	aux1 = ft_strjoin_free(aux2, aux);
+	aux1 = ft_strjoin_free(aux2, aux, 3);
+	free(cwd);
 	return (aux1);
 }
 
@@ -50,19 +51,16 @@ static char	*get_line_prompt(char **env, int error)
 		cwd = ft_strdup("");
 	aux1 = ft_strjoin((char *)GREEN, (char *) ft_getenv("USER", env));
 	hostname = NULL;
-	ft_append_array((void ***)&hostname, ft_strdup("hostname"));
+	ft_append_array((void ***)&hostname, ft_safe_strdup("hostname"));
 	aux2 = ft_strjoin("@", ft_exec_catch(hostname, env));
 	ft_free_array((void ***)&hostname);
-	aux2 = parsing_pwd(env, cwd, ft_strjoin_free(aux1, aux2), aux2);
-	free(cwd);
+	aux2 = parsing_pwd(env, cwd, ft_strjoin_free(aux1, aux2, 3), aux2);
 	if (error)
 		aux1 = ft_strjoin(aux2, RED);
 	else
 		aux1 = ft_strjoin(aux2, GREEN);
 	free(aux2);
-	if (!aux1)
-		exit(0);
-	aux2 = ft_strjoin_free(aux1, ft_strjoin(">", RESET));
+	aux2 = ft_strjoin_free(aux1, ft_strjoin(">", RESET), 3);
 	prompt = readline(aux2);
 	free(aux2);
 	ft_putstr_fd(RESET, STDOUT_FILENO);
