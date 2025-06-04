@@ -31,7 +31,7 @@ LIBFT = $(LIB_DIR)libft.a
 PIPEX = pipex/
 
 CC = cc -g
-CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) -fsanitiz=address
+CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) #-fsanitiz=address
 
 DEPS	= ${SRCS:.c=.d}
 

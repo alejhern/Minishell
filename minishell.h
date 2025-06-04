@@ -104,8 +104,6 @@ t_token					*token_lstlast(t_token *token);
 t_token					*token_lstnew(char *token, int type);
 void					token_lstadd_back(t_token **token, t_token *new_token);
 
-char					*ft_strjoin_free(char *s1, char *s2);
-
 char					*quote_remover(char *str, char *ret);
 
 // ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗

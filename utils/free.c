@@ -55,19 +55,3 @@ void	free_shell(void *content)
 	ft_lstclear(&shell->commands, free_comm);
 	free(shell);
 }
-
-char	*ft_strjoin_free(char *s1, char *s2)
-{
-	char	*ret;
-
-	if (!s1 || !s2)
-		exit(0);
-	ret = ft_strjoin(s1, s2);
-	if (s1)
-		free(s1);
-	if (s2)
-		free(s2);
-	if (!ret)
-		exit(0);
-	return (ret);
-}
