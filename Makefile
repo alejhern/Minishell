@@ -6,7 +6,7 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/05/30 19:01:23 by pafranco         ###   ########.fr        #
+#    Updated: 2025/06/04 13:41:47 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,7 @@ LIBFT = $(LIB_DIR)libft.a
 PIPEX = pipex/
 
 CC = cc -g
-CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) # -fsanitize=address
+CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) -fsanitiz=address
 
 DEPS	= ${SRCS:.c=.d}
 

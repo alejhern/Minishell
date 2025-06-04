@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/05/30 17:51:04 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:05:13 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ static void	launch_shell_commands(t_shell *shell, char *proyect_path,
 {
 	t_command				*command;
 	t_redirects_response	redirects_response;
+	t_list					*aux;
 
-	while (shell->commands)
+	aux = shell->commands;
+	while (aux)
 	{
-		command = shell->commands->content;
+		command = aux->content;
 		redirects_response = prepare_redirects(command);
-		shell->commands = shell->commands->next;
+		aux = aux->next;
 		if (command->subshell)
 			*result = launch_shells(command->subshell, proyect_path, env);
 		else
