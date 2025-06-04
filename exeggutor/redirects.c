@@ -31,14 +31,14 @@ static int	*get_output_files(t_list *redirects)
 		else
 			fds[index] = open(redirect->path, O_WRONLY | O_CREAT | O_TRUNC,
 					0644);
-		if (fds[index++] == -1)
+		if (fds[index] == -1)
 			ft_perror_exit("Error opening output file");
 		redirects = redirects->next;
+		if (dup2(fds[index], STDOUT_FILENO) == -1)
+			ft_perror_exit("Error redirecting output");
+		close(fds[index++]);
 	}
-	fds[index] = -1;
-	if (dup2(fds[--index], STDOUT_FILENO) == -1)
-		ft_perror_exit("Error redirecting output");
-	return (close(fds[index]), fds);
+	return (fds);
 }
 
 static int	get_input_file(t_list *redirects)
@@ -60,16 +60,11 @@ static int	get_input_file(t_list *redirects)
 
 void	recover_fds(t_redirects_response response)
 {
-	int	index;
-
 	if (response.fd_in != -1)
 		if (dup2(response.fd_in, STDIN_FILENO) == -1)
 			ft_perror_exit("Error redirecting input");
 	if (response.fds_out)
 	{
-		index = 0;
-		while (response.fds_out[index] != -1)
-			close(response.fds_out[index++]);
 		if (dup2(response.save_out, STDOUT_FILENO) == -1)
 			ft_perror_exit("Error redirecting output");
 		close(response.save_out);
