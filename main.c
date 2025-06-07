@@ -80,7 +80,7 @@ static int	manage_prompt(char *prompt)
 	return (1);
 }
 
-static void	line_shell(char ***env, char *proyect_path)
+static void	line_shell(char ***env)
 {
 	int		error;
 	char	*prompt;
@@ -103,7 +103,7 @@ static void	line_shell(char ***env, char *proyect_path)
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
-		result = launch_shells(shells, proyect_path, env);
+		result = launch_shells(shells, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);
 	}
@@ -112,7 +112,6 @@ static void	line_shell(char ***env, char *proyect_path)
 int	main(int argc, char **argv, char **env)
 {
 	char	**envp;
-	char	*proyect_path;
 
 	if (argc != 1 && argv[0])
 	{
@@ -122,12 +121,8 @@ int	main(int argc, char **argv, char **env)
 	envp = ft_env((const char **)env);
 	if (!envp)
 		ft_perror_exit("Error: malloc");
-	proyect_path = getcwd(NULL, 0);
-	if (!proyect_path)
-		ft_perror_exit("Error: getcwd");
 	signal(SIGINT, signal_handler_main);
-	line_shell(&envp, proyect_path);
-	free(proyect_path);
+	line_shell(&envp);;
 	ft_free_array((void ***)&envp);
 	return (0);
 }

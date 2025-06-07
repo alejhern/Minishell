@@ -49,8 +49,7 @@ static int	make_comand(t_command *command, char ***env)
 		return (0);
 }
 
-static void	launch_shell_commands(t_shell *shell, char *proyect_path,
-		char ***env, int *result)
+static void	launch_shell_commands(t_shell *shell, char ***env, int *result)
 {
 	t_command				*command;
 	t_redirects_response	redirects_response;
@@ -63,20 +62,19 @@ static void	launch_shell_commands(t_shell *shell, char *proyect_path,
 		redirects_response = prepare_redirects(command);
 		aux = aux->next;
 		if (command->subshell)
-			*result = launch_shells(command->subshell, proyect_path, env);
+			*result = launch_shells(command->subshell, env);
 		else
 			*result = make_comand(command, env);
 		recover_fds(redirects_response);
 	}
 }
 
-int	launch_shells(t_list *shells, char *proyect_path, char ***env)
+int	launch_shells(t_list *shells, char ***env)
 {
 	t_list	*list;
 	t_shell	*shell;
 	int		result;
 
-	(void)proyect_path;
 	list = shells;
 	result = 1;
 	while (list)
@@ -84,7 +82,7 @@ int	launch_shells(t_list *shells, char *proyect_path, char ***env)
 		shell = list->content;
 		if (result == 0 && shell->type == OR)
 			break ;
-		launch_shell_commands(shell, proyect_path, env, &result);
+		launch_shell_commands(shell, env, &result);
 		list = list->next;
 	}
 	return (result);
