@@ -35,14 +35,25 @@ int	find_builtins(char **command, char ***env)
 	return (result_builtin);
 }
 
-static int	make_comand(t_command *command, char ***env)
+static int	make_comand(t_command *command, char ***env, t_list *next, t_redirects_response *redirects_response)
 {
 	int		result;
+	int		pipe_fd;
 
 	result = find_builtins(command->command, env);
 	if (result != -1)
 		return (result);
-	result = ft_execute(command->command, *env, 1);
+	if (!next)
+		result = ft_execute(command->command, *env, 1);
+	else
+	{
+		pipe_fd = ft_pipe(redirects_response->fd_in, command->command, *env);
+		if (pipe_fd == -1)
+			return (1);
+		if (redirects_response->fd_in != -1)
+			close(redirects_response->fd_in);
+		redirects_response->fd_in = pipe_fd;
+	}
 	if (result == 0 || result == 127)
 		return (1);
 	else
@@ -64,7 +75,7 @@ static void	launch_shell_commands(t_shell *shell, char ***env, int *result)
 		if (command->subshell)
 			*result = launch_shells(command->subshell, env);
 		else
-			*result = make_comand(command, env);
+			*result = make_comand(command, env, aux, &redirects_response);
 		recover_fds(redirects_response);
 	}
 }
