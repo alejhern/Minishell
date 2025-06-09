@@ -32,16 +32,16 @@ static int	*get_output_files(t_list *redirects)
 			fds[index] = open(redirect->path, O_WRONLY | O_CREAT | O_TRUNC,
 					0644);
 		if (fds[index] == -1)
-			ft_perror_exit("Error opening output file");
+			ft_printf_fd(2, "no such file or directory: %s\n", redirect->path);
 		redirects = redirects->next;
 		if (dup2(fds[index], STDOUT_FILENO) == -1)
-			ft_perror_exit("Error redirecting output");
+			ft_putendl_fd("Error redirecting output", STDERR_FILENO);
 		close(fds[index++]);
 	}
 	return (fds);
 }
 
-static int	get_input_file(t_list *redirects)
+static int	get_input_file(t_list *redirects, int *error)
 {
 	int			fd;
 	t_redirect	*redirect;
@@ -51,7 +51,12 @@ static int	get_input_file(t_list *redirects)
 	redirect = redirects->content;
 	fd = open(redirect->path, O_RDONLY);
 	if (fd == -1)
-		ft_perror_exit("Error opening input file");
+	{
+		ft_printf_fd(STDERR_FILENO, "no such file or directory: %s\n",
+			redirect->path);
+		*error = 1;
+		return (-1);
+	}
 	if (dup2(fd, STDIN_FILENO) == -1)
 		ft_perror_exit("Error redirecting input");
 	close(fd);
@@ -72,11 +77,18 @@ void	recover_fds(t_redirects_response response)
 	}
 }
 
-t_redirects_response	prepare_redirects(t_command *command)
+t_redirects_response	prepare_redirects(t_command *command, int *error)
 {
 	t_redirects_response	response;
 
-	response.fd_in = get_input_file(command->redirect_in);
+	*error = 0;
+	response.fd_in = get_input_file(command->redirect_in, error);
+	if (*error)
+	{
+		response.fds_out = NULL;
+		response.save_out = -1;
+		return (response);
+	}
 	response.save_out = dup(STDOUT_FILENO);
 	response.fds_out = get_output_files(command->redirect_out);
 	if (response.save_out == -1)

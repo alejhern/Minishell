@@ -130,7 +130,7 @@ int						check_subshell(t_token **token, char **env);
 // ███████╗██╔╝ ██╗███████╗╚██████╗
 // ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
 
-t_redirects_response	prepare_redirects(t_command *command);
+t_redirects_response	prepare_redirects(t_command *command, int *error);
 void					recover_fds(t_redirects_response response);
 int						launch_shells(t_list *shells, char ***env);
 
