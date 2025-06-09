@@ -62,7 +62,6 @@ clean:
 
 fclean: clean
 	@make -C $(LIB_DIR) fclean
-	@make -C $(PIPEX) fclean
 	rm -f $(NAME)
 
 re:			fclean all
