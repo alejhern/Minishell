@@ -43,7 +43,7 @@ static char	*get_line_prompt(char **env, int error)
 	char	*aux;
 	char	**hostname;
 
-	prompt_line = ft_strjoin((char *)GREEN, (char *) ft_getenv("USER", env));
+	prompt_line = ft_strjoin((char *)GREEN, (char *)ft_getenv("USER", env));
 	hostname = NULL;
 	ft_append_array((void ***)&hostname, ft_strdup("hostname"));
 	prompt_line = ft_strappend(prompt_line, "@");
@@ -122,7 +122,8 @@ int	main(int argc, char **argv, char **env)
 	if (!envp)
 		ft_perror_exit("Error: malloc");
 	signal(SIGINT, signal_handler_main);
-	line_shell(&envp);;
+	line_shell(&envp);
+	;
 	ft_free_array((void ***)&envp);
 	return (0);
 }

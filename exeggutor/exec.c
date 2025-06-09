@@ -35,10 +35,11 @@ int	find_builtins(char **command, char ***env)
 	return (result_builtin);
 }
 
-static int	make_comand(t_command *command, char ***env, t_list *next, t_redirects_response *redirects_response)
+static int	make_comand(t_command *command, char ***env, t_list *next,
+		t_redirects_response *redirects_response)
 {
-	int		result;
-	int		pipe_fd;
+	int	result;
+	int	pipe_fd;
 
 	result = find_builtins(command->command, env);
 	if (result != -1)
@@ -53,6 +54,7 @@ static int	make_comand(t_command *command, char ***env, t_list *next, t_redirect
 		if (redirects_response->fd_in != -1)
 			close(redirects_response->fd_in);
 		redirects_response->fd_in = pipe_fd;
+		result = 1;
 	}
 	if (result == 0 || result == 127)
 		return (1);
@@ -85,9 +87,11 @@ int	launch_shells(t_list *shells, char ***env)
 	t_list	*list;
 	t_shell	*shell;
 	int		result;
+	int		save_in;
 
 	list = shells;
 	result = 1;
+	save_in = dup(STDIN_FILENO);
 	while (list)
 	{
 		shell = list->content;
@@ -96,5 +100,8 @@ int	launch_shells(t_list *shells, char ***env)
 		launch_shell_commands(shell, env, &result);
 		list = list->next;
 	}
+	if (dup2(save_in, STDIN_FILENO) == -1)
+		ft_perror_exit("dup2 input");
+	close(save_in);
 	return (result);
 }
