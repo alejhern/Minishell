@@ -28,8 +28,6 @@ OBJS	= ${SRCS:.c=.o}
 LIB_DIR = libft/
 LIBFT = $(LIB_DIR)libft.a
 
-PIPEX = pipex/
-
 CC = cc -g
 CFLAGS = -Wall -Werror -Wextra -I $(LIB_DIR) #-fsanitiz=address
 
@@ -57,14 +55,6 @@ $(LIBFT):
 		git clone https://github.com/alejhern/libft.git $(LIB_DIR); \
 	fi
 	@make -C $(LIB_DIR)
-
-$(PIPEX):
-	@if [ ! -d "$(PIPEX)" ]; then \
-		git clone https://github.com/alejhern/pipex.git $(PIPEX); \
-	fi
-	@make minishell -C $(PIPEX)
-	@make -C $(PIPEX)
-	@echo "Pipex built successfully."
 
 clean:
 	@make -C $(LIB_DIR) clean
