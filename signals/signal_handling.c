@@ -22,6 +22,7 @@ void	signal_handler_main(int sig)
 		rl_replace_line("", 1);
 		rl_done = 1;
 		rl_on_new_line();
+		ft_printf("\n");
 		rl_redisplay();
 	}
 	else if (sig == SIGQUIT)
