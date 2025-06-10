@@ -44,7 +44,7 @@ static int	make_comand(t_command *command, char ***env, t_list *next,
 	result = find_builtins(command->command, env);
 	if (result != -1)
 		return (result);
-	if (!next && redirects_response->fd_in == -1)
+	if (!next || redirects_response->fds_out)
 		result = ft_execute(command->command, *env, 1);
 	else
 	{
@@ -66,20 +66,20 @@ static void	launch_shell_commands(t_shell *shell, char ***env, int *result)
 {
 	t_command				*command;
 	t_redirects_response	redirects_response;
-	t_list					*aux;
+	t_list					*list;
 
-	aux = shell->commands;
-	while (aux)
+	list = shell->commands;
+	while (list)
 	{
-		command = aux->content;
+		command = list->content;
 		redirects_response = prepare_redirects(command, &(*result));
-		aux = aux->next;
+		list = list->next;
 		if (*result == 1)
 			break ;
 		if (command->subshell)
 			*result = launch_shells(command->subshell, env);
 		else
-			*result = make_comand(command, env, aux, &redirects_response);
+			*result = make_comand(command, env, list, &redirects_response);
 		recover_fds(redirects_response);
 	}
 }
