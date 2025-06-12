@@ -70,6 +70,7 @@ static void	launch_shell_commands(t_shell *shell,
 
 	list = shell->commands;
 	*result = 0;
+	redirs_manage->is_pipe = 0;
 	while (list)
 	{
 		command = list->content;
@@ -82,6 +83,7 @@ static void	launch_shell_commands(t_shell *shell,
 		else
 			*result = make_comand(command, env, list, redirs_manage);
 		recover_fds(redirs_manage);
+		redirs_manage->is_pipe = 1;
 	}
 }
 

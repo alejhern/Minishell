@@ -59,15 +59,17 @@ static int	get_input_file(t_list *redirects, int *error)
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
 		ft_perror_exit("Error redirecting input");
-	close(fd);
 	return (fd);
 }
 
 void	recover_fds(t_redirs_manage *manage)
 {
 	if (manage->fd_in != -1)
+	{
 		if (dup2(manage->fd_in, STDIN_FILENO) == -1)
 			ft_perror_exit("Error redirecting input");
+		close(manage->fd_in);
+	}
 	if (manage->fds_out)
 	{
 		if (dup2(manage->save_out, STDOUT_FILENO) == -1)
@@ -81,6 +83,12 @@ void	prepare_redirects(t_redirs_manage *manage, t_command *command,
 		int *error)
 {
 	manage->fd_in = get_input_file(command->redirect_in, error);
+	if (manage->fd_in == -1 && manage->is_pipe)
+	{
+		manage->fd_in = open("/dev/null", O_RDONLY);
+		if (dup2(manage->fd_in, STDIN_FILENO) == -1)
+			ft_perror_exit("");
+	}
 	manage->save_out = dup(STDOUT_FILENO);
 	manage->fds_out = get_output_files(command->redirect_out, error);
 	if (*error)
