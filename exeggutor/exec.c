@@ -36,7 +36,7 @@ int	find_builtins(char **command, char ***env)
 }
 
 static int	make_comand(t_command *command, char ***env, t_list *next,
-		t_redirects_response *redirects_response)
+		t_redirs_manage *redirs_manage)
 {
 	int	result;
 	int	pipe_fd;
@@ -44,16 +44,16 @@ static int	make_comand(t_command *command, char ***env, t_list *next,
 	result = find_builtins(command->command, env);
 	if (result != -1)
 		return (result);
-	if (!next || redirects_response->fds_out)
+	if (!next || redirs_manage->fds_out)
 		result = ft_execute(command->command, *env, 1);
 	else
 	{
-		pipe_fd = ft_pipe(redirects_response->fd_in, command->command, *env);
+		pipe_fd = ft_pipe(redirs_manage->fd_in, command->command, *env);
 		if (pipe_fd == -1)
 			return (1);
-		if (redirects_response->fd_in != -1)
-			close(redirects_response->fd_in);
-		redirects_response->fd_in = pipe_fd;
+		if (redirs_manage->fd_in != -1)
+			close(redirs_manage->fd_in);
+		redirs_manage->fd_in = pipe_fd;
 		result = 1;
 	}
 	if (result == 0 || result == 127)
@@ -62,49 +62,50 @@ static int	make_comand(t_command *command, char ***env, t_list *next,
 		return (0);
 }
 
-static void	launch_shell_commands(t_shell *shell, char ***env, int *result)
+static void	launch_shell_commands(t_shell *shell,
+		t_redirs_manage *redirs_manage, char ***env, int *result)
 {
-	t_command				*command;
-	t_redirects_response	redirects_response;
-	t_list					*list;
+	t_command	*command;
+	t_list		*list;
 
 	list = shell->commands;
+	*result = 0;
 	while (list)
 	{
 		command = list->content;
-		redirects_response = prepare_redirects(command, &(*result));
+		prepare_redirects(redirs_manage, command, result);
 		list = list->next;
 		if (*result == 1)
 			break ;
 		if (command->subshell)
 			*result = launch_shells(command->subshell, env);
 		else
-			*result = make_comand(command, env, list, &redirects_response);
-		recover_fds(redirects_response);
+			*result = make_comand(command, env, list, redirs_manage);
+		recover_fds(redirs_manage);
 	}
 }
 
 int	launch_shells(t_list *shells, char ***env)
 {
-	t_list	*list;
-	t_shell	*shell;
-	int		result;
-	int		save_in;
+	t_list			*list;
+	t_shell			*shell;
+	int				result;
+	t_redirs_manage	redirs_manage;
 
 	list = shells;
 	result = -1;
-	save_in = dup(STDIN_FILENO);
+	redirs_manage.save_in = dup(STDIN_FILENO);
 	while (list)
 	{
 		shell = list->content;
 		if (result != -1 && ((result == 0 && shell->type == OR) || (result != 0
 					&& shell->type == AND)))
 			break ;
-		launch_shell_commands(shell, env, &result);
+		launch_shell_commands(shell, &redirs_manage, env, &result);
 		list = list->next;
 	}
-	if (dup2(save_in, STDIN_FILENO) == -1)
+	if (dup2(redirs_manage.save_in, STDIN_FILENO) == -1)
 		ft_perror_exit("dup2 input");
-	close(save_in);
+	close(redirs_manage.save_in);
 	return (result);
 }

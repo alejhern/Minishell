@@ -26,12 +26,13 @@
 
 extern int				g_signal;
 
-typedef struct s_redirects_response
+typedef struct s_redirs_manage
 {
 	int					*fds_out;
 	int					fd_in;
 	int					save_out;
-}						t_redirects_response;
+	int					save_in;
+}						t_redirs_manage;
 
 typedef struct s_redirect
 {
@@ -130,8 +131,9 @@ int						check_subshell(t_token **token, char **env);
 // ███████╗██╔╝ ██╗███████╗╚██████╗
 // ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
 
-t_redirects_response	prepare_redirects(t_command *command, int *error);
-void					recover_fds(t_redirects_response response);
+void					prepare_redirects(t_redirs_manage *manage,
+							t_command *command, int *error);
+void					recover_fds(t_redirs_manage *manage);
 int						launch_shells(t_list *shells, char ***env);
 
 // ██╗  ██╗██╗███████╗████████╗ ██████╗ ██████╗ ██╗   ██╗
