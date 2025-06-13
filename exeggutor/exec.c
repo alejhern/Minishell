@@ -45,7 +45,11 @@ static int	make_comand(t_command *command, char ***env, t_list *next,
 	if (result != -1)
 		return (result);
 	if (!next || redirs_manage->fds_out)
+	{
 		result = ft_execute(command->command, *env, 1);
+		if (next)
+			redirs_manage->forced_pipe = 1;
+	}
 	else
 	{
 		pipe_fd = ft_pipe(redirs_manage->fd_in, command->command, *env);
@@ -58,8 +62,7 @@ static int	make_comand(t_command *command, char ***env, t_list *next,
 	}
 	if (result == 0 || result == 127)
 		return (1);
-	else
-		return (0);
+	return (0);
 }
 
 static void	launch_shell_commands(t_shell *shell,
