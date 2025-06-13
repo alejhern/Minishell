@@ -33,6 +33,7 @@ typedef struct s_redirs_manage
 	int				save_out;
 	int				save_in;
 	int				is_pipe;
+	int				forced_pipe;
 }					t_redirs_manage;
 
 typedef struct s_redirect
