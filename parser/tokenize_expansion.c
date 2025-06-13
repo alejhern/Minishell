@@ -37,6 +37,7 @@ static void	token_expanse(char *p, int *i, t_token **token, char **env)
 	if (!var)
 		exit(0);
 	exp = ft_getenv(var, env);
+	free(var);
 	if (exp == 0)
 		exp = ft_strdup("");
 	else
