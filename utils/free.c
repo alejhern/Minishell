@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 13:25:32 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/04 15:17:44 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/14 18:10:44 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*ft_strjoin_free(char *s1, char *s2, int util)
 	ret = ft_strjoin(s1, s2);
 	if (s1 && (util == 1 || util == 3))
 		free(s1);
-	if (s2 && util <= 2)
+	if (s2 && util >= 2)
 		free(s2);
 	if (!ret)
 		exit(0);

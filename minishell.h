@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/04 15:02:49 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/14 17:44:38 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <limits.h>
 
 extern int				g_signal;
 
@@ -119,11 +120,13 @@ t_token					*tokenize(char *prompt, int *error);
 t_list					*token_parser(t_token *token, int *error,
 							t_token **token_sub);
 void					parser_check(t_token **t_sub, t_token *t);
-char					*expand(char *prompt, char **env);
+char					*expand(char *prompt, char **env, int here);
 int						new_subshell(t_list *list_og, t_token **token);
 void					check_tokens(t_token *token, t_token **token_sub,
 							int *error, char **env);
 int						check_subshell(t_token **token, char **env);
+
+void					here_doc(char **eof, int util, char **env);
 
 // ███████╗██╗  ██╗███████╗ ██████╗
 // ██╔════╝╚██╗██╔╝██╔════╝██╔════╝

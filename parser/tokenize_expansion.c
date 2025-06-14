@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:54:03 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/30 17:51:28 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/14 17:04:36 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,13 @@ static void	token_expanse(char *p, int *i, t_token **token, char **env)
 
 	k = 1;
 	while (p[*i + i[1] + k] != ' ' && p[*i + i[1] + k] != '	'
-		&& p[*i + i[1] + k] && p[*i + i[1] + k] != '$'
+		&& p[*i + i[1] + k] && p[*i + i[1] + k] != '$' && p[*i + i[1] + k] != 10
 		&& p[*i + i[1] + k] != '\'' && p[*i + i[1] + k] != '\"')
 		k++;
 	if (p[*i + i[1] + 1] == '$')
 		k = 2;
-	if (p[*i + i[1] + k] == '\'' || p[*i + i[1] + k] == '\"')
+	if (p[*i + i[1] + k] == '\'' || p[*i + i[1] + k] == '\"'
+			|| p[*i + i[1] + k] == '\n')
 		k--;
 	var = ft_substr(p, *i + i[1] + 1, k);
 	if (!var)
@@ -55,10 +56,10 @@ static void	token_word2(char *prompt, int *i, t_token **token, char **env)
 	next = token_lstnew(0, 0);
 	i[1] = 0;
 	k = 0;
-	*i += (i[2] != 0);
+	*i += (i[2] > 0);
 	token_lstadd_back(token, next);
-	while (((prompt[*i + i[1]] != '\'' && i[2] != 2)
-			|| (prompt[*i + i[1]] != '\"' && i[2] != 1)) && prompt[*i + i[1]])
+	while ((i[3] == 1 || ((prompt[*i + i[1]] != '\'' && i[2] != 2)
+			|| (prompt[*i + i[1]] != '\"' && i[2] != 1))) && prompt[*i + i[1]])
 	{
 		if (prompt[*i + i[1]] == '$' && i[2] != 1)
 		{
@@ -99,21 +100,22 @@ static char	*join_tokens(t_token *token)
 	return (new);
 }
 
-char	*expand(char *prompt, char **env)
+char	*expand(char *prompt, char **env, int doc)
 {
-	int		i[3];
+	int		i[4];
 	char	*new;
 	t_token	*token;
 
 	i[0] = 0;
 	i[1] = 0;
+	i[3] = doc;
 	token = 0;
 	while (prompt[i[0]])
 	{
-		i[2] = (prompt[i[0]] == '\'') + ((prompt[i[0]] == '\"') * 2);
-		if (prompt[i[0]] == '\'')
+		i[2] = (prompt[i[0]] == '\'') + ((prompt[i[0]] == '\"') * 2) - doc * 3;
+		if (prompt[i[0]] == '\'' && doc == 0)
 			token_word2(prompt, i, &token, env);
-		else if (prompt[i[0]] == '\"')
+		else if (prompt[i[0]] == '\"' && doc == 0)
 			token_word2(prompt, i, &token, env);
 		else if (prompt[i[0]])
 			token_word2(prompt, i, &token, env);
