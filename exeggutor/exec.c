@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/04 13:05:13 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/14 12:37:43 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@ int	find_builtins(char **command, char ***env)
 {
 	int	result_builtin;
 
-	if (ft_strncmp(command[0], "echo", 5) == 0)
+	if (command && ft_strncmp(command[0], "echo", 5) == 0)
 		result_builtin = builtin_echo(command);
-	else if (ft_strncmp(command[0], "cd", 3) == 0)
+	else if (command && ft_strncmp(command[0], "cd", 3) == 0)
 		result_builtin = builtin_cd(command, env);
-	else if (ft_strncmp(command[0], "pwd", 4) == 0)
+	else if (command && ft_strncmp(command[0], "pwd", 4) == 0)
 		result_builtin = builtin_pwd(command, env);
-	else if (ft_strncmp(command[0], "export", 7) == 0)
+	else if (command && ft_strncmp(command[0], "export", 7) == 0)
 		result_builtin = builtin_export(command, env);
-	else if (ft_strncmp(command[0], "unset", 6) == 0)
+	else if (command && ft_strncmp(command[0], "unset", 6) == 0)
 		result_builtin = builtin_unset(command, env);
-	else if (ft_strncmp(command[0], "env", 4) == 0)
+	else if (command && ft_strncmp(command[0], "env", 4) == 0)
 		result_builtin = builtin_env(env);
-	else if (ft_strncmp(command[0], "exit", 5) == 0)
+	else if (command && ft_strncmp(command[0], "exit", 5) == 0)
 		result_builtin = builtin_exit(command);
 	else
 		result_builtin = -1;
