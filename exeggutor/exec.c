@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/14 12:37:43 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/04 13:05:13 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,26 +16,28 @@ int	find_builtins(char **command, char ***env)
 {
 	int	result_builtin;
 
-	if (command && ft_strncmp(command[0], "echo", 5) == 0)
+	if (!command || !command[0])
+		return (-1);
+	else if (ft_strncmp(command[0], "echo", 5) == 0)
 		result_builtin = builtin_echo(command);
-	else if (command && ft_strncmp(command[0], "cd", 3) == 0)
+	else if (ft_strncmp(command[0], "cd", 3) == 0)
 		result_builtin = builtin_cd(command, env);
-	else if (command && ft_strncmp(command[0], "pwd", 4) == 0)
+	else if (ft_strncmp(command[0], "pwd", 4) == 0)
 		result_builtin = builtin_pwd(command, env);
-	else if (command && ft_strncmp(command[0], "export", 7) == 0)
+	else if (ft_strncmp(command[0], "export", 7) == 0)
 		result_builtin = builtin_export(command, env);
-	else if (command && ft_strncmp(command[0], "unset", 6) == 0)
+	else if (ft_strncmp(command[0], "unset", 6) == 0)
 		result_builtin = builtin_unset(command, env);
-	else if (command && ft_strncmp(command[0], "env", 4) == 0)
+	else if (ft_strncmp(command[0], "env", 4) == 0)
 		result_builtin = builtin_env(env);
-	else if (command && ft_strncmp(command[0], "exit", 5) == 0)
+	else if (ft_strncmp(command[0], "exit", 5) == 0)
 		result_builtin = builtin_exit(command);
 	else
 		result_builtin = -1;
 	return (result_builtin);
 }
 
-static int	make_comand(t_command *command, char ***env, t_list *next,
+static int	make_comand(t_command *command, char ***env,
 		t_redirs_manage *redirs_manage)
 {
 	int	result;
@@ -44,10 +46,10 @@ static int	make_comand(t_command *command, char ***env, t_list *next,
 	result = find_builtins(command->command, env);
 	if (result != -1)
 		return (result);
-	if (!next || redirs_manage->fds_out)
+	if (!redirs_manage->is_pipe || redirs_manage->fds_out)
 	{
 		result = ft_execute(command->command, *env, 1);
-		if (next)
+		if (redirs_manage->is_pipe)
 			redirs_manage->forced_pipe = 1;
 	}
 	else
@@ -74,17 +76,19 @@ static void	launch_shell_commands(t_shell *shell,
 	list = shell->commands;
 	*result = 0;
 	redirs_manage->is_pipe = 0;
-	while (list)
+	redirs_manage->forced_pipe = 0;
+	while (list && *result == 0)
 	{
 		command = list->content;
 		prepare_redirects(redirs_manage, command, result);
 		list = list->next;
+		redirs_manage->is_pipe = (list != NULL);
 		if (*result == 1)
 			break ;
 		if (command->subshell)
-			*result = launch_shells(command->subshell, env);
+			make_fork(command, redirs_manage, env, result);
 		else
-			*result = make_comand(command, env, list, redirs_manage);
+			*result = make_comand(command, env, redirs_manage);
 		recover_fds(redirs_manage);
 		redirs_manage->is_pipe = 1;
 	}
