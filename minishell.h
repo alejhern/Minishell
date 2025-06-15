@@ -34,6 +34,7 @@ typedef struct s_redirs_manage
 	int				save_in;
 	int				is_pipe;
 	int				forced_pipe;
+	int				pipes[2];
 }					t_redirs_manage;
 
 typedef struct s_redirect
@@ -134,6 +135,9 @@ int					check_subshell(t_token **token, char **env);
 
 void				prepare_redirects(t_redirs_manage *manage,
 						t_command *command, int *error);
+void				make_fork(t_command *command,
+						t_redirs_manage *redirs_manage, char ***env,
+						int *result);
 void				recover_fds(t_redirs_manage *manage);
 int					launch_shells(t_list *shells, char ***env);
 

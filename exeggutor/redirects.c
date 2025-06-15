@@ -82,6 +82,8 @@ void	recover_fds(t_redirs_manage *manage)
 void	prepare_redirects(t_redirs_manage *manage, t_command *command,
 		int *error)
 {
+	manage->pipes[0] = -1;
+	manage->pipes[1] = -1;
 	manage->fd_in = get_input_file(command->redirect_in, error);
 	if (manage->fd_in == -1 && manage->is_pipe && manage->forced_pipe)
 	{

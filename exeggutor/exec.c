@@ -16,7 +16,9 @@ int	find_builtins(char **command, char ***env)
 {
 	int	result_builtin;
 
-	if (ft_strncmp(command[0], "echo", 5) == 0)
+	if (!command || !command[0])
+		return (-1);
+	else if (ft_strncmp(command[0], "echo", 5) == 0)
 		result_builtin = builtin_echo(command);
 	else if (ft_strncmp(command[0], "cd", 3) == 0)
 		result_builtin = builtin_cd(command, env);
@@ -35,7 +37,7 @@ int	find_builtins(char **command, char ***env)
 	return (result_builtin);
 }
 
-static int	make_comand(t_command *command, char ***env, t_list *next,
+static int	make_comand(t_command *command, char ***env,
 		t_redirs_manage *redirs_manage)
 {
 	int	result;
@@ -44,10 +46,10 @@ static int	make_comand(t_command *command, char ***env, t_list *next,
 	result = find_builtins(command->command, env);
 	if (result != -1)
 		return (result);
-	if (!next || redirs_manage->fds_out)
+	if (!redirs_manage->is_pipe || redirs_manage->fds_out)
 	{
 		result = ft_execute(command->command, *env, 1);
-		if (next)
+		if (redirs_manage->is_pipe)
 			redirs_manage->forced_pipe = 1;
 	}
 	else
@@ -74,17 +76,19 @@ static void	launch_shell_commands(t_shell *shell,
 	list = shell->commands;
 	*result = 0;
 	redirs_manage->is_pipe = 0;
-	while (list)
+	redirs_manage->forced_pipe = 0;
+	while (list && *result == 0)
 	{
 		command = list->content;
 		prepare_redirects(redirs_manage, command, result);
 		list = list->next;
+		redirs_manage->is_pipe = (list != NULL);
 		if (*result == 1)
 			break ;
 		if (command->subshell)
-			*result = launch_shells(command->subshell, env);
+			make_fork(command, redirs_manage, env, result);
 		else
-			*result = make_comand(command, env, list, redirs_manage);
+			*result = make_comand(command, env, redirs_manage);
 		recover_fds(redirs_manage);
 		redirs_manage->is_pipe = 1;
 	}
