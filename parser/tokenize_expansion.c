@@ -6,18 +6,12 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:54:03 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/14 17:04:36 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:32:33 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
-/*
-static void	token_word2_util(int *j, int *k)
-{
-	*j += 1;
-	*k += 1;
-}
-**/
+
 static void	token_expanse(char *p, int *i, t_token **token, char **env)
 {
 	char	*var;
@@ -38,6 +32,7 @@ static void	token_expanse(char *p, int *i, t_token **token, char **env)
 	if (!var)
 		exit(0);
 	exp = ft_getenv(var, env);
+	free(var);
 	if (exp == 0)
 		exp = ft_strdup("");
 	else

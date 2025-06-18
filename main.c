@@ -6,63 +6,58 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/04 15:25:33 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/18 15:30:44 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*parsing_pwd(char **env, char *cwd, char *aux1, char * aux2)
+static void	*parsing_pwd(char **env, char error)
 {
+	char	*prompt;
 	char	*home;
+	char	*cwd;
 	char	*aux;
 
+	prompt = ft_strjoin(":", BLUE);
+	cwd = getcwd(NULL, 0);
 	home = ft_getenv("HOME", env);
-	aux = ft_strjoin(":", BLUE);
-	if (!aux)
-		exit(0);
-	aux2 = ft_strjoin_free(aux1, aux, 3);
-	if (home)
-	{
-		if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
-			aux = ft_strjoin("~", cwd + ft_strlen(home));
-		else
-			aux = ft_strdup(cwd);
-	}
+	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
+		aux = ft_strjoin("~", cwd + ft_strlen(home));
 	else
 		aux = ft_strdup(cwd);
-	if (!aux)
-		exit(0);
-	aux1 = ft_strjoin_free(aux2, aux, 3);
+	prompt = ft_strappend(prompt, aux);
+	free(aux);
+	if (error)
+		prompt = ft_strappend(prompt, RED);
+	else
+		prompt = ft_strappend(prompt, GREEN);
 	free(cwd);
-	return (aux1);
+	return (prompt);
 }
 
 static char	*get_line_prompt(char **env, int error)
 {
-	char	*cwd;
-	char	*aux1;
-	char	*aux2;
 	char	*prompt;
+	char	*prompt_line;
+	char	*aux;
 	char	**hostname;
 
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		cwd = ft_strdup("");
-	aux1 = ft_strjoin((char *)GREEN, (char *) ft_getenv("USER", env));
+	prompt_line = ft_strjoin((char *)GREEN, (char *)ft_getenv("USER", env));
 	hostname = NULL;
-	ft_append_array((void ***)&hostname, ft_safe_strdup("hostname"));
-	aux2 = ft_strjoin("@", ft_exec_catch(hostname, env));
+	ft_append_array((void ***)&hostname, ft_strdup("hostname"));
+	prompt_line = ft_strappend(prompt_line, "@");
+	aux = ft_exec_catch(hostname, env);
 	ft_free_array((void ***)&hostname);
-	aux2 = parsing_pwd(env, cwd, ft_strjoin_free(aux1, aux2, 3), aux2);
-	if (error)
-		aux1 = ft_strjoin(aux2, RED);
-	else
-		aux1 = ft_strjoin(aux2, GREEN);
-	free(aux2);
-	aux2 = ft_strjoin_free(aux1, ft_strjoin(">", RESET), 3);
-	prompt = readline(aux2);
-	free(aux2);
+	prompt_line = ft_strappend(prompt_line, aux);
+	free(aux);
+	aux = parsing_pwd(env, error);
+	prompt_line = ft_strappend(prompt_line, aux);
+	free(aux);
+	prompt_line = ft_strappend(prompt_line, ">");
+	prompt_line = ft_strappend(prompt_line, (char *)RESET);
+	prompt = readline(prompt_line);
+	free(prompt_line);
 	ft_putstr_fd(RESET, STDOUT_FILENO);
 	return (prompt);
 }
@@ -85,7 +80,7 @@ static int	manage_prompt(char *prompt)
 	return (1);
 }
 
-static void	line_shell(char ***env, char *proyect_path)
+static void	line_shell(char ***env)
 {
 	int		error;
 	char	*prompt;
@@ -108,8 +103,7 @@ static void	line_shell(char ***env, char *proyect_path)
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
-		ft_lstiter(shells, print_shell);
-		result = launch_shells(shells, proyect_path, env);
+		result = launch_shells(shells, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);
 	}
@@ -118,7 +112,6 @@ static void	line_shell(char ***env, char *proyect_path)
 int	main(int argc, char **argv, char **env)
 {
 	char	**envp;
-	char	*proyect_path;
 
 	if (argc != 1 && argv[0])
 	{
@@ -128,12 +121,9 @@ int	main(int argc, char **argv, char **env)
 	envp = ft_env((const char **)env);
 	if (!envp)
 		ft_perror_exit("Error: malloc");
-	proyect_path = getcwd(NULL, 0);
-	if (!proyect_path)
-		ft_perror_exit("Error: getcwd");
 	signal(SIGINT, signal_handler_main);
-	line_shell(&envp, proyect_path);
-	free(proyect_path);
+	line_shell(&envp);
+	;
 	ft_free_array((void ***)&envp);
 	return (0);
 }
