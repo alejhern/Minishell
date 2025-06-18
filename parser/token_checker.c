@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 20:08:46 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/14 17:46:26 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:59:52 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,9 @@ static int	check_redirection(t_token **token, char **env)
 		if (here)
 		{
 			(*token) = (*token)->next;
-			here_doc(&(*token)->token, 0, env);
-			if ((*token)->token == 0)
-				(*token)->token = ft_strdup("");
 			return (check_word(*token, env, 1));
 		}
-		return (0);//potser fer un check word aqui per poder evitar les quotes removals :)
+		return (0);
 	}
 	return (1);
 }

@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 13:46:39 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/05/14 18:35:48 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/18 17:57:30 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ void	print_red(void *content)
 
 	red = content;
 	ft_printf("\t\t\t%s", red->path);
-	if (red->is_double)
-		ft_putstr_fd(" append", STDOUT_FILENO);
 	ft_putendl_fd("", STDOUT_FILENO);
 }
 

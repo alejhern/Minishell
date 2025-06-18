@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/18 15:33:19 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:50:49 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,7 +129,7 @@ void				check_tokens(t_token *token, t_token **token_sub,
 						int *error, char **env);
 int					check_subshell(t_token **token, char **env);
 
-void				here_doc(char **eof, int util, char **env);
+int					here_doc(char *eof, char **env);
 
 // ███████╗██╗  ██╗███████╗ ██████╗
 // ██╔════╝╚██╗██╔╝██╔════╝██╔════╝
@@ -139,7 +139,7 @@ void				here_doc(char **eof, int util, char **env);
 // ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
 
 void				prepare_redirects(t_redirs_manage *manage,
-						t_command *command, int *error);
+						t_command *command, int *error, char ***env);
 void				make_fork(t_command *command,
 						t_redirs_manage *redirs_manage, char ***env,
 						int *result);
