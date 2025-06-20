@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 23:29:18 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/18 17:39:57 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:26:19 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,28 +41,29 @@ static int	*get_output_files(t_list *redirects, int *error)
 	return (fds);
 }
 
-static int	get_input_file(t_list *redirects, int *error, char **env)
+static int	get_input_file(t_list *redirects, int *error, char **env, int fd)
 {
-	int			fd;
-	t_redirect	*redirect;
-
 	if (!redirects)
 		return (-1);
-	redirect = redirects->content;
-	if (redirect->is_double)
-		fd = here_doc(redirect->path, env);
-	else
+	while (redirects != 0 && fd >= 0)
 	{
-		fd = open(redirect->path, O_RDONLY);
-		if (fd == -1)
+		if (((t_redirect *) redirects->content)->is_double)
+			fd = here_doc(((t_redirect *) redirects->content)->path, env);
+		else
 		{
-			ft_printf_fd(STDERR_FILENO, "no such file or directory: %s\n",
-				redirect->path);
-			*error = 1;
-			return (-1);
+			fd = open(((t_redirect *) redirects->content)->path, O_RDONLY);
+			if (fd == -1)
+			{
+				ft_printf_fd(STDERR_FILENO, "no such file or directory: %s\n",
+					((t_redirect *) redirects->content)->path);
+				*error = 1;
+			}
 		}
+		redirects = redirects->next;
+		if (redirects != 0 && fd >= 0)
+			close(fd);
 	}
-	if (dup2(fd, STDIN_FILENO) == -1)
+	if (fd >= 0 &&  dup2(fd, STDIN_FILENO) == -1)
 		ft_perror_exit("Error redirecting input");
 	return (fd);
 }
@@ -89,7 +90,12 @@ void	prepare_redirects(t_redirs_manage *manage, t_command *command,
 {
 	manage->pipes[0] = -1;
 	manage->pipes[1] = -1;
-	manage->fd_in = get_input_file(command->redirect_in, error, *env);
+	manage->fd_in = get_input_file(command->redirect_in, error, *env, 1);
+	if (manage->fd_in == -2)
+	{
+		*error = 2;
+		return ;
+	}
 	if (manage->fd_in == -1 && manage->is_pipe && manage->forced_pipe)
 	{
 		manage->fd_in = open("/dev/null", O_RDONLY);
