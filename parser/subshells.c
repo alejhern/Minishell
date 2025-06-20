@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 19:43:23 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/14 11:52:25 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 23:08:12 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,14 +37,15 @@ int	check_subshell(t_token **token, char **env)
 
 	error = 0;
 	if (((*token)->next->type == WORD || (*token)->next->type == OPEN_SUB
-		|| (*token)->next->type == IN_RED || (*token)->next->type == OUT_RED)
+			|| (*token)->next->type == IN_RED
+			|| (*token)->next->type == OUT_RED)
 		&& (*token)->type == OPEN_SUB)
 		check_tokens(0, token, &error, env);
 	else
 		error = 1;
-	if ((*token) == 0 || (*token)->type != CLOSE_SUB ||
-	((*token)->next != 0 && ((*token)->next->type == OPEN_SUB
-	|| (*token)->next->type == WORD)))
+	if ((*token) == 0 || (*token)->type != CLOSE_SUB
+		|| ((*token)->next != 0 && ((*token)->next->type == OPEN_SUB
+				|| (*token)->next->type == WORD)))
 		error = 1;
 	return (error);
 }

@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/20 19:28:17 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:58:08 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,7 @@ int	launch_shells(t_list *shells, char ***env)
 	{
 		shell = list->content;
 		if ((result != -1 && ((result == 0 && shell->type == OR) || (result != 0
-					&& shell->type == AND))) || result == 2)
+						&& shell->type == AND))) || result == 2)
 			break ;
 		launch_shell_commands(shell, &redirs_manage, env, &result);
 		list = list->next;

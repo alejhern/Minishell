@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 14:11:31 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/20 22:17:29 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 23:12:54 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,24 +20,25 @@ static void	here_doc_fd(char *eof, char **env, int fd, int error)
 	int			util;
 
 	util = 0;
-	quotes = (ft_strchr(eof, '\'') == 0 || ft_strchr(eof, '\"') == 0);
+	quotes = (ft_strchr(eof, '\'') != 0 || ft_strchr(eof, '\"') != 0);
 	eof = quote_remover(ft_strdup(eof), 0);
-	ret = ft_strdup("");;
 	while (!util)
 	{
 		in = readline("> ");
 		if (g_signal != 0)
 		{
+			g_signal = 0;
 			write(error, "e", 1);
-			return (free(in));
+			exit(0);
 		}
 		if (ft_strncmp(in, eof, INT_MAX) == 0)
-			util = 1;
-		else if (in != 0 && ft_strchr(in, '$') &&quotes == 1)
+			break ;
+		else if (in != 0 && ft_strchr(in, '$') && quotes == 0)
 			in = expand(in, env, 1);
-		write(fd, in, ft_strlen(in));
-		free(in);
+		ret = ft_strjoin_free(in, "\n", 1);
+		write(fd, ret, ft_strlen(ret));
 	}
+	free(eof);
 }
 
 static void	here_child(char *eof, char **env, int *fd, int *error)
@@ -70,7 +71,10 @@ int	here_doc(char *eof, char **env)
 	close(error[1]);
 	read(error[0], &ret, sizeof(char));
 	if (ret == 'e')
+	{
+		g_signal = 0;
 		return (-2);
+	}
 	close(error[0]);
-	return(fd[0]);
+	return (fd[0]);
 }

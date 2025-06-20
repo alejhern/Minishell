@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/20 19:39:20 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 23:08:42 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ static void	line_shell(char ***env)
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
-		//ft_lstiter(shells, print_shell);
 		result = launch_shells(shells, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);

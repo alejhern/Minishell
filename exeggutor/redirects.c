@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/12 23:29:18 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/20 19:26:19 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:57:33 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ static int	get_input_file(t_list *redirects, int *error, char **env, int fd)
 		if (redirects != 0 && fd >= 0)
 			close(fd);
 	}
-	if (fd >= 0 &&  dup2(fd, STDIN_FILENO) == -1)
+	if (fd >= 0 && dup2(fd, STDIN_FILENO) == -1)
 		ft_perror_exit("Error redirecting input");
 	return (fd);
 }

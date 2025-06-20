@@ -6,11 +6,19 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:54:03 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/18 15:32:33 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 23:07:54 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
+
+static int	token_expanse_util(char p)
+{
+	if (p != ' ' && p != '	' && p && p != '$' && p != '\n' && p != '\''
+		&& p != '\"')
+		return (1);
+	return (0);
+}
 
 static void	token_expanse(char *p, int *i, t_token **token, char **env)
 {
@@ -19,14 +27,12 @@ static void	token_expanse(char *p, int *i, t_token **token, char **env)
 	char	*exp;
 
 	k = 1;
-	while (p[*i + i[1] + k] != ' ' && p[*i + i[1] + k] != '	'
-		&& p[*i + i[1] + k] && p[*i + i[1] + k] != '$' && p[*i + i[1] + k] != 10
-		&& p[*i + i[1] + k] != '\'' && p[*i + i[1] + k] != '\"')
+	while (token_expanse_util(p[*i + i[1] + k]))
 		k++;
 	if (p[*i + i[1] + 1] == '$')
 		k = 2;
 	if (p[*i + i[1] + k] == '\'' || p[*i + i[1] + k] == '\"'
-			|| p[*i + i[1] + k] == '\n')
+		|| p[*i + i[1] + k] == '\n')
 		k--;
 	var = ft_substr(p, *i + i[1] + 1, k);
 	if (!var)
@@ -43,7 +49,7 @@ static void	token_expanse(char *p, int *i, t_token **token, char **env)
 	i[1] += k;
 }
 
-static void	token_word2(char *prompt, int *i, t_token **token, char **env)
+static void	token_word2(char *p, int *i, t_token **token, char **env)
 {
 	int			k;
 	t_token		*next;
@@ -53,13 +59,13 @@ static void	token_word2(char *prompt, int *i, t_token **token, char **env)
 	k = 0;
 	*i += (i[2] > 0);
 	token_lstadd_back(token, next);
-	while ((i[3] == 1 || ((prompt[*i + i[1]] != '\'' && i[2] != 2)
-			|| (prompt[*i + i[1]] != '\"' && i[2] != 1))) && prompt[*i + i[1]])
+	while ((i[3] == 1 || ((p[*i + i[1]] != '\'' && i[2] != 2)
+				|| (p[*i + i[1]] != '\"' && i[2] != 1))) && p[*i + i[1]])
 	{
-		if (prompt[*i + i[1]] == '$' && i[2] != 1)
+		if (p[*i + i[1]] == '$' && i[2] != 1)
 		{
-			next->token = ft_substr(prompt, *i + k, i[1] - k);
-			token_expanse(prompt, i, token, env);
+			next->token = ft_substr(p, *i + k, i[1] - k);
+			token_expanse(p, i, token, env);
 			next = token_lstnew(0, 0);
 			token_lstadd_back(token, next);
 			k = i[1] + 1;
@@ -67,7 +73,7 @@ static void	token_word2(char *prompt, int *i, t_token **token, char **env)
 		else
 			i[1]++;
 	}
-	next->token = ft_substr(prompt, *i + k, i[1] - k);
+	next->token = ft_substr(p, *i + k, i[1] - k);
 	i[1] += (i[2] != 0);
 	*i += i[1];
 }
