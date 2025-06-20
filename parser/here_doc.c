@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 14:11:31 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/20 23:12:54 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 23:25:10 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,10 @@ static void	here_doc_fd(char *eof, char **env, int fd, int error)
 	char		*in;
 	char		*ret;
 	int			quotes;
-	int			util;
 
-	util = 0;
 	quotes = (ft_strchr(eof, '\'') != 0 || ft_strchr(eof, '\"') != 0);
 	eof = quote_remover(ft_strdup(eof), 0);
-	while (!util)
+	while (fd != -1321)
 	{
 		in = readline("> ");
 		if (g_signal != 0)
@@ -37,6 +35,7 @@ static void	here_doc_fd(char *eof, char **env, int fd, int error)
 			in = expand(in, env, 1);
 		ret = ft_strjoin_free(in, "\n", 1);
 		write(fd, ret, ft_strlen(ret));
+		free(ret);
 	}
 	free(eof);
 }
@@ -60,6 +59,7 @@ int	here_doc(char *eof, char **env)
 	int			id;
 	char		ret;
 
+	ret = 0;
 	if (pipe(fd) == -1)
 		ft_perror_exit("Error generating pipe");
 	if (pipe(error) == -1)
