@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 18:52:06 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/20 20:35:19 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:28:48 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	signal_handler_here(int sig)
 	if (sig == SIGINT)
 	{
 		rl_done = 1;
-		ft_printf("\n");
-		rl_on_new_line();
+	//	ft_printf("\n");
+	//	rl_on_new_line();
 	//	rl_redisplay();
 	}
 	else if (sig == SIGQUIT)

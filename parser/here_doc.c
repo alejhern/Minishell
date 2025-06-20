@@ -6,13 +6,13 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/04 14:11:31 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/20 20:20:13 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:17:29 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	here_doc_fd(char *eof, char **env, int fd)
+static void	here_doc_fd(char *eof, char **env, int fd, int error)
 {
 	char		*in;
 	char		*ret;
@@ -28,31 +28,49 @@ static int	here_doc_fd(char *eof, char **env, int fd)
 		in = readline("> ");
 		if (g_signal != 0)
 		{
-			return (g_signal = 0, free(ret), -1);
+			write(error, "e", 1);
+			return (free(in));
 		}
 		if (ft_strncmp(in, eof, INT_MAX) == 0)
 			util = 1;
-		else
-			ret = ft_strjoin_free(ret, ft_strjoin_free(in, "\n", 1), 3);
+		else if (in != 0 && ft_strchr(in, '$') &&quotes == 1)
+			in = expand(in, env, 1);
+		write(fd, in, ft_strlen(in));
+		free(in);
 	}
-	if (ret != 0 && ft_strchr(ret, '$') &&quotes == 1)
-		ret = expand(ret, env, 1);
-	write(fd, ret, ft_strlen(ret));
-	return (free(ret), 0);
+}
+
+static void	here_child(char *eof, char **env, int *fd, int *error)
+{
+	close(fd[0]);
+	close(error[0]);
+	signal(SIGINT, signal_handler_here);
+	here_doc_fd(eof, env, fd[1], error[1]);
+	signal(SIGINT, signal_handler_main);
+	close(fd[1]);
+	close(error[1]);
+	exit(0);
 }
 
 int	here_doc(char *eof, char **env)
 {
 	int			fd[2];
-	int			ret;
+	int			error[2];
+	int			id;
+	char		ret;
 
 	if (pipe(fd) == -1)
 		ft_perror_exit("Error generating pipe");
-	signal(SIGINT, signal_handler_here);
-	ret = here_doc_fd(eof, env, fd[1]);
-	signal(SIGINT, signal_handler_main);
+	if (pipe(error) == -1)
+		ft_perror_exit("Error generating pipe");
+	id = fork();
+	if (id == 0)
+		here_child(eof, env, fd, error);
 	close(fd[1]);
-	if (ret == -1)
+	close(error[1]);
+	read(error[0], &ret, sizeof(char));
+	if (ret == 'e')
 		return (-2);
+	close(error[0]);
 	return(fd[0]);
 }
