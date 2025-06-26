@@ -74,11 +74,11 @@ static void	launch_shell_commands(t_shell *shell,
 	t_list		*list;
 
 	list = shell->commands;
-	*result = 0;
 	redirs_manage->is_pipe = 0;
 	redirs_manage->forced_pipe = 0;
-	while (list && *result == 0)
+	while (list)
 	{
+		*result = 0;
 		command = list->content;
 		prepare_redirects(redirs_manage, command, result);
 		list = list->next;
