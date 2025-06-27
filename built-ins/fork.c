@@ -22,7 +22,7 @@ static void	close_fork(t_redirs_manage *redirs_manage, pid_t pid)
 }
 
 int	builtin_fork(char **command, t_redirs_manage *redirs_manage, char ***env,
-		int *(f)(char **, char ***))
+		int f(char **, char ***))
 {
 	pid_t	pid;
 	int		error;
@@ -42,7 +42,7 @@ int	builtin_fork(char **command, t_redirs_manage *redirs_manage, char ***env,
 			close(redirs_manage->pipes[0]);
 		if (redirs_manage->pipes[1] != -1)
 			close(redirs_manage->pipes[1]);
-		error = f(command, redirs_manage, env);
+		error = f(command, env);
 		exit(error);
 	}
 	close_fork(redirs_manage, pid);

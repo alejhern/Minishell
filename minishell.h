@@ -168,7 +168,7 @@ int					builtin_unset(char **command, char ***env);
 int					builtin_env(char **command, char ***env);
 int					builtin_echo(char **command, char ***env);
 int					builtin_fork(char **command, t_redirs_manage *redirs_manage,
-						char ***env, int *(f)(char **, char ***));
+						char ***env, int (f)(char **, char ***));
 
 //███████ ██  ██████  ███    ██  █████  ██      ███████
 //██      ██ ██       ████   ██ ██   ██ ██      ██
