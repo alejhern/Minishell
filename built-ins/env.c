@@ -21,7 +21,7 @@ int	builtin_env(char **command, char ***env)
 		ft_printf_fd(STDERR_FILENO, "env: no environment variables set\n");
 		return (1);
 	}
-	if (command[0])
+	if (command[0] && command[1])
 		return (ft_execute(command + 1, *env, 1));
 	original_env = *env;
 	while (*original_env)
