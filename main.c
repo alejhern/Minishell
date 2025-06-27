@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/27 19:46:44 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/27 21:00:18 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ int	main(int argc, char **argv, char **env)
 	if (!envp)
 		ft_perror_exit("Error: malloc");
 	signal(SIGINT, signal_handler_main);
+	signal(SIGQUIT, SIG_IGN);
 	line_shell(&envp);
 	ft_free_array((void ***)&envp);
 	return (0);
