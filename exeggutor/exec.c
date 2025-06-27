@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/20 22:58:08 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/27 17:01:23 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,9 @@ static int	make_comand(t_command *command, char ***env,
 		return (result);
 	if (!redirs_manage->is_pipe || redirs_manage->fds_out)
 	{
+		signal(SIGINT, signal_handler_fork);
 		result = ft_execute(command->command, *env, 1);
+		signal(SIGINT, signal_handler_main);
 		if (redirs_manage->is_pipe)
 			redirs_manage->forced_pipe = 1;
 	}
@@ -86,7 +88,9 @@ static void	launch_shell_commands(t_shell *shell,
 		if (*result == 1 || *result == 2)
 			break ;
 		if (command->subshell)
+		{
 			make_fork(command, redirs_manage, env, result);
+		}
 		else
 			*result = make_comand(command, env, redirs_manage);
 		recover_fds(redirs_manage);

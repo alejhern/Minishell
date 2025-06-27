@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/20 18:09:53 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/27 16:02:27 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,5 +179,6 @@ int					builtin_echo(char **command);
 
 void				signal_handler_main(int sig);
 void				signal_handler_here(int sig);
+void				signal_handler_fork(int sig);
 
 #endif

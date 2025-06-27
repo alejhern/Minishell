@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/20 23:08:42 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/27 17:35:32 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ static void	line_shell(char ***env)
 	result = 0;
 	while (1)
 	{
+		error = 0;
 		prompt = get_line_prompt(*env, result);
 		if (!manage_prompt(prompt))
 			continue ;
@@ -99,7 +100,12 @@ static void	line_shell(char ***env)
 		free(prompt);
 		check_tokens(token, 0, &error, *env);
 		if (error != 0)
-			ft_error_exit("SYNTAX ERROR");
+		{
+			free_token(token);
+			ft_printf("SYNTAX ERROR\n");
+			error = 0;
+			continue ;
+		}
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
