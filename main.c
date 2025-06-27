@@ -77,7 +77,7 @@ static int	manage_prompt(char *prompt, int fd)
 		return (0);
 	}
 	add_history(prompt);
-	if (!ft_putstr_fd(prompt, fd))
+	if (!ft_putendl_fd(prompt, fd))
 		ft_putendl_fd("Error: can't write to history file", STDERR_FILENO);
 	return (1);
 }

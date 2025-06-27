@@ -54,12 +54,12 @@ int	history(char **comand,char ***env)
 	if (fd == -1)
 		return (perror(""), 1);
 	line_count = 0;
-	line = ft_get_next_line(fd);
+	line = get_next_line(fd);
 	while (line && ++line_count)
 	{
-		ft_printf("\t %d %s\n", line_count, line);
+    ft_printf("  %d %s", line_count, line);
 		free(line);
-		line = ft_get_next_line(fd);
+		line = get_next_line(fd);
 	}
 	close(fd);
 	return (0);
