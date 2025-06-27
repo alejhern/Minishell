@@ -16,9 +16,7 @@ int	find_builtins(char **command, char ***env, t_redirs_manage *redirs_manage)
 {
 	int	result_builtin;
 
-	if (!command || !command[0])
-		return (-1);
-	else if (ft_strncmp(command[0], "echo", 5) == 0)
+	if (ft_strncmp(command[0], "echo", 5) == 0)
 		result_builtin = builtin_fork(command, redirs_manage, env,
 				builtin_echo);
 	else if (ft_strncmp(command[0], "cd", 3) == 0)
@@ -36,6 +34,8 @@ int	find_builtins(char **command, char ***env, t_redirs_manage *redirs_manage)
 	else if (ft_strncmp(command[0], "exit", 5) == 0)
 		result_builtin = builtin_fork(command, redirs_manage, env,
 				builtin_exit);
+	else if (ft_strncmp(command[0], "history", 8) == 0)
+		result_builtin = builtin_fork(command, redirs_manage, env, history);
 	else
 		result_builtin = -1;
 	return (result_builtin);

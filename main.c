@@ -62,7 +62,7 @@ static char	*get_line_prompt(char **env, int error)
 	return (prompt);
 }
 
-static int	manage_prompt(char *prompt)
+static int	manage_prompt(char *prompt, int fd)
 {
 	if (g_signal != 0)
 	{
@@ -77,39 +77,38 @@ static int	manage_prompt(char *prompt)
 		return (0);
 	}
 	add_history(prompt);
+	if (!ft_putstr_fd(prompt, fd))
+		ft_putendl_fd("Error: can't write to history file", STDERR_FILENO);
 	return (1);
 }
 
-static void	line_shell(char ***env)
+static void	line_shell(char ***env, int history_fd)
 {
 	int		error;
 	char	*prompt;
 	t_list	*shells;
 	t_token	*token;
-	int		result;
 
 	error = 0;
-	result = 0;
 	while (1)
 	{
-		error = 0;
-		prompt = get_line_prompt(*env, result);
-		if (!manage_prompt(prompt))
+		prompt = get_line_prompt(*env, error);
+		if (!manage_prompt(prompt, history_fd))
 			continue ;
+		error = 0;
 		token = tokenize(prompt, &error);
 		free(prompt);
-		check_tokens(token, 0, &error, *env);
+		check_tokens(token, NULL, &error, *env);
 		if (error != 0)
 		{
 			free_token(token);
 			ft_printf("SYNTAX ERROR\n");
-			error = 0;
 			continue ;
 		}
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
-		result = launch_shells(shells, env);
+		error = launch_shells(shells, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);
 	}
@@ -118,6 +117,7 @@ static void	line_shell(char ***env)
 int	main(int argc, char **argv, char **env)
 {
 	char	**envp;
+	int		history_fd;
 
 	if (argc != 1 && argv[0])
 	{
@@ -128,7 +128,10 @@ int	main(int argc, char **argv, char **env)
 	if (!envp)
 		ft_perror_exit("Error: malloc");
 	signal(SIGINT, signal_handler_main);
-	line_shell(&envp);
+	history_fd = create_history_file(envp);
+	if (history_fd == -1)
+		perror("Error: can't create history file");
+	line_shell(&envp, history_fd);
 	ft_free_array((void ***)&envp);
 	return (0);
 }

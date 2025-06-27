@@ -19,8 +19,9 @@ PARSE_DIR = ./parser/
 EXEC_DIR = ./exeggutor/
 SIGNALS_DIR = ./signals/
 BUILT-IN_DIR = ./built-ins/
+HISTORY_DIR = ./history/
 
-SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) $(BUILT-IN_DIR) $(SIGNALS_DIR) -type f -name "*.c") \
+SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) $(BUILT-IN_DIR) $(SIGNALS_DIR) $(HISTORY_DIR) -type f -name "*.c") \
 		main.c \
 
 OBJS	= ${SRCS:.c=.o}

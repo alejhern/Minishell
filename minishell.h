@@ -155,9 +155,8 @@ int					launch_shells(t_list *shells, char ***env);
 // ██║  ██║██║███████║   ██║   ╚██████╔╝██║  ██║   ██║
 // ╚═╝  ╚═╝╚═╝╚══════╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝   ╚═╝
 
-int					add_to_history(char **history, char *line, int size);
-void				commit_history(char **history, int size);
-char				**get_history(int *size);
+int					history(char **command, char ***env);
+int					create_history_file(char **env);
 
 //██████  ██    ██ ██ ██      ████████ ██ ███    ██ ███████
 //██   ██ ██    ██ ██ ██         ██    ██ ████   ██ ██
