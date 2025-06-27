@@ -75,18 +75,13 @@ static int	change_directory(char *new_path, char ***env)
 	char	*old_path;
 
 	old_path = getcwd(NULL, 0);
-	if (!old_path)
-	{
-		perror("cd: getcwd error");
-		return (1);
-	}
 	if (chdir(new_path) == -1)
 	{
 		ft_printf_fd(2, "cd: no such file or directory: %s\n", new_path);
 		free(old_path);
 		return (1);
 	}
-	if (!ft_setenv("OLDPWD", old_path, env))
+	if (old_path && !ft_setenv("OLDPWD", old_path, env))
 		ft_putendl_fd("cd: failed to set OLDPWD", 2);
 	free(old_path);
 	old_path = getcwd(NULL, 0);
