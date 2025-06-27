@@ -12,8 +12,9 @@
 
 #include "../minishell.h"
 
-int	builtin_exit(char **comand)
+int	builtin_exit(char **comand, char ***env)
 {
+	(void)env;
 	if (!comand)
 	{
 		ft_putendl_fd("exit", STDOUT_FILENO);
