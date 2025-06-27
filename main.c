@@ -21,6 +21,8 @@ static void	*parsing_pwd(char **env, char error)
 
 	prompt = ft_strjoin(":", BLUE);
 	cwd = getcwd(NULL, 0);
+	if (!cwd)
+		cwd = ft_strdup(ft_getenv("PWD", env));
 	home = ft_getenv("HOME", env);
 	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
 		aux = ft_strjoin("~", cwd + ft_strlen(home));
