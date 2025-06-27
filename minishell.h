@@ -140,6 +140,8 @@ int					here_doc(char *eof, char **env);
 
 void				prepare_redirects(t_redirs_manage *manage,
 						t_command *command, int *error, char ***env);
+int					create_pipe(t_redirs_manage *redirs_manage, int save_stdin,
+						int save_stdout);
 void				make_fork(t_command *command,
 						t_redirs_manage *redirs_manage, char ***env,
 						int *result);
@@ -163,13 +165,15 @@ char				**get_history(int *size);
 //██   ██ ██    ██ ██ ██         ██    ██ ██  ██ ██      ██
 //██████   ██████  ██ ███████    ██    ██ ██   ████ ███████
 
-int					builtin_exit(char **command);
+int					builtin_exit(char **command, char ***env);
 int					builtin_cd(char **command, char ***env);
 int					builtin_pwd(char **command, char ***env);
 int					builtin_export(char **command, char ***env);
 int					builtin_unset(char **command, char ***env);
-int					builtin_env(char ***env);
-int					builtin_echo(char **command);
+int					builtin_env(char **command, char ***env);
+int					builtin_echo(char **command, char ***env);
+int					builtin_fork(char **command, t_redirs_manage *redirs_manage,
+						char ***env, int (f)(char **, char ***));
 
 //███████ ██  ██████  ███    ██  █████  ██      ███████
 //██      ██ ██       ████   ██ ██   ██ ██      ██

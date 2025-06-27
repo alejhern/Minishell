@@ -70,7 +70,7 @@ static int	manage_prompt(char *prompt)
 		return (0);
 	}
 	if (!prompt)
-		builtin_exit(ft_split("exit 1", ' '));
+		builtin_exit(ft_split("exit 1", ' '), NULL);
 	if (ft_strlen(prompt) == 0)
 	{
 		free(prompt);

@@ -12,8 +12,7 @@
 
 #include "../minishell.h"
 
-static int	create_pipe(t_redirs_manage *redirs_manage, int save_stdin,
-		int save_stdout)
+int	create_pipe(t_redirs_manage *redirs_manage, int save_stdin, int save_stdout)
 {
 	if (redirs_manage->is_pipe)
 	{

@@ -12,26 +12,30 @@
 
 #include "../minishell.h"
 
-int	find_builtins(char **command, char ***env)
+int	find_builtins(char **command, char ***env, t_redirs_manage *redirs_manage)
 {
 	int	result_builtin;
 
 	if (!command || !command[0])
 		return (-1);
 	else if (ft_strncmp(command[0], "echo", 5) == 0)
-		result_builtin = builtin_echo(command);
+		result_builtin = builtin_fork(command, redirs_manage, env,
+				builtin_echo);
 	else if (ft_strncmp(command[0], "cd", 3) == 0)
-		result_builtin = builtin_cd(command, env);
+		result_builtin = builtin_fork(command, redirs_manage, env, builtin_cd);
 	else if (ft_strncmp(command[0], "pwd", 4) == 0)
-		result_builtin = builtin_pwd(command, env);
+		result_builtin = builtin_fork(command, redirs_manage, env, builtin_pwd);
 	else if (ft_strncmp(command[0], "export", 7) == 0)
-		result_builtin = builtin_export(command, env);
+		result_builtin = builtin_fork(command, redirs_manage, env,
+				builtin_export);
 	else if (ft_strncmp(command[0], "unset", 6) == 0)
-		result_builtin = builtin_unset(command, env);
+		result_builtin = builtin_fork(command, redirs_manage, env,
+				builtin_unset);
 	else if (ft_strncmp(command[0], "env", 4) == 0)
-		result_builtin = builtin_env(env);
+		result_builtin = builtin_fork(command, redirs_manage, env, builtin_env);
 	else if (ft_strncmp(command[0], "exit", 5) == 0)
-		result_builtin = builtin_exit(command);
+		result_builtin = builtin_fork(command, redirs_manage, env,
+				builtin_exit);
 	else
 		result_builtin = -1;
 	return (result_builtin);
@@ -43,7 +47,7 @@ static int	make_comand(t_command *command, char ***env,
 	int	result;
 	int	pipe_fd;
 
-	result = find_builtins(command->command, env);
+	result = find_builtins(command->command, env, redirs_manage);
 	if (result != -1)
 		return (result);
 	if (!redirs_manage->is_pipe || redirs_manage->fds_out)
@@ -76,11 +80,11 @@ static void	launch_shell_commands(t_shell *shell,
 	t_list		*list;
 
 	list = shell->commands;
-	*result = 0;
 	redirs_manage->is_pipe = 0;
 	redirs_manage->forced_pipe = 0;
-	while (list && *result == 0)
+	while (list)
 	{
+		*result = 0;
 		command = list->content;
 		prepare_redirects(redirs_manage, command, result, env);
 		list = list->next;
