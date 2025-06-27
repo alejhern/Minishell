@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/03 22:25:22 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 18:09:53 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <limits.h>
 
 extern int			g_signal;
 
@@ -107,6 +108,8 @@ t_token				*token_lstlast(t_token *token);
 t_token				*token_lstnew(char *token, int type);
 void				token_lstadd_back(t_token **token, t_token *new_token);
 
+char				*ft_strjoin_free(char *s1, char *s2, int util);
+
 char				*quote_remover(char *str, char *ret);
 
 // ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
@@ -120,11 +123,13 @@ t_token				*tokenize(char *prompt, int *error);
 t_list				*token_parser(t_token *token, int *error,
 						t_token **token_sub);
 void				parser_check(t_token **t_sub, t_token *t);
-char				*expand(char *prompt, char **env);
+char				*expand(char *prompt, char **env, int doc);
 int					new_subshell(t_list *list_og, t_token **token);
 void				check_tokens(t_token *token, t_token **token_sub,
 						int *error, char **env);
 int					check_subshell(t_token **token, char **env);
+
+int					here_doc(char *eof, char **env);
 
 // ███████╗██╗  ██╗███████╗ ██████╗
 // ██╔════╝╚██╗██╔╝██╔════╝██╔════╝
@@ -134,7 +139,7 @@ int					check_subshell(t_token **token, char **env);
 // ╚══════╝╚═╝  ╚═╝╚══════╝ ╚═════╝
 
 void				prepare_redirects(t_redirs_manage *manage,
-						t_command *command, int *error);
+						t_command *command, int *error, char ***env);
 void				make_fork(t_command *command,
 						t_redirs_manage *redirs_manage, char ***env,
 						int *result);
@@ -173,5 +178,6 @@ int					builtin_echo(char **command);
 //███████ ██  ██████  ██   ████ ██   ██ ███████ ███████
 
 void				signal_handler_main(int sig);
+void				signal_handler_here(int sig);
 
 #endif

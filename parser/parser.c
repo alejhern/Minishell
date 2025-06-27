@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/13 18:46:25 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/03 21:53:40 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:39:05 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,8 @@ int	add_redirect(t_list *shells, t_token **token)
 		((t_redirect *)red->content)->is_double = 1;
 		*token = (*token)->next;
 	}
-	heredoc((*token)->next, ((t_redirect *)red->content), type);
+	*token = (*token)->next;
+	((t_redirect *)red->content)->path = ft_strdup((*token)->token);
 	if (type == IN_RED)
 		ft_lstadd_back(&command->redirect_in, red);
 	else if (type == OUT_RED)

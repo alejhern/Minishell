@@ -6,23 +6,25 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 20:08:46 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/03 21:19:52 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/18 16:59:52 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static int	check_word(t_token *token, char **env)
+static int	check_word(t_token *token, char **env, int here)
 {
 	char	*str;
 	char	*var;
 
 	if (token->next && token->next->type == OPEN_SUB)
 		return (1);
+	if (here)
+		return (0);
 	var = ft_strchr(token->token, '$');
 	if (var != 0)
 	{
-		str = expand(token->token, env);
+		str = expand(token->token, env, 0);
 		free(token->token);
 		token->token = str;
 	}
@@ -48,12 +50,26 @@ static int	check_conditional(t_token *token)
 	return (0);
 }
 
-static int	check_redirection(t_token **token)
+static int	check_redirection(t_token **token, char **env)
 {
+	int			here;
+
+	here = 0;
 	if ((*token)->next && (*token)->type == (*token)->next->type)
+	{
 		*token = (*token)->next;
+		if ((*token)->type == IN_RED)
+			here = 1;
+	}
 	if ((*token)->next && (*token)->next->type == WORD)
+	{
+		if (here)
+		{
+			(*token) = (*token)->next;
+			return (check_word(*token, env, 1));
+		}
 		return (0);
+	}
 	return (1);
 }
 
@@ -69,7 +85,7 @@ void	check_tokens(t_token *token, t_token **token_sub, int *error,
 	while (aux && *error == 0 && aux->type != CLOSE_SUB)
 	{
 		if (aux->type == WORD)
-			*error = check_word(aux, env);
+			*error = check_word(aux, env, 0);
 		else if (aux->type == PIPE)
 			*error = check_pipe(aux);
 		else if (aux->type == ORC || aux->type == ANDC)
@@ -77,7 +93,7 @@ void	check_tokens(t_token *token, t_token **token_sub, int *error,
 		else if (aux->type == OPEN_SUB || aux->type == CLOSE_SUB)
 			*error = check_subshell(&aux, env);
 		else if (aux->type == OUT_RED || aux->type == IN_RED)
-			*error = check_redirection(&aux);
+			*error = check_redirection(&aux, env);
 		aux = aux->next;
 	}
 	if (token_sub != 0 && *error == 0)

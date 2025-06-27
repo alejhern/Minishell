@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/06 15:02:05 by pafranco          #+#    #+#             */
-/*   Updated: 2025/05/26 17:10:54 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 19:40:06 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,13 @@ void	token_sub_red(char *prompt, int *i, int *error, t_token **token)
 	if (!token)
 		free_token(*token);
 	if (prompt[*i] == '(')
-		next->type = 4;
+		next->type = OPEN_SUB;
 	else if (prompt[*i] == ')')
-		next->type = 5;
+		next->type = CLOSE_SUB;
 	else if (prompt[*i] == '<')
-		next->type = 6;
+		next->type = IN_RED;
 	else if (prompt[*i] == '>')
-		next->type = 7;
+		next->type = OUT_RED;
 	else
 		*error = 1;
 	token_lstadd_back(token, next);

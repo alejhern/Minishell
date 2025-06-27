@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/04 13:05:13 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/20 22:58:08 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,10 +80,10 @@ static void	launch_shell_commands(t_shell *shell,
 	while (list && *result == 0)
 	{
 		command = list->content;
-		prepare_redirects(redirs_manage, command, result);
+		prepare_redirects(redirs_manage, command, result, env);
 		list = list->next;
 		redirs_manage->is_pipe = (list != NULL);
-		if (*result == 1)
+		if (*result == 1 || *result == 2)
 			break ;
 		if (command->subshell)
 			make_fork(command, redirs_manage, env, result);
@@ -107,8 +107,8 @@ int	launch_shells(t_list *shells, char ***env)
 	while (list)
 	{
 		shell = list->content;
-		if (result != -1 && ((result == 0 && shell->type == OR) || (result != 0
-					&& shell->type == AND)))
+		if ((result != -1 && ((result == 0 && shell->type == OR) || (result != 0
+						&& shell->type == AND))) || result == 2)
 			break ;
 		launch_shell_commands(shell, &redirs_manage, env, &result);
 		list = list->next;
