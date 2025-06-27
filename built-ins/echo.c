@@ -12,10 +12,11 @@
 
 #include "../minishell.h"
 
-int	builtin_echo(char **command)
+int	builtin_echo(char **command, char ***env)
 {
 	int	jump;
 
+	(void)env;
 	command++;
 	jump = ft_strncmp("-n", *command, 2);
 	if (!jump)

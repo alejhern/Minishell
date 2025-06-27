@@ -31,8 +31,9 @@ static int	prevalidate_export(char *var)
 	}
 	if (ft_strncmp(var, "SHELL", 5) == 0)
 	{
-		ft_putendl_fd("export: SHELL: cannot modify environment variable", STDERR_FILENO);
-		return	(1);
+		ft_putendl_fd("export: SHELL: cannot modify environment variable",
+			STDERR_FILENO);
+		return (1);
 	}
 	return (0);
 }
@@ -56,7 +57,8 @@ int	builtin_export(char **command, char ***env)
 	if (!ft_setenv(command[1], value, env))
 	{
 		free(value);
-		ft_putendl_fd("export: failed to set environment variable", STDERR_FILENO);
+		ft_putendl_fd("export: failed to set environment variable",
+			STDERR_FILENO);
 		return (1);
 	}
 	free(value);
