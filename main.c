@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/27 19:46:44 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/28 12:05:30 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ int	main(int argc, char **argv, char **env)
 	if (!envp)
 		ft_perror_exit("Error: malloc");
 	signal(SIGINT, signal_handler_main);
+	signal(SIGQUIT, SIG_IGN);
 	history_fd = create_history_file(envp);
 	if (history_fd == -1)
 		perror("Error: can't create history file");
