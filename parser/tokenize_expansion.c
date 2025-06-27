@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/02 17:54:03 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/20 23:07:54 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/27 19:17:06 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	token_word2(char *p, int *i, t_token **token, char **env)
 	*i += (i[2] > 0);
 	token_lstadd_back(token, next);
 	while ((i[3] == 1 || ((p[*i + i[1]] != '\'' && i[2] != 2)
-				|| (p[*i + i[1]] != '\"' && i[2] != 1))) && p[*i + i[1]])
+				&& (p[*i + i[1]] != '\"' && i[2] != 1))) && p[*i + i[1]])
 	{
 		if (p[*i + i[1]] == '$' && i[2] != 1)
 		{
