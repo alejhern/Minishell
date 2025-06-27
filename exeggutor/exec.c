@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/27 17:01:23 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/27 19:34:16 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void	launch_shell_commands(t_shell *shell,
 		{
 			make_fork(command, redirs_manage, env, result);
 		}
-		else
+		else if (command->command)
 			*result = make_comand(command, env, redirs_manage);
 		recover_fds(redirs_manage);
 		redirs_manage->is_pipe = 1;
