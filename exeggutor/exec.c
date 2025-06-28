@@ -53,24 +53,45 @@ static int	make_comand(t_command *command, char ***env,
 	if (!redirs_manage->is_pipe || redirs_manage->fds_out)
 	{
 		signal(SIGINT, signal_handler_fork);
-		result = ft_execute(command->command, *env, 1);
+		result = ft_execute(command->command, *env, &command->pid);
 		signal(SIGINT, signal_handler_main);
 		if (redirs_manage->is_pipe)
 			redirs_manage->forced_pipe = 1;
+		else
+			waitpid(command->pid, NULL, 0);
 	}
 	else
 	{
-		pipe_fd = ft_pipe(redirs_manage->fd_in, command->command, *env);
+		pipe_fd = ft_pipe(redirs_manage->fd_in, command->command, *env,
+				&command->pid);
 		if (pipe_fd == -1)
 			return (1);
 		if (redirs_manage->fd_in != -1)
 			close(redirs_manage->fd_in);
 		redirs_manage->fd_in = pipe_fd;
-		result = 1;
+		result = 0;
 	}
-	if (result == 0 || result == 127)
-		return (1);
-	return (0);
+	return (result);
+}
+
+static void	wait_pids(t_list *list, int *error)
+{
+	t_list		*aux;
+	t_command	*command;
+	int			status;
+
+	aux = list;
+	status = 0;
+	while (aux)
+	{
+		command = aux->content;
+		aux = aux->next;
+		waitpid(command->pid, &status, 0);
+	}
+	if (*error != 0)
+		return ;
+	if (WIFEXITED(status))
+		*error = WEXITSTATUS(status);
 }
 
 static void	launch_shell_commands(t_shell *shell,
@@ -92,14 +113,13 @@ static void	launch_shell_commands(t_shell *shell,
 		if (*result == 1 || *result == 2)
 			break ;
 		if (command->subshell)
-		{
 			make_fork(command, redirs_manage, env, result);
-		}
 		else if (command->command)
 			*result = make_comand(command, env, redirs_manage);
 		recover_fds(redirs_manage);
 		redirs_manage->is_pipe = 1;
 	}
+	wait_pids(list, result);
 }
 
 int	launch_shells(t_list *shells, char ***env)

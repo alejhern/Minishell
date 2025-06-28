@@ -66,7 +66,7 @@ typedef enum e_token_type
 
 typedef struct s_command
 {
-	int				pid;
+	pid_t				pid;
 	char			**command;
 	t_list			*subshell;
 	t_list			*redirect_out;

@@ -45,6 +45,8 @@ static char	*get_line_prompt(char **env, int error)
 	char	*aux;
 	char	**hostname;
 
+	if (!env || ft_memlen(env) == 0)
+		return (readline("minishell> "));
 	prompt_line = ft_strjoin((char *)GREEN, (char *)ft_getenv("USER", env));
 	hostname = NULL;
 	ft_append_array((void ***)&hostname, ft_strdup("hostname"));
@@ -79,7 +81,7 @@ static int	manage_prompt(char *prompt, int fd)
 		return (0);
 	}
 	add_history(prompt);
-	if (!ft_putendl_fd(prompt, fd))
+	if (fd != -1 && !ft_putendl_fd(prompt, fd))
 		ft_putendl_fd("Error: can't write to history file", STDERR_FILENO);
 	return (1);
 }
@@ -128,12 +130,12 @@ int	main(int argc, char **argv, char **env)
 	}
 	envp = ft_env((const char **)env);
 	if (!envp)
-		ft_perror_exit("Error: malloc");
+		envp = ft_safe_calloc(1, sizeof(char *));
 	signal(SIGINT, signal_handler_main);
 	signal(SIGQUIT, SIG_IGN);
 	history_fd = create_history_file(envp);
 	if (history_fd == -1)
-		perror("Error: can't create history file");
+		ft_putendl_fd("Error: can't create history file", STDERR_FILENO);
 	line_shell(&envp, history_fd);
 	ft_free_array((void ***)&envp);
 	return (0);
