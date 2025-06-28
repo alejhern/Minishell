@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/27 21:00:52 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/28 23:33:17 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,19 +46,22 @@ static int	make_comand(t_command *command, char ***env,
 {
 	int	result;
 	int	pipe_fd;
+	int	status;
 
 	result = find_builtins(command->command, env, redirs_manage);
 	if (result != -1)
 		return (result);
 	if (!redirs_manage->is_pipe || redirs_manage->fds_out)
 	{
-		signal(SIGINT, signal_handler_fork);
 		result = ft_execute(command->command, *env, &command->pid);
-		signal(SIGINT, signal_handler_main);
 		if (redirs_manage->is_pipe)
 			redirs_manage->forced_pipe = 1;
 		else
-			waitpid(command->pid, NULL, 0);
+		{
+			waitpid(command->pid, &status, 0);
+			if (WIFEXITED(status))
+				result = WEXITSTATUS(status);
+		}
 	}
 	else
 	{
@@ -73,7 +76,7 @@ static int	make_comand(t_command *command, char ***env,
 	}
 	return (result);
 }
-
+/*
 static void	wait_pids(t_list *list, int *error)
 {
 	t_list		*aux;
@@ -93,7 +96,7 @@ static void	wait_pids(t_list *list, int *error)
 	if (WIFEXITED(status))
 		*error = WEXITSTATUS(status);
 }
-
+*/
 static void	launch_shell_commands(t_shell *shell,
 		t_redirs_manage *redirs_manage, char ***env, int *result)
 {
@@ -103,8 +106,11 @@ static void	launch_shell_commands(t_shell *shell,
 	list = shell->commands;
 	redirs_manage->is_pipe = 0;
 	redirs_manage->forced_pipe = 0;
+	signal(SIGINT, signal_handler_fork);
 	while (list)
 	{
+		if (g_signal != 0)
+			g_signal = 0;
 		*result = 0;
 		command = list->content;
 		prepare_redirects(redirs_manage, command, result, env);
@@ -119,7 +125,7 @@ static void	launch_shell_commands(t_shell *shell,
 		recover_fds(redirs_manage);
 		redirs_manage->is_pipe = 1;
 	}
-	wait_pids(list, result);
+//	wait_pids(list, result);
 }
 
 int	launch_shells(t_list *shells, char ***env)
@@ -144,5 +150,9 @@ int	launch_shells(t_list *shells, char ***env)
 	if (dup2(redirs_manage.save_in, STDIN_FILENO) == -1)
 		ft_perror_exit("dup2 input");
 	close(redirs_manage.save_in);
+	signal(SIGINT, signal_handler_main);
+	if (g_signal != 0)
+		result = 127 + g_signal;
+	g_signal = 0;
 	return (result);
 }
