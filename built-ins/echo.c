@@ -18,7 +18,7 @@ int	builtin_echo(char **command, char ***env)
 
 	(void)env;
 	command++;
-	jump = ft_strncmp("-n", *command, 2);
+	jump = ft_strncmp("-n", *command, 3);
 	if (!jump)
 		command++;
 	while (*command)

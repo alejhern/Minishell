@@ -40,6 +40,14 @@ static int	fork_exeptions(char **command, char ***env,
 		return (redirs_manage->forced_pipe = 1, -1);
 	else if (ft_strncmp(command[0], "cd", 3) == 0)
 		return (builtin_cd(command, env));
+	if (ft_strncmp(command[0], "export", 7) == 0 && redirs_manage->is_pipe)
+		return (redirs_manage->forced_pipe = 1, -1);
+	else if (ft_strncmp(command[0], "export", 7) == 0)
+		return (builtin_export(command, env));
+	if (ft_strncmp(command[0], "unset", 6) == 0 && redirs_manage->is_pipe)
+		return (redirs_manage->forced_pipe = 1, -1);
+	else if (ft_strncmp(command[0], "unset", 6) == 0)
+		return (builtin_unset(command, env));
 	return (-1);
 }
 
