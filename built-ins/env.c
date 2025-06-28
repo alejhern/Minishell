@@ -22,7 +22,7 @@ int	builtin_env(char **command, char ***env)
 		return (1);
 	}
 	if (command[0] && command[1])
-		return (ft_execute(command + 1, *env, 1));
+		return (ft_execute(command + 1, *env, NULL));
 	original_env = *env;
 	while (*original_env)
 		ft_putendl_fd(*original_env++, STDOUT_FILENO);
