@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 20:08:46 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/29 14:53:39 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:23:11 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void	check_tokens(t_token *token, t_token **token_sub, int *error,
 	aux = token;
 	if (token == 0)
 		aux = (*token_sub)->next;
-	while (aux && *error == 0 && aux->type != CLOSE_SUB)
+	while (aux && *error == 0 && !(aux->type == CLOSE_SUB && token == 0))
 	{
 		if (aux->type == WORD)
 			*error = check_word(aux, env, 0);
