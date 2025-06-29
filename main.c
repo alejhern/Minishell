@@ -45,6 +45,7 @@ static char	*get_line_prompt(char **env, int error)
 	char	*aux;
 	char	**hostname;
 
+	signal(SIGINT, signal_handler_main);
 	if (!env || ft_memlen(env) == 0)
 		return (readline("minishell> "));
 	prompt_line = ft_strjoin((char *)GREEN, (char *)ft_getenv("USER", env));
