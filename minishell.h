@@ -20,10 +20,10 @@
 # define RED "\033[1;31m"
 
 # include "libft/libft.h"
+# include <limits.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <limits.h>
 
 extern int			g_signal;
 
@@ -66,7 +66,7 @@ typedef enum e_token_type
 
 typedef struct s_command
 {
-	pid_t				pid;
+	pid_t			pid;
 	char			**command;
 	t_list			*subshell;
 	t_list			*redirect_out;
@@ -109,6 +109,14 @@ t_token				*token_lstnew(char *token, int type);
 void				token_lstadd_back(t_token **token, t_token *new_token);
 
 char				*ft_strjoin_free(char *s1, char *s2, int util);
+
+void				execute_exec_process(t_command *command,
+						t_redirs_manage *redirs_manage, char ***env,
+						int *error);
+void				pipe_exec_process(t_command *command,
+						t_redirs_manage *redirs_manage, char ***env,
+						int *error);
+void				wait_pids(t_list *list, int *error);
 
 char				*quote_remover(char *str, char *ret);
 
@@ -175,7 +183,7 @@ int					builtin_unset(char **command, char ***env);
 int					builtin_env(char **command, char ***env);
 int					builtin_echo(char **command, char ***env);
 int					builtin_fork(char **command, t_redirs_manage *redirs_manage,
-						char ***env, int (f)(char **, char ***));
+						char ***env, int(f)(char **, char ***));
 
 //███████ ██  ██████  ███    ██  █████  ██      ███████
 //██      ██ ██       ████   ██ ██   ██ ██      ██

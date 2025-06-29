@@ -6,7 +6,7 @@
 /*   By: alejhern <alejhern@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 11:41:42 by alejhern          #+#    #+#             */
-/*   Updated: 2025/06/29 12:56:18 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:27:48 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 void	execute_exec_process(t_command *command, t_redirs_manage *redirs_manage,
 		char ***env, int *error)
 {
-
 	signal(SIGINT, signal_handler_fork);
 	*error = ft_execute(command->command, *env, &command->pid);
 	if (redirs_manage->is_pipe)
