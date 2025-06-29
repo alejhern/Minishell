@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/29 14:27:03 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:29:18 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,8 @@ static void	launch_shell_commands(t_shell *shell,
 		if (g_signal != 0)
 			g_signal = 0;
 		*error = 0;
+		if (g_signal != 0)
+			g_signal = 0;
 		command = list->content;
 		prepare_redirects(redirs_manage, command, error, env);
 		list = list->next;
@@ -108,7 +110,6 @@ int	launch_shells(t_list *shells, char ***env)
 	if (dup2(redirs_manage.save_in, STDIN_FILENO) == -1)
 		ft_perror_exit("dup2 input");
 	close(redirs_manage.save_in);
-	signal(SIGINT, signal_handler_main);
 	if (g_signal != 0)
 		error = 127 + g_signal;
 	g_signal = 0;
