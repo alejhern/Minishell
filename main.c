@@ -97,10 +97,10 @@ static void	line_shell(char ***env, int history_fd)
 	error = 0;
 	while (1)
 	{
-		error = 0;
 		prompt = get_line_prompt(*env, error);
 		if (!manage_prompt(prompt, history_fd))
 			continue ;
+		error = 0;
 		token = tokenize(prompt, &error);
 		free(prompt);
 		syntax_error(token, env, &error);
