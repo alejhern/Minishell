@@ -97,6 +97,7 @@ int	launch_shells(t_list *shells, char ***env)
 	list = shells;
 	error = -1;
 	redirs_manage.save_in = dup(STDIN_FILENO);
+	redirs_manage.fd_in = 0;
 	while (list)
 	{
 		shell = list->content;

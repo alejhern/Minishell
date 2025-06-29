@@ -41,30 +41,31 @@ static int	*get_output_files(t_list *redirects, int *error)
 	return (fds);
 }
 
-static int	get_input_file(t_list *redirects, int *error, char **env, int fd)
+static int	get_input_file(t_list *redirects, int *error, char **env)
 {
+	int			fd;
+	t_redirect	*redirect;
+
 	if (!redirects)
 		return (-1);
-	while (redirects != 0 && fd >= 0)
+	while (redirects != 0)
 	{
-		if (((t_redirect *) redirects->content)->is_double)
-			fd = here_doc(((t_redirect *) redirects->content)->path, env);
+		redirect = redirects->content;
+		if (redirect->is_double)
+			fd = here_doc(redirect->path, env);
 		else
+			fd = open(redirect->path, O_RDONLY);
+		if (fd == -1)
 		{
-			fd = open(((t_redirect *) redirects->content)->path, O_RDONLY);
-			if (fd == -1)
-			{
-				ft_printf_fd(STDERR_FILENO, "no such file or directory: %s\n",
-					((t_redirect *) redirects->content)->path);
-				*error = 1;
-			}
+			ft_printf_fd(STDERR_FILENO, "no such file or directory: %s\n",
+				redirect->path);
+			*error = 1;
+			return (-1);
 		}
+		if (dup2(fd, STDIN_FILENO) == -1)
+			ft_perror_exit("Error redirecting input");
 		redirects = redirects->next;
-		if (redirects != 0 && fd >= 0)
-			close(fd);
 	}
-	if (fd == -1 && dup2(fd, STDIN_FILENO) == -1)
-		*error = 1;
 	return (fd);
 }
 
@@ -90,7 +91,7 @@ void	prepare_redirects(t_redirs_manage *manage, t_command *command,
 {
 	manage->pipes[0] = -1;
 	manage->pipes[1] = -1;
-	manage->fd_in = get_input_file(command->redirect_in, error, *env, 1);
+	manage->fd_in = get_input_file(command->redirect_in, error, *env);
 	if (manage->fd_in == -2)
 	{
 		*error = 2;

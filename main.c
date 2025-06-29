@@ -135,6 +135,7 @@ int	main(int argc, char **argv, char **env)
 	if (history_fd == -1)
 		ft_putendl_fd("Error: can't create history file", STDERR_FILENO);
 	line_shell(&envp, history_fd);
+	close(history_fd);
 	ft_free_array((void ***)&envp);
 	return (0);
 }
