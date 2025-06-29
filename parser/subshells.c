@@ -14,9 +14,9 @@
 
 int	new_subshell(t_list *list_og, t_token **token)
 {
-	t_shell					*shell;
-	t_command				*command;
-	int						error;
+	t_shell		*shell;
+	t_command	*command;
+	int			error;
 
 	shell = ft_lstlast(list_og)->content;
 	error = 0;
@@ -33,19 +33,18 @@ int	new_subshell(t_list *list_og, t_token **token)
 
 int	check_subshell(t_token **token, char **env)
 {
-	int					error;
+	int	error;
 
 	error = 0;
-	if (token && (*token) && (*token)->next
-			&&((*token)->next->type == WORD || (*token)->next->type == OPEN_SUB
+	if (token && (*token) && (*token)->next && ((*token)->next->type == WORD
+			|| (*token)->next->type == OPEN_SUB
 			|| (*token)->next->type == IN_RED
-			|| (*token)->next->type == OUT_RED)
-		&& (*token)->type == OPEN_SUB)
+			|| (*token)->next->type == OUT_RED) && (*token)->type == OPEN_SUB)
 		check_tokens(0, token, &error, env);
 	else
 		error = 1;
-	if ((*token) == 0 || (*token)->type != CLOSE_SUB
-		|| ((*token)->next != 0 && ((*token)->next->type == OPEN_SUB
+	if ((*token) == 0 || (*token)->type != CLOSE_SUB || ((*token)->next != 0
+			&& ((*token)->next->type == OPEN_SUB
 				|| (*token)->next->type == WORD)))
 		error = 1;
 	return (error);

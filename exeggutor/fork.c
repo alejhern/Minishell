@@ -46,13 +46,33 @@ static void	execute_child_process(t_command *command,
 	exit(EXIT_SUCCESS);
 }
 
-static void finalize_fork(t_redirs_manage *redirs_manage, int *result, pid_t pid)
+static void	finalize_fork(t_redirs_manage *redirs_manage, int *result,
+		pid_t pid, t_list *subshells)
 {
+	t_list		*list_com;
+	t_command	*command;
+	t_list		*list_sub;
+	t_shell		*subshell;
+
 	waitpid(pid, result, 0);
 	if (WIFEXITED(*result))
 		*result = WEXITSTATUS(*result);
 	if (redirs_manage->fds_out)
 		redirs_manage->forced_pipe = 1;
+	list_sub = subshells;
+	while (list_sub)
+	{
+		subshell = list_sub->content;
+		list_com = subshell->commands;
+		while (list_com)
+		{
+			command = list_com->content;
+			if (command->redirect_out)
+				return (redirs_manage->forced_pipe = 1, (void)0);
+			list_com = list_com->next;
+		}
+		list_sub = list_sub->next;
+	}
 }
 
 void	make_fork(t_command *command, t_redirs_manage *redirs_manage,
@@ -76,7 +96,7 @@ void	make_fork(t_command *command, t_redirs_manage *redirs_manage,
 		execute_child_process(command, redirs_manage, env, result);
 	if (redirs_manage->is_pipe)
 		close(redirs_manage->pipes[1]);
-	finalize_fork(redirs_manage, result, pid);
+	finalize_fork(redirs_manage, result, pid, command->subshell);
 	dup2(save_stdin, STDIN_FILENO);
 	dup2(save_stdout, STDOUT_FILENO);
 	close(save_stdin);
