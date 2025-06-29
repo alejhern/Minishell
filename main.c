@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/09 11:49:10 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/28 22:39:22 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:35:53 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,7 @@ static void	line_shell(char ***env, int history_fd)
 		token = tokenize(prompt, &error);
 		free(prompt);
 		syntax_error(token, env, &error);
-		if (error != 0)
+		if (error != 0 || !token)
 			continue ;
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
