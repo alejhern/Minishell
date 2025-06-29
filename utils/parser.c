@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/18 12:52:18 by pafranco          #+#    #+#             */
-/*   Updated: 2025/04/12 14:07:59 by amhernandez      ###   ########.fr       */
+/*   Updated: 2025/06/28 22:39:18 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,28 +35,18 @@ void	parser_check(t_token **t_sub, t_token *t)
 		*t_sub = t;
 }
 
-int	remove_quotes(t_token *token)
-{
-	char	*str;
-
-	str = ft_substr(token->token, 1, ft_strlen(token->token) - 2);
-	free(token->token);
-	token->token = str;
-	return (0);
-}
-
-void	heredoc(t_token *token, t_redirect *red, int type)
-{
-	if (red->is_double == 0 || type == OUT_RED)
-	{
-		red->path = ft_strdup(token->token);
-		token->type = PASS;
-		return ;
-	}
-}
-
 int	is_del(char c)
 {
 	return (c == '<' || c == '>' || c == '&' || c == '|' || c == '('
 		|| c == ')');
+}
+
+void	syntax_error(t_token *token, char ***env, int *error)
+{
+	check_tokens(token, NULL, error, *env);
+	if (*error == 0)
+		return ;
+	free_token(token);
+	ft_printf("SYNTAX ERROR\n");
+	persist_exit_status(2, env);
 }

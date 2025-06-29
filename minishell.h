@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/27 16:02:27 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/28 22:29:02 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,6 +119,9 @@ void				pipe_exec_process(t_command *command,
 void				wait_pids(t_list *list, int *error);
 
 char				*quote_remover(char *str, char *ret);
+
+void				persist_exit_status(int status, char ***env);
+void				syntax_error(t_token *token, char ***env, int *error);
 
 // ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗
 // ██╔══██╗██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗

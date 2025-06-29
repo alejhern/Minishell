@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/21 18:52:06 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/27 21:12:46 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/28 22:51:03 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	signal_handler_here(int sig)
 
 void	signal_handler_fork(int sig)
 {
-	sig = 14;
+	g_signal = sig;
 	ft_printf("\n");
 	return ;
 }
