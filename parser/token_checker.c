@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/19 20:08:46 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/28 22:39:08 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 14:53:39 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,8 @@ void	check_tokens(t_token *token, t_token **token_sub, int *error,
 {
 	t_token	*aux;
 
-	if (token != 0)
-		aux = token;
-	else
+	aux = token;
+	if (token == 0)
 		aux = (*token_sub)->next;
 	while (aux && *error == 0 && aux->type != CLOSE_SUB)
 	{
@@ -94,7 +93,8 @@ void	check_tokens(t_token *token, t_token **token_sub, int *error,
 			*error = check_subshell(&aux, env);
 		else if (aux->type == OUT_RED || aux->type == IN_RED)
 			*error = check_redirection(&aux, env);
-		aux = aux->next;
+		if (aux != 0)
+			aux = aux->next;
 	}
 	if (token_sub != 0 && *error == 0)
 	{
