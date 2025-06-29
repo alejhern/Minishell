@@ -46,6 +46,15 @@ static void	execute_child_process(t_command *command,
 	exit(EXIT_SUCCESS);
 }
 
+static void finalize_fork(t_redirs_manage *redirs_manage, int *result, pid_t pid)
+{
+	waitpid(pid, result, 0);
+	if (WIFEXITED(*result))
+		*result = WEXITSTATUS(*result);
+	if (redirs_manage->fds_out)
+		redirs_manage->forced_pipe = 1;
+}
+
 void	make_fork(t_command *command, t_redirs_manage *redirs_manage,
 		char ***env, int *result)
 {
@@ -67,9 +76,7 @@ void	make_fork(t_command *command, t_redirs_manage *redirs_manage,
 		execute_child_process(command, redirs_manage, env, result);
 	if (redirs_manage->is_pipe)
 		close(redirs_manage->pipes[1]);
-	waitpid(pid, result, 0);
-	if (WIFEXITED(*result))
-		*result = WEXITSTATUS(*result);
+	finalize_fork(redirs_manage, result, pid);
 	dup2(save_stdin, STDIN_FILENO);
 	dup2(save_stdout, STDOUT_FILENO);
 	close(save_stdin);
