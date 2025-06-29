@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/28 23:33:17 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 12:39:45 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,6 @@ static int	make_comand(t_command *command, char ***env,
 {
 	int	result;
 	int	pipe_fd;
-	int	status;
 
 	result = find_builtins(command->command, env, redirs_manage);
 	if (result != -1)
@@ -56,11 +55,11 @@ static int	make_comand(t_command *command, char ***env,
 		result = ft_execute(command->command, *env, &command->pid);
 		if (redirs_manage->is_pipe)
 			redirs_manage->forced_pipe = 1;
-		else
+		else if (result != 127)
 		{
-			waitpid(command->pid, &status, 0);
-			if (WIFEXITED(status))
-				result = WEXITSTATUS(status);
+			waitpid(command->pid, &result, 0);
+			if (WIFEXITED(result))
+				result = WEXITSTATUS(result);
 		}
 	}
 	else
