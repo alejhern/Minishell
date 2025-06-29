@@ -6,7 +6,7 @@
 /*   By: amhernandez <alejhern@student.42.fr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/12 16:57:49 by amhernandez       #+#    #+#             */
-/*   Updated: 2025/06/29 13:05:38 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:10:54 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,7 @@ static void	launch_shell_commands(t_shell *shell,
 	while (list)
 	{
 		*error = 0;
-		if (g_signal != 0)
-			g_signal = 0;
+		g_signal = 0;
 		command = list->content;
 		prepare_redirects(redirs_manage, command, error, env);
 		list = list->next;

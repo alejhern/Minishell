@@ -6,7 +6,7 @@
 /*   By: alejhern <alejhern@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/27 23:27:46 by alejhern          #+#    #+#             */
-/*   Updated: 2025/06/27 23:27:48 by alejhern         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:11:55 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,14 @@ int	create_history_file(char **env)
 	return (fd);
 }
 
-int	history(char **comand,char ***env)
+int	history(char **comand, char ***env)
 {
 	char	*history_file;
 	int		fd;
 	char	*line;
 	int		line_count;
 
-    (void)comand;
+	(void) comand;
 	history_file = get_history_path(*env);
 	if (!history_file)
 		return (perror("No souch history file"), -1);
@@ -57,7 +57,7 @@ int	history(char **comand,char ***env)
 	line = get_next_line(fd);
 	while (line && ++line_count)
 	{
-    ft_printf("  %d %s", line_count, line);
+		ft_printf("  %d %s", line_count, line);
 		free(line);
 		line = get_next_line(fd);
 	}

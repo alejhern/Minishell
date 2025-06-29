@@ -6,7 +6,7 @@
 /*   By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/12 19:59:04 by pafranco          #+#    #+#             */
-/*   Updated: 2025/06/28 22:29:02 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:10:39 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -183,7 +183,7 @@ int					builtin_unset(char **command, char ***env);
 int					builtin_env(char **command, char ***env);
 int					builtin_echo(char **command, char ***env);
 int					builtin_fork(char **command, t_redirs_manage *redirs_manage,
-						char ***env, int(f)(char **, char ***));
+						char ***env, int (f)(char **, char ***));
 
 //███████ ██  ██████  ███    ██  █████  ██      ███████
 //██      ██ ██       ████   ██ ██   ██ ██      ██

@@ -6,7 +6,7 @@
 /*   By: alejhern <alejhern@student.42barcelon      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/29 11:41:42 by alejhern          #+#    #+#             */
-/*   Updated: 2025/06/29 13:06:37 by pafranco         ###   ########.fr       */
+/*   Updated: 2025/06/29 20:12:29 by pafranco         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	execute_exec_process(t_command *command, t_redirs_manage *redirs_manage,
 	*error = ft_execute(command->command, *env, &command->pid);
 	if (redirs_manage->is_pipe)
 		redirs_manage->forced_pipe = 1;
-	else if (*error  != 127)
+	else if (*error != 127)
 	{
 		waitpid(command->pid, error, 0);
 		if (WIFEXITED(*error))
