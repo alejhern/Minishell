@@ -34,7 +34,7 @@ static int	*get_output_files(t_list *redirects, int *error)
 			perror(redirect->path);
 		redirects = redirects->next;
 		if (dup2(fds[it], STDOUT_FILENO) == -1)
-			ft_perror_exit("Error redirecting output");
+			return (close(fds[it++]), fds);
 		close(fds[it++]);
 	}
 	*error = 0;
@@ -63,8 +63,8 @@ static int	get_input_file(t_list *redirects, int *error, char **env, int fd)
 		if (redirects != 0 && fd >= 0)
 			close(fd);
 	}
-	if (fd >= 0 && dup2(fd, STDIN_FILENO) == -1)
-		ft_perror_exit("Error redirecting input");
+	if (fd == -1 && dup2(fd, STDIN_FILENO) == -1)
+		*error = 1;
 	return (fd);
 }
 
