@@ -6,7 +6,7 @@
 #    By: pafranco <pafranco@student.42barcelon      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/11 18:59:32 by pafranco          #+#    #+#              #
-#    Updated: 2025/06/04 13:41:47 by pafranco         ###   ########.fr        #
+#    Updated: 2025/06/29 20:09:24 by pafranco         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,6 +20,31 @@ EXEC_DIR = ./exeggutor/
 SIGNALS_DIR = ./signals/
 BUILT-IN_DIR = ./built-ins/
 HISTORY_DIR = ./history/
+
+UTIL_SRC =		cd.c \
+				echo.c \
+				env.c \
+				exit.c \
+				export.c \
+				export.c \
+				fork.c \
+				pwd.c \
+				unset.c \
+
+EXEC_SRC =		exec.c \
+				fork.c \
+				redirects.c \
+
+HISTORY_SRC =	history.c \
+
+PARSE_SRC =		here_doc.c \
+				parser.c \
+				subshells.c \
+				token_checker.c \
+				tokenize_expansion.c \
+				tokenizer.c \
+
+SIGNALS_SRC =	signal_handling.c \
 
 SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) $(BUILT-IN_DIR) $(SIGNALS_DIR) $(HISTORY_DIR) -type f -name "*.c") \
 		main.c \
