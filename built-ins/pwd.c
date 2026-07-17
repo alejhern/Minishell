@@ -16,11 +16,7 @@ int	builtin_pwd(char **command, char ***env)
 {
 	char	*cwd;
 
-	if (command[1])
-	{
-		ft_printf_fd(STDERR_FILENO, "pwd: too many arguments\n");
-		return (1);
-	}
+	(void)command;
 	cwd = ft_getenv("PWD", *env);
 	if (!cwd)
 	{
