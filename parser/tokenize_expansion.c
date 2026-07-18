@@ -47,7 +47,7 @@ static void	token_expanse(char *p, int *i, t_token **token, char **env)
 
 	if (p[*i + i[1] + 1] == '?')
 	{
-		exp = ft_itoa(g_signal);
+		exp = ft_itoa(g_exit_status);
 		if (!exp)
 			exit(0);
 		i[1] += 2;
@@ -77,8 +77,8 @@ static void	token_word2(char *p, int *i, t_token **token, char **env)
 	k = 0;
 	*i += (i[2] > 0);
 	token_lstadd_back(token, next);
-	while ((i[3] == 1 || ((p[*i + i[1]] != '\'' || i[2] == 2) && (p[*i
-					+ i[1]] != '"' || i[2] == 1))) && p[*i + i[1]])
+	while ((i[3] == 1 || ((p[*i + i[1]] != '\'' || i[2] == 2) && (p[*i + i[1]]
+					!= '"' || i[2] == 1))) && p[*i + i[1]])
 	{
 		if (p[*i + i[1]] == '$' && i[2] != 1)
 		{
@@ -121,9 +121,9 @@ static char	*join_tokens(t_token *token)
 
 char	*expand(char *prompt, char **env, int doc)
 {
-	int i[4];
-	char *new;
-	t_token *token;
+	int		i[4];
+	char	*new;
+	t_token	*token;
 
 	i[0] = 0;
 	i[1] = 0;

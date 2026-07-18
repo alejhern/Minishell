@@ -26,6 +26,7 @@
 # include <signal.h>
 
 extern int			g_signal;
+extern int			g_exit_status;
 
 typedef struct s_redirs_manage
 {
@@ -120,7 +121,6 @@ void				wait_pids(t_list *list, int *error);
 
 char				*quote_remover(char *str, char *ret);
 
-void				persist_exit_status(int status, char ***env);
 void				syntax_error(t_token *token, char ***env, int *error);
 
 // ██████╗  █████╗ ██████╗ ███████╗███████╗██████╗

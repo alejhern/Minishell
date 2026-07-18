@@ -21,31 +21,6 @@ SIGNALS_DIR = ./signals/
 BUILT-IN_DIR = ./built-ins/
 HISTORY_DIR = ./history/
 
-UTIL_SRC =		cd.c \
-				echo.c \
-				env.c \
-				exit.c \
-				export.c \
-				export.c \
-				fork.c \
-				pwd.c \
-				unset.c \
-
-EXEC_SRC =		exec.c \
-				fork.c \
-				redirects.c \
-
-HISTORY_SRC =	history.c \
-
-PARSE_SRC =		here_doc.c \
-				parser.c \
-				subshells.c \
-				token_checker.c \
-				tokenize_expansion.c \
-				tokenizer.c \
-
-SIGNALS_SRC =	signal_handling.c \
-
 SRCS = $(shell find $(UTIL_DIR) $(PARSE_DIR) $(EXEC_DIR) $(BUILT-IN_DIR) $(SIGNALS_DIR) $(HISTORY_DIR) -type f -name "*.c") \
 		main.c \
 

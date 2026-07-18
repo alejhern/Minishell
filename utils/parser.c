@@ -48,5 +48,5 @@ void	syntax_error(t_token *token, char ***env, int *error)
 		return ;
 	free_token(token);
 	ft_printf("SYNTAX ERROR\n");
-	persist_exit_status(2, env);
+	g_exit_status = 2;
 }

@@ -12,16 +12,27 @@
 
 #include "../minishell.h"
 
+static int valid_identifier(char *s)
+{
+    int i;
+
+    if (!ft_isalpha(s[0]) && s[0] != '_')
+        return (0);
+    i = 1;
+    while (s[i] && s[i] != '=')
+    {
+        if (!ft_isalnum(s[i]) && s[i] != '_')
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
 static int	prevalidate_export(char *var)
 {
 	if (!var || !var[0])
 	{
 		ft_putendl_fd("export: not enough arguments", STDERR_FILENO);
-		return (1);
-	}
-	if (ft_strchr(var, '=') == NULL)
-	{
-		ft_putendl_fd("export: invalid variable format", STDERR_FILENO);
 		return (1);
 	}
 	if (ft_isdigit(var[0]))
@@ -35,32 +46,37 @@ static int	prevalidate_export(char *var)
 			STDERR_FILENO);
 		return (1);
 	}
+	if (!valid_identifier(var))
+	{
+		ft_putendl_fd("not a valid identifier", STDERR_FILENO);
+		return (1);
+	}
 	return (0);
 }
 
 int	builtin_export(char **command, char ***env)
 {
-	char	*var;
+	char	*equal;
 	char	*value;
+	int		i;
+	int		status;
 
-	if (prevalidate_export(command[1]))
-		return (1);
-	var = ft_strchr(command[1], '=');
-	if (var)
-		*var = '\0';
-	value = ft_strtrim(var + 1, "\"");
-	if (!value)
+	i = 0;
+	status = 0;
+	while (command[++i])
 	{
-		ft_putendl_fd("export: memory allocation error", STDERR_FILENO);
-		return (1);
-	}
-	if (!ft_setenv(command[1], value, env))
-	{
+		if (prevalidate_export(command[i]))
+			return (1);
+		equal = ft_strchr(command[i], '=');
+		if (!equal)
+			continue ;
+		*equal = '\0';
+		value = ft_strtrim(equal + 1, "\"");
+		if (!value)
+			exit(0);
+		status = !ft_setenv(command[i], value, env);
 		free(value);
-		ft_putendl_fd("export: failed to set environment variable",
-			STDERR_FILENO);
-		return (1);
+		*equal = '=';
 	}
-	free(value);
-	return (0);
+	return (status);
 }
