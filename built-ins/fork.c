@@ -12,13 +12,18 @@
 
 #include "../minishell.h"
 
-static void	close_fork(t_redirs_manage *redirs_manage, pid_t pid)
+static int	close_fork(t_redirs_manage *redirs_manage, pid_t pid)
 {
+	int	status;
+
 	if (redirs_manage->is_pipe)
 		close(redirs_manage->pipes[1]);
-	waitpid(pid, NULL, 0);
+	waitpid(pid, &status, 0);
 	if (dup2(redirs_manage->save_out, STDOUT_FILENO) == -1)
 		ft_perror_exit("restore stdout");
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	return (1);
 }
 
 static void	close_pipes(t_redirs_manage *redirs_manage)
@@ -46,8 +51,6 @@ static int	fork_exeptions(char **command, char ***env,
 		return (builtin_export(command, env));
 	if (ft_strncmp(command[0], "unset", 6) == 0 && redirs_manage->is_pipe)
 		return (redirs_manage->forced_pipe = 1, -1);
-	else if (ft_strncmp(command[0], "unset", 6) == 0)
-		return (builtin_unset(command, env));
 	return (-1);
 }
 
@@ -75,6 +78,5 @@ int	builtin_fork(char **command, t_redirs_manage *redirs_manage, char ***env,
 		error = f(command, env);
 		exit(error);
 	}
-	close_fork(redirs_manage, pid);
-	return (error);
+	return (close_fork(redirs_manage, pid));
 }
