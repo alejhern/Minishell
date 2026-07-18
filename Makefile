@@ -65,6 +65,9 @@ fclean: clean
 	@make -C $(LIB_DIR) fclean
 	rm -f $(NAME)
 
+valgrind:	
+	valgrind --leak-check=full --show-leak-kinds=all ./$(NAME)
+
 re:			fclean all
 
-.PHONY:		clean fclean re all
+.PHONY:		clean fclean re all valgrind
