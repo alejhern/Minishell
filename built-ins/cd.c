@@ -98,6 +98,11 @@ int	builtin_cd(char **command, char ***env)
 
 	if (!command)
 		return (0);
+	if (command[2])
+	{
+		ft_putendl_fd("cd: too many arguments", 2);
+		return (1);
+	}
 	new_path = get_new_path(command, *env);
 	if (!new_path)
 		return (1);
