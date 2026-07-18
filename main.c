@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	*parsing_pwd(char **env, char error)
+static void	*parsing_pwd(char **env)
 {
 	char	*prompt;
 	char	*home;
@@ -21,16 +21,14 @@ static void	*parsing_pwd(char **env, char error)
 
 	prompt = ft_strjoin(":", BLUE);
 	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		cwd = ft_strdup(ft_getenv("PWD", env));
 	home = ft_getenv("HOME", env);
-	if (ft_strncmp(cwd, home, ft_strlen(home)) == 0)
+	if (home && ft_strncmp(cwd, home, ft_strlen(home)) == 0)
 		aux = ft_strjoin("~", cwd + ft_strlen(home));
 	else
 		aux = ft_strdup(cwd);
 	prompt = ft_strappend(prompt, aux);
 	free(aux);
-	if (error)
+	if (g_exit_status)
 		prompt = ft_strappend(prompt, RED);
 	else
 		prompt = ft_strappend(prompt, GREEN);
@@ -38,7 +36,7 @@ static void	*parsing_pwd(char **env, char error)
 	return (prompt);
 }
 
-static char	*get_line_prompt(char **env, int error)
+static char	*get_line_prompt(char **env)
 {
 	char	*prompt;
 	char	*prompt_line;
@@ -50,13 +48,13 @@ static char	*get_line_prompt(char **env, int error)
 		return (readline("minishell> "));
 	prompt_line = ft_strjoin((char *)GREEN, (char *)ft_getenv("USER", env));
 	hostname = NULL;
-	ft_append_array((void ***)&hostname, ft_strdup("hostname"));
+	ft_append_array((void ***)&hostname, ft_strdup("/usr/bin/hostname"));
 	prompt_line = ft_strappend(prompt_line, "@");
 	aux = ft_exec_catch(hostname, env);
 	ft_free_array((void ***)&hostname);
 	prompt_line = ft_strappend(prompt_line, aux);
 	free(aux);
-	aux = parsing_pwd(env, error);
+	aux = parsing_pwd(env);
 	prompt_line = ft_strappend(prompt_line, aux);
 	free(aux);
 	prompt_line = ft_strappend(prompt_line, ">");
@@ -97,7 +95,7 @@ static void	line_shell(char ***env, int history_fd)
 	error = 0;
 	while (1)
 	{
-		prompt = get_line_prompt(*env, error);
+		prompt = get_line_prompt(*env);
 		if (!manage_prompt(prompt, history_fd))
 			continue ;
 		error = 0;
@@ -109,10 +107,9 @@ static void	line_shell(char ***env, int history_fd)
 		shells = token_parser(token, &error, NULL);
 		if (!shells)
 			ft_error_exit("PARSER ERROR");
-		error = launch_shells(shells, env);
+		g_exit_status = launch_shells(shells, env);
 		ft_lstclear(&shells, free_shell);
 		free_token(token);
-		persist_exit_status(error, env);
 	}
 }
 
