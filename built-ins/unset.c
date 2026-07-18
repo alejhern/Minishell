@@ -14,17 +14,6 @@
 
 int	builtin_unset(char **command, char ***env)
 {
-	if (!command[1])
-	{
-		ft_putstr_fd("unset: not enough arguments\n", 2);
-		return (1);
-	}
-	if (ft_strncmp(command[1], "SHELL", 5) == 0)
-	{
-		ft_putstr_fd("unset: cannot unset environment variable\n", 2);
-		return (1);
-	}
-	if (!ft_unsetenv(command[1], env))
-		return (1);
+	ft_unsetenv(command[1], env);
 	return (0);
 }
